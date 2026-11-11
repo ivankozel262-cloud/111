@@ -14,9 +14,17 @@ var FILES = SHELL.concat(
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(CACHE).then(function (cache) {
-      // Каждый файл отдельно: один недоступный файл не должен ломать установку.
+      // Каждый файл отдельно. Если свежий не скачался — берём его из старой версии кэша,
+      // чтобы при обновлении тренажёр не пропал из офлайна. Недостающее потом докачивает index.html.
       return Promise.all(FILES.map(function (url) {
-        return cache.add(new Request(url, { cache: 'reload' })).catch(function () { return null; });
+        return fetch(new Request(url, { cache: 'reload' })).then(function (res) {
+          if (!res || !res.ok) throw new Error('HTTP ' + (res && res.status));
+          return cache.put(url, res);
+        }).catch(function () {
+          return caches.match(url, { ignoreSearch: true }).then(function (old) {
+            return old ? cache.put(url, old) : null;
+          }).catch(function () { return null; });
+        });
       }));
     }).then(function () { return self.skipWaiting(); })
   );
@@ -41,6 +49,9 @@ self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.open(CACHE).then(function (cache) {
       return cache.match(req, { ignoreSearch: true }).then(function (hit) {
+        // нет в текущей версии — поискать в любой версии кэша
+        return hit || caches.match(req, { ignoreSearch: true });
+      }).then(function (hit) {
         var fresh = fetch(req).then(function (res) {
           if (res && res.ok) cache.put(req, res.clone());
           return res;

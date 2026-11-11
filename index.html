@@ -34,7 +34,7 @@
   .row { display: flex; gap: 10px; align-items: center; padding: 8px 0; }
   .row input { width: 22px; height: 22px; flex: none; }
   .row .dot { width: 22px; flex: none; text-align: center; opacity: .5; }
-  #status { margin-top: 28px; font-size: 13px; opacity: .6; }
+  #status { margin-top: 28px; font-size: 13px; opacity: .6; cursor: pointer; }
   #backup { margin-top: 28px; padding-top: 12px; border-top: 1px solid rgba(128, 128, 128, .4); }
   #backup h2 { font-size: 17px; margin: 0 0 4px; }
   #backup-info { margin: 0 0 10px; font-size: 15px; }
@@ -425,18 +425,73 @@
 
   // ---------- офлайн ----------
   function setStatus(text) { $('status').textContent = 'Версия ' + (DATA.version || '—') + ' · ' + text; }
-  function countCache() {
-    if (!self.caches) { setStatus('офлайн включён'); return; }
-    caches.open('ege-app-' + DATA.version).then(function (c) { return c.keys(); }).then(function (keys) {
-      setStatus('офлайн готов, файлов в кэше: ' + keys.length);
-    }).catch(function () { setStatus('офлайн включён'); });
+
+  // Те же файлы, что кладёт в кэш sw.js
+  function expectedFiles() {
+    var shell = ['./', 'index.html', 'data.js', 'manifest.webmanifest', 'icon-180.png', 'icon-512.png'];
+    return shell.concat(DATA.trainers.filter(isReady).map(function (t) { return t.file; }))
+      .filter(function (u, i, all) { return all.indexOf(u) === i; });
   }
+  function fileLabel(url) {
+    var ts = DATA.trainers.filter(function (t) { return t.file === url; });
+    if (ts.length === 1) return '«' + ts[0].title + '»';
+    if (ts.length > 1) {
+      var subj = DATA.subjects.filter(function (s) { return s.id === ts[0].subject; })[0];
+      return '«' + (subj ? subj.title + ': ' : '') + ts[0].title + ' … ' + ts[ts.length - 1].title + '»';
+    }
+    return url === './' ? 'главная' : url;
+  }
+
+  // Проверяет, все ли файлы лежат в телефоне; недостающие докачивает, если есть интернет.
+  var checking = false;
+  function checkOffline() {
+    if (!self.caches) { setStatus('офлайн включён'); return; }
+    if (checking) return;
+    checking = true;
+    var files = expectedFiles(), lastErr = '';
+    setStatus('проверяю офлайн…');
+    caches.open('ege-app-' + DATA.version).then(function (cache) {
+      return Promise.all(files.map(function (f) {
+        return cache.match(f, { ignoreSearch: true }).then(function (r) { return r ? null : f; });
+      })).then(function (miss) {
+        miss = miss.filter(Boolean);
+        if (!miss.length || navigator.onLine === false) return miss;
+        return Promise.all(miss.map(function (f) {
+          return fetch(f, { cache: 'reload' }).then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return cache.put(f, res).then(function () { return null; });
+          }).catch(function (e) { lastErr = (e && (e.message || e.name)) || 'ошибка'; return f; });
+        })).then(function (m) { return m.filter(Boolean); });
+      });
+    }).then(function (miss) {
+      checking = false;
+      var total = files.length;
+      if (!miss.length) { setStatus('офлайн готов: ' + total + ' из ' + total + ' файлов'); return; }
+      setStatus('офлайн: ' + (total - miss.length) + ' из ' + total + '. Не сохранены: ' + miss.map(fileLabel).join(', ') +
+        (navigator.onLine === false ? '. Открой приложение с интернетом.' : '. Причина: ' + (lastErr || 'неизвестна') + '. Нажми сюда, чтобы попробовать ещё раз.'));
+    }).catch(function (e) {
+      checking = false;
+      setStatus('офлайн: не удалось проверить (' + ((e && e.message) || 'ошибка') + ')');
+    });
+  }
+  $('status').onclick = checkOffline;
+
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
     setStatus('готовлю офлайн…');
-    navigator.serviceWorker.register('sw.js')
-      .then(function () { return navigator.serviceWorker.ready; })
-      .then(countCache)
-      .catch(function () { setStatus('офлайн не включился'); });
+    var watchWorker = function (w) {
+      if (!w) return;
+      setStatus('обновляю офлайн…');
+      w.addEventListener('statechange', function () {
+        if (w.state === 'activated' || w.state === 'redundant') checkOffline();
+      });
+    };
+    navigator.serviceWorker.register('sw.js').then(function (reg) {
+      reg.addEventListener('updatefound', function () { watchWorker(reg.installing); });
+      return navigator.serviceWorker.ready.then(function () {
+        if (reg.installing || reg.waiting) watchWorker(reg.installing || reg.waiting);
+        else checkOffline();
+      });
+    }).catch(function () { setStatus('офлайн не включился'); });
   } else {
     setStatus('открыто как файл: офлайн-кэш здесь не работает, для проверки на компьютере это нормально');
   }
