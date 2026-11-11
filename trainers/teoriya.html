@@ -1,0 +1,988 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Тренажёр теории планиметрии</title>
+<style>
+/* Same family as «Первый ход»: one column up to 660px, sticky tab strip, questions set in a book serif,
+   Latin letters in italic as in the cheat sheet, mistakes marked in teacher's red. */
+:root{
+  --bg:#f1f3f8; --surface:#ffffff; --ink:#162032; --muted:#5a6680; --line:#d5dae6; --grid:#e3e8f2;
+  --accent:#2341ab; --accent-soft:#e5eafa; --on-accent:#ffffff;
+  --ok:#17784a; --ok-soft:#e1f1e8; --bad:#c12b25; --bad-soft:#f9e4e3; --on-bad:#ffffff;
+  --exc:#8a5000; --exc-soft:#fbeed6;
+  --heat1:#d3dbf5; --heat2:#a9b8ec; --heat3:#6f86d9; --heat4:#2341ab;
+  --f-ui:"Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-word:"Literata", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f131b; --surface:#171c27; --ink:#e5e8f0; --muted:#98a2b8; --line:#2a3142; --grid:#1f2533;
+    --accent:#8fa4ff; --accent-soft:#1e2846; --on-accent:#0c111e;
+    --ok:#5cc28d; --ok-soft:#14301f; --bad:#ff7b72; --bad-soft:#3b1a19; --on-bad:#2a0c0a;
+    --exc:#efb25a; --exc-soft:#352710;
+    --heat1:#1e2846; --heat2:#2c3d72; --heat3:#4d65b8; --heat4:#8fa4ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f131b; --surface:#171c27; --ink:#e5e8f0; --muted:#98a2b8; --line:#2a3142; --grid:#1f2533;
+  --accent:#8fa4ff; --accent-soft:#1e2846; --on-accent:#0c111e;
+  --ok:#5cc28d; --ok-soft:#14301f; --bad:#ff7b72; --bad-soft:#3b1a19; --on-bad:#2a0c0a;
+  --exc:#efb25a; --exc-soft:#352710;
+  --heat1:#1e2846; --heat2:#2c3d72; --heat3:#4d65b8; --heat4:#8fa4ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 var(--f-ui);-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.wrap{max-width:660px;margin:0 auto;padding-inline:16px;padding-block:14px 64px}
+
+.hd{display:flex;gap:14px;align-items:center;padding-block:4px 12px}
+.hd-ico{width:50px;height:50px;flex:none;display:grid;place-items:center;border:2px solid var(--ink);border-radius:6px}
+.hd-ico svg{width:40px;height:40px;display:block}
+.hd-ico .tri{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+.hd-ico .inc{fill:none;stroke:var(--accent);stroke-width:2}
+.hd-ico .bis{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:2.4 2}
+.hd-ico .dt{fill:var(--accent)}
+.hd h1{margin:0;font:700 1.3rem/1.15 var(--f-ui);text-wrap:balance}
+.hd p{margin:3px 0 0;color:var(--muted);font-size:.88rem}
+
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:2px;
+  overflow-x:auto;scrollbar-width:none;padding-block:6px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;background:none;border:0;border-radius:8px;padding:10px 10px;cursor:pointer;
+  font-weight:600;font-size:.9rem;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+.cnt{display:inline-block;min-width:1.5em;margin-left:5px;padding:2px 6px;border-radius:999px;font-size:.72rem;
+  line-height:1.3;text-align:center;background:var(--bad);color:var(--on-bad);font-variant-numeric:tabular-nums}
+.cnt[data-zero]{background:var(--grid);color:var(--muted)}
+
+.lbl{font:600 .68rem/1.2 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.lead{margin:0 0 12px;color:var(--muted)}
+.note{margin:0;color:var(--muted);font-size:.92rem}
+.note a{color:var(--accent);font-weight:600}
+.btn{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 17px;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.small{padding:8px 12px;font-size:.9rem}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:18px 16px;color:var(--muted)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 14px 8px;margin-bottom:14px}
+.sec-h{margin:18px 0 8px;font:700 1rem/1.25 var(--f-ui)}
+
+/* ---------- start screen ---------- */
+.today{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:11px;margin-bottom:12px}
+.trow2{display:flex;justify-content:space-between;gap:6px 14px;align-items:baseline;flex-wrap:wrap}
+.trow2 b{font-variant-numeric:tabular-nums}
+.goalbar{height:8px;background:var(--grid);border-radius:4px;overflow:hidden}
+.goalbar i{display:block;height:100%;background:var(--accent)}
+.goalbar i.full{background:var(--ok)}
+.week{display:flex;gap:5px;flex-wrap:wrap}
+.week span{width:26px;height:26px;border-radius:6px;background:var(--grid);display:grid;place-items:center;font-size:.7rem;color:var(--muted)}
+.week span.on{background:var(--accent);color:var(--on-accent)}
+.week span.now{box-shadow:0 0 0 1.5px var(--surface),0 0 0 3px var(--accent)}
+.queue{color:var(--muted);font-size:.92rem}
+.queue b{color:var(--ink);font-variant-numeric:tabular-nums}
+.startbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:10px 12px;cursor:pointer;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg.wide{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
+.seg.wide button{padding:10px 4px;font-size:.88rem;min-width:0;white-space:normal}
+.seglbl{color:var(--muted);font-size:.9rem}
+.lenpick{display:inline-flex;gap:8px;align-items:center}
+.mixrow{display:grid;gap:6px;margin-bottom:12px}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+details.algo{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 16px;margin-bottom:12px}
+details.algo summary{cursor:pointer;padding:13px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.algo summary::-webkit-details-marker{display:none}
+details.algo summary::after{content:"+";color:var(--muted);font-weight:500}
+details.algo[open] summary::after{content:"−"}
+details.algo ol{margin:0 0 14px;padding-left:1.3em;display:grid;gap:8px}
+details.algo li{padding-left:2px}
+details.algo li b{font-weight:600}
+details.algo li i,.roots i{font-family:var(--f-word);font-style:italic}
+.roots{list-style:none;padding-left:0!important}
+.roots li{display:grid;grid-template-columns:34px 1fr;gap:2px 8px;padding-left:0!important}
+.roots .kk{font-weight:700;font-variant-numeric:tabular-nums}
+.roots .tp{grid-column:2;color:var(--muted);font-size:.86rem}
+
+/* ---------- card ---------- */
+.bar{display:flex;justify-content:space-between;gap:12px;font-size:.88rem;color:var(--muted);margin-bottom:6px}
+.bar span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{height:4px;background:var(--grid);border-radius:2px;overflow:hidden;margin-bottom:12px}
+.track i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kind{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)}
+.kind .src{font:600 .68rem/1.2 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:var(--exc)}
+.qt{padding:16px 16px 4px;font:400 1.1rem/1.55 var(--f-word);overflow-wrap:anywhere}
+.qt i,.opt i,.stm i,.why i,.hintline i,.sol i,.mlist i,.tr i.v,.thinkbox i{font-family:var(--f-word);font-style:italic}
+sub{font-size:.72em;line-height:0}
+sup{font-size:.72em;line-height:0}
+.zone{padding:12px 16px 16px;display:grid;gap:10px}
+.thinkbox{border:1.5px dashed var(--line);border-radius:10px;padding:11px 13px;color:var(--muted);font-size:.95rem}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;text-align:left;width:100%;border:1.5px solid var(--line);
+  background:var(--surface);border-radius:10px;padding:11px 13px;cursor:pointer;line-height:1.38;overflow-wrap:anywhere}
+.opt .k{font:600 .78rem/1.75 var(--f-ui);color:var(--muted);font-variant-numeric:tabular-nums}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.dim{opacity:.55}
+.tfrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tfb{align-items:center;font-weight:600;padding:14px 13px}
+.tfb .k{line-height:1.2}
+.verdict{font-weight:700;font-size:1.05rem}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.why{margin:0}
+.ref{display:flex;gap:6px 8px;flex-wrap:wrap;align-items:center}
+.tchip{font-size:.78rem;padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-weight:600;line-height:1.35}
+.ansrow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.ansrow input{width:9em;max-width:100%;font:600 1.1rem/1.1 var(--f-ui);padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums}
+.ansrow input.badv{border-color:var(--bad)}
+.nfb{font-weight:600}
+.nfb.ok{color:var(--ok)} .nfb.bad{color:var(--bad)}
+.hintline{font-size:.97rem;padding:8px 12px;border-left:3px solid var(--exc);background:var(--exc-soft);border-radius:0 8px 8px 0}
+.sol{font-size:.97rem;padding:9px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
+.next{justify-self:start}
+.stms{display:grid;gap:8px}
+.stm{display:grid;grid-template-columns:22px 1fr;gap:4px 10px;align-items:start;text-align:left;width:100%;border:1.5px solid var(--line);
+  background:var(--surface);border-radius:10px;padding:11px 13px;cursor:pointer;line-height:1.38;overflow-wrap:anywhere}
+.stm .bx{width:20px;height:20px;border:2px solid var(--muted);border-radius:5px;display:grid;place-items:center;margin-top:1px}
+.stm[aria-pressed="true"] .bx{background:var(--accent);border-color:var(--accent)}
+.stm[aria-pressed="true"] .bx::after{content:"";width:9px;height:5px;border-left:2.5px solid var(--on-accent);border-bottom:2.5px solid var(--on-accent);transform:translate(0,-1px) rotate(-45deg)}
+.stm:disabled{cursor:default}
+.stm.good{border-color:var(--ok)}
+.stm.badm{border-color:var(--bad);background:var(--bad-soft)}
+.stm.quiet{opacity:.6}
+.stm .tg{grid-column:2;font:700 .66rem/1.2 var(--f-ui);letter-spacing:.07em;text-transform:uppercase}
+.stm.good .tg{color:var(--ok)} .stm.badm .tg{color:var(--bad)} .stm.quiet .tg{color:var(--muted)}
+
+.done{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 16px;display:grid;gap:12px}
+.done h2{margin:0;font:700 1.6rem/1.1 var(--f-ui);font-variant-numeric:tabular-nums}
+.done p{margin:0;color:var(--muted)}
+.cmp{font-variant-numeric:tabular-nums}
+.cmp b{color:var(--ink)}
+.cmp .up{color:var(--ok);font-weight:600} .cmp .down{color:var(--bad);font-weight:600}
+.mlist{list-style:none;margin:0;padding:0;display:grid}
+.mlist li{display:grid;gap:3px;padding:10px 0;border-top:1px solid var(--line);min-width:0}
+.mlist li:first-child{border-top:0}
+.mlist .k2{font:600 .66rem/1.2 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.mlist .s{line-height:1.38;overflow-wrap:anywhere}
+.mlist .s b{font-weight:700}
+.mlist .m{font-size:.88rem;color:var(--muted);overflow-wrap:anywhere}
+.mlist .m b{color:var(--bad);font-weight:600}
+.mlist .m .gd{color:var(--ok);font-weight:600}
+
+/* ---------- topics & stats ---------- */
+.topic{border-top:1px solid var(--line)}
+.topic:first-child{border-top:0}
+.topic > button{display:grid;grid-template-columns:34px 1fr auto;gap:3px 10px;align-items:start;width:100%;background:none;border:0;
+  padding:11px 0;text-align:left;cursor:pointer}
+.topic .no{font:700 .82rem/1.6 var(--f-ui);color:var(--muted);font-variant-numeric:tabular-nums}
+.topic .nm{font-weight:600;line-height:1.3;min-width:0}
+.topic .nm small{display:block;font-weight:400;color:var(--muted);font-size:.82rem}
+.topic .pc{font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.meter{grid-column:2/-1;height:6px;background:var(--grid);border-radius:3px;overflow:hidden;display:flex}
+.meter i{display:block;height:100%;background:var(--accent)}
+.meter i.low{background:var(--bad)}
+.meter i.good{background:var(--ok)}
+.tbody{padding:0 0 14px 44px;display:grid;gap:9px}
+.tr{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;font-size:.93rem;line-height:1.4}
+.tr > span{min-width:0;overflow-wrap:anywhere}
+.tr b{font-weight:700}
+.tr small{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+.tr i{font-family:var(--f-word);font-style:italic}
+.st{width:9px;height:9px;border-radius:50%;margin-top:6px;background:var(--grid);border:1.5px solid var(--muted);display:inline-block;flex:none}
+.st.prog{background:var(--heat2);border-color:var(--heat3)}
+.st.mast{background:var(--ok);border-color:var(--ok)}
+.st.err{background:var(--bad);border-color:var(--bad)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin:0 0 12px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend .st{margin-top:0}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.tile b{display:block;font:700 1.35rem/1.1 var(--f-ui);font-variant-numeric:tabular-nums}
+.tile b small{font-size:.6em;color:var(--muted);font-weight:600}
+.tile span{font-size:.8rem;color:var(--muted)}
+.srow{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.srow:first-child{border-top:0}
+.srow .t{font-weight:600;line-height:1.3;min-width:0}
+.srow .t small{display:block;font-weight:400;color:var(--muted);font-size:.84rem}
+.srow .pct{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;white-space:nowrap}
+.srow .pct small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.srow .meter{grid-column:1/-1}
+.weak{display:inline-block;margin-left:6px;font:700 .64rem/1 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;
+  color:var(--bad);border:1.5px solid var(--bad);border-radius:4px;padding:3px 5px;vertical-align:2px}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.chart svg{display:block;width:100%;height:auto}
+.chart p{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
+.heatwrap{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:grid;gap:8px}
+.heat{display:grid;grid-template-columns:repeat(7,minmax(0,30px));gap:4px}
+.heat span{aspect-ratio:1;border-radius:5px;background:var(--grid)}
+.heat span.h1{background:var(--heat1)} .heat span.h2{background:var(--heat2)} .heat span.h3{background:var(--heat3)} .heat span.h4{background:var(--heat4)}
+.heat span.fut{background:none;border:1px dashed var(--line)}
+.heat .dn{font-size:.68rem;color:var(--muted);text-align:center;aspect-ratio:auto;background:none}
+.setrow{display:flex;justify-content:space-between;gap:8px 12px;align-items:center;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--line)}
+.setrow:first-child{border-top:0}
+.sync{color:var(--muted);font-size:.86rem;margin:12px 0}
+.confirm{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.confirm p{margin:0;width:100%;font-size:.92rem}
+@media (max-width:420px){ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tbody{padding-left:0} .seg.wide{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
+</style>
+
+<div class="wrap">
+  <header class="hd">
+    <div class="hd-ico" aria-hidden="true"><svg viewBox="0 0 50 50"><path class="bis" d="M4 45L31.34 25.29M46 45L10.03 26.92M17 6L23.25 45"/><circle class="inc" cx="21.25" cy="32.56" r="12.44"/><path class="tri" d="M4 45L46 45L17 6Z"/><circle class="dt" cx="21.25" cy="32.56" r="2.1"/></svg></div>
+    <div><h1>Формулы и факты</h1><p id="hdSub">Планиметрия · по шпаргалке</p></div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Разделы">
+    <button role="tab" id="t-ser" data-tab="ser" aria-selected="true">Серия</button>
+    <button role="tab" id="t-top" data-tab="top" aria-selected="false">Темы</button>
+    <button role="tab" id="t-errs" data-tab="errs" aria-selected="false">Ошибки<span class="cnt" id="errCnt" data-zero>0</span></button>
+    <button role="tab" id="t-stats" data-tab="stats" aria-selected="false">Итоги</button>
+  </nav>
+
+  <main>
+    <section id="p-ser" role="tabpanel" aria-labelledby="t-ser">
+      <div id="serStart"></div>
+      <div id="serRun" hidden>
+        <div class="bar"><span id="sTitle"></span><span id="sProg"></span></div>
+        <div class="track"><i id="sTrack"></i></div>
+        <div id="sCard"></div>
+      </div>
+      <div class="done" id="serDone" hidden></div>
+    </section>
+
+    <section id="p-top" role="tabpanel" aria-labelledby="t-top" hidden>
+      <div id="topBody"></div>
+    </section>
+
+    <section id="p-errs" role="tabpanel" aria-labelledby="t-errs" hidden>
+      <div id="errsBody"></div>
+    </section>
+
+    <section id="p-stats" role="tabpanel" aria-labelledby="t-stats" hidden>
+      <div id="statsBody"></div>
+      <p class="sync" id="sync"></p>
+      <div id="resetBox"><button class="btn small danger" id="reset">Сбросить прогресс</button></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const BANK = {"version":1,"topics":{"T":"Тригонометрия","0":"Опорные факты","1":"Биссектрисы смежных и односторонних углов","2":"Углы между биссектрисами и высотами","3":"Прямоугольный треугольник с высотой","4":"Медиана и биссектриса прямоугольного треугольника","5":"Правильные многоугольники","6":"Высота треугольника и трапеции","7":"Медиана, точка пересечения медиан","8":"Биссектриса треугольника","9":"Площадь треугольника","10":"Площадь трапеции","11":"Площадь по всем сторонам","12":"Площадь через диагонали","13":"Теоремы синусов и косинусов","14":"Радиус вписанной окружности","15":"Радиус описанной окружности","16":"Окружность, описанная около трапеции","17":"Дельтоид","18":"Углы: хорды, секущие, касательные","19":"Отрезки хорд, секущих, касательных","20":"Общая касательная к окружностям","21":"Признаки вписанности четырёхугольника","22":"Средняя линия трапеции","23":"Признаки параллелограмма, Вариньон","24":"Обобщённая теорема Фалеса","25":"Подобие треугольников","26":"Теорема Менелая","27":"Отношение площадей","28":"Отрезки касательных","29":"Вневписанная окружность","30":"Высоты","D":"Дополнительные построения"},"order":["T","0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","D"],"items":[{"id":"T-01","type":"mc","t":"T","q":"sin 30° = …","opts":["½","√3/2","−½","0"],"correct":0,"why":"sin 30° = ½."},{"id":"T-02","type":"mc","t":"T","q":"cos 30° = …","opts":["√3/2","½","−√3/2","0"],"correct":0,"why":"cos 30° = √3/2."},{"id":"T-03","type":"mc","t":"T","q":"sin 45° = …","opts":["√2/2","−√2/2","½","0"],"correct":0,"why":"sin 45° = √2/2."},{"id":"T-04","type":"mc","t":"T","q":"cos 45° = …","opts":["√2/2","−√2/2","½","0"],"correct":0,"why":"cos 45° = √2/2."},{"id":"T-05","type":"mc","t":"T","q":"sin 60° = …","opts":["√3/2","½","−√3/2","0"],"correct":0,"why":"sin 60° = √3/2."},{"id":"T-06","type":"mc","t":"T","q":"cos 60° = …","opts":["½","√3/2","−½","0"],"correct":0,"why":"cos 60° = ½."},{"id":"T-07","type":"mc","t":"T","q":"sin 120° = …","opts":["√3/2","−½","−√3/2","½"],"correct":0,"why":"sin 120° = √3/2. Синус тупого угла положителен: sin(180° − α) = sin α."},{"id":"T-08","type":"mc","t":"T","q":"cos 120° = …","opts":["−½","√3/2","½","0"],"correct":0,"why":"cos 120° = −½. Косинус тупого угла отрицателен: cos(180° − α) = −cos α."},{"id":"T-09","type":"mc","t":"T","q":"sin 135° = …","opts":["√2/2","−√2/2","½","0"],"correct":0,"why":"sin 135° = √2/2. Синус тупого угла положителен: sin(180° − α) = sin α."},{"id":"T-10","type":"mc","t":"T","q":"cos 135° = …","opts":["−√2/2","√2/2","½","0"],"correct":0,"why":"cos 135° = −√2/2. Косинус тупого угла отрицателен: cos(180° − α) = −cos α."},{"id":"T-11","type":"mc","t":"T","q":"sin 150° = …","opts":["½","−√3/2","−½","√3/2"],"correct":0,"why":"sin 150° = ½. Синус тупого угла положителен: sin(180° − α) = sin α."},{"id":"T-12","type":"mc","t":"T","q":"cos 150° = …","opts":["−√3/2","½","√3/2","0"],"correct":0,"why":"cos 150° = −√3/2. Косинус тупого угла отрицателен: cos(180° − α) = −cos α."},{"id":"T-13","type":"mc","t":"T","q":"tg 30° = …","opts":["√3/3","−√3/3","1","√3"],"correct":0,"why":"tg 30° = sin/cos = √3/3."},{"id":"T-14","type":"mc","t":"T","q":"tg 60° = …","opts":["√3","−√3","√3/3","1"],"correct":0,"why":"tg 60° = sin/cos = √3."},{"id":"T-15","type":"mc","t":"T","q":"tg 120° = …","opts":["−√3","√3","√3/3","1"],"correct":0,"why":"tg 120° = sin/cos = −√3."},{"id":"T-16","type":"mc","t":"T","q":"tg 150° = …","opts":["−√3/3","√3/3","1","√3"],"correct":0,"why":"tg 150° = sin/cos = −√3/3."},{"id":"T-17","type":"mc","t":"T","q":"sin(180° − α) = …","opts":["sin α","−sin α","cos α","−cos α"],"correct":0,"why":"Смежные углы имеют одинаковый синус — отсюда двузначность угла по синусу.","k":"f"},{"id":"T-18","type":"mc","t":"T","q":"cos(180° − α) = …","opts":["−cos α","cos α","sin α","−sin α"],"correct":0,"why":"Косинусы смежных углов противоположны.","k":"f"},{"id":"T-19","type":"mc","t":"T","q":"sin(90° − α) = …","opts":["cos α","sin α","−cos α","tg α"],"correct":0,"why":"Синус одного острого угла прямоугольного треугольника — косинус другого.","k":"f"},{"id":"T-20","type":"mc","t":"T","q":"sin 2α = …","opts":["2 sin α cos α","sin²α − cos²α","2 sin α","sin α cos α"],"correct":0,"why":"Формула двойного угла.","k":"f"},{"id":"T-21","type":"mc","t":"T","q":"cos 2α = …","opts":["1 − 2sin²α","1 − 2cos²α","2 sin α cos α","1 + 2sin²α"],"correct":0,"why":"cos 2α = cos²α − sin²α = 2cos²α − 1 = 1 − 2sin²α.","k":"f"},{"id":"T-22","type":"mc","t":"T","q":"1 + tg²α = …","opts":["1/cos²α","1/sin²α","cos²α","1/(1 + sin²α)"],"correct":0,"why":"Делим sin²α + cos²α = 1 на cos²α.","k":"f"},{"id":"T-23","type":"mc","t":"T","q":"cos²(α/2) = …","opts":["(1 + cos α)/2","(1 − cos α)/2","(1 + sin α)/2","cos α/2"],"correct":0,"why":"Из cos α = 2cos²(α/2) − 1.","k":"f"},{"id":"T-24","type":"mc","t":"T","q":"sin²(α/2) = …","opts":["(1 − cos α)/2","(1 + cos α)/2","(1 − sin α)/2","sin α/2"],"correct":0,"why":"Из cos α = 1 − 2sin²(α/2).","k":"f"},{"id":"T-25","type":"mc","t":"T","q":"tg(α/2) = …","opts":["sin α/(1 + cos α)","sin α/(1 − cos α)","(1 − cos α)/(1 + cos α)","cos α/(1 + sin α)"],"correct":0,"why":"Умножь числитель и знаменатель tg(α/2) на 2cos(α/2).","k":"f"},{"id":"T-26","type":"mc","t":"T","q":"sin(α + β) = …","opts":["sin α cos β + cos α sin β","sin α sin β + cos α cos β","sin α cos β − cos α sin β","cos α cos β − sin α sin β"],"correct":0,"why":"Синус суммы: «синус-косинус + косинус-синус».","k":"f"},{"id":"T-27","type":"mc","t":"T","q":"cos(α + β) = …","opts":["cos α cos β − sin α sin β","cos α cos β + sin α sin β","sin α cos β + cos α sin β","sin α sin β − cos α cos β"],"correct":0,"why":"Косинус суммы: «косинус-косинус минус синус-синус».","k":"f"},{"id":"T-28","type":"mc","t":"T","q":"cos(α − β) = …","opts":["cos α cos β + sin α sin β","cos α cos β − sin α sin β","sin α cos β − cos α sin β","sin α sin β − cos α cos β"],"correct":0,"why":"У косинуса разности знак плюс.","k":"f"},{"id":"T-29","type":"tf","t":"T","q":"По известному синусу угол треугольника определяется однозначно.","ok":false,"why":"sin α = sin(180° − α): подходят и острый, и тупой угол. Однозначно угол даёт косинус."},{"id":"T-30","type":"tf","t":"T","q":"Если cos C < 0, то угол C тупой.","ok":true,"why":"Косинус отрицателен ровно для углов от 90° до 180°."},{"id":"T-31","type":"num","t":"T","q":"sin α = 0,6, угол α тупой. Найдите cos α.","ans":-0.8,"hint":"sin²α + cos²α = 1, а у тупого угла cos < 0.","sol":"cos α = −√(1 − 0,36) = −0,8."},{"id":"T-32","type":"num","t":"T","q":"cos α = 0,8, угол α острый. Найдите sin 2α.","ans":0.96,"hint":"sin 2α = 2 sin α cos α.","sol":"sin α = 0,6, sin 2α = 2·0,6·0,8 = 0,96."},{"id":"T-33","type":"num","t":"T","q":"cos α = 0,28. Найдите cos²(α/2).","ans":0.64,"hint":"cos²(α/2) = (1 + cos α)/2.","sol":"(1 + 0,28)/2 = 0,64."},{"id":"0-01","type":"mc","t":"0","q":"Точка пересечения биссектрис треугольника — это…","opts":["центр вписанной окружности","центр описанной окружности","точка пересечения медиан","ортоцентр"],"correct":0,"why":"Каждая точка биссектрисы равноудалена от сторон угла, поэтому точка на всех трёх биссектрисах равноудалена от всех сторон."},{"id":"0-02","type":"mc","t":"0","q":"Центр описанной окружности треугольника — точка пересечения…","opts":["серединных перпендикуляров к сторонам","биссектрис","медиан","высот"],"correct":0,"why":"Серединный перпендикуляр — ГМТ, равноудалённых от концов отрезка; центр равноудалён от всех вершин."},{"id":"0-03","type":"mc","t":"0","q":"Точка пересечения медиан делит каждую медиану в отношении…","opts":["2 : 1, считая от вершины","1 : 2, считая от вершины","1 : 1","3 : 1, считая от вершины"],"correct":0,"why":"Две трети медианы — от вершины до точки пересечения."},{"id":"0-04","type":"mc","t":"0","q":"Ортоцентр — это точка пересечения…","opts":["высот (их прямых)","медиан","биссектрис","серединных перпендикуляров"],"correct":0,"why":"У тупоугольного треугольника пересекаются продолжения высот."},{"id":"0-05","type":"mc","t":"0","q":"Центр вневписанной окружности, касающейся стороны BC, — пересечение…","opts":["биссектрисы угла A и биссектрис внешних углов B и C","биссектрис внешних углов A, B и C","биссектрис углов B и C","серединных перпендикуляров к AB и AC"],"correct":0,"why":"Окружность вписана в угол A и касается продолжений сторон."},{"id":"0-06","type":"mc","t":"0","q":"Где лежит центр описанной окружности тупоугольного треугольника?","opts":["вне треугольника","внутри треугольника","на середине большей стороны","в вершине тупого угла"],"correct":0,"why":"Внутри — у остроугольного, на середине гипотенузы — у прямоугольного."},{"id":"0-07","type":"mc","t":"0","q":"Где лежит ортоцентр прямоугольного треугольника?","opts":["в вершине прямого угла","на середине гипотенузы","вне треугольника","внутри треугольника"],"correct":0,"why":"Катеты сами являются высотами."},{"id":"0-08","type":"ms","t":"0","q":"Отметь точки, которые лежат внутри любого треугольника.","stmts":[{"t":"центр вписанной окружности I","ok":true},{"t":"точка пересечения медиан M","ok":true},{"t":"центр описанной окружности O","ok":false},{"t":"ортоцентр H","ok":false},{"t":"центр вневписанной окружности I_a","ok":false}],"why":"O и H выходят наружу у тупоугольного треугольника, I_a всегда снаружи."},{"id":"0-09","type":"mc","t":"0","q":"Точки, равноудалённые от сторон угла, лежат на…","opts":["биссектрисе угла","серединном перпендикуляре","окружности с центром в вершине","медиане"],"correct":0,"why":"Это ГМТ."},{"id":"0-10","type":"mc","t":"0","q":"Точки, равноудалённые от концов отрезка AB, лежат на…","opts":["серединном перпендикуляре к AB","биссектрисе угла","окружности с диаметром AB","прямой, параллельной AB"],"correct":0,"why":"Это ГМТ."},{"id":"0-11","type":"mc","t":"0","q":"Точки, из которых отрезок AB виден под прямым углом, лежат на…","opts":["окружности с диаметром AB (кроме A и B)","серединном перпендикуляре к AB","прямой, параллельной AB","окружности с центром A и радиусом AB"],"correct":0,"why":"Вписанный угол, опирающийся на диаметр, прямой."},{"id":"0-12","type":"mc","t":"0","q":"В четырёхугольник можно вписать окружность тогда и только тогда, когда…","opts":["суммы противоположных сторон равны","суммы противоположных углов равны 180°","диагонали перпендикулярны","диагонали равны"],"correct":0,"why":"Отрезки касательных из вершин равны."},{"id":"0-13","type":"mc","t":"0","q":"Около четырёхугольника можно описать окружность тогда и только тогда, когда…","opts":["сумма противоположных углов равна 180°","суммы противоположных сторон равны","диагонали равны","диагонали делятся пополам"],"correct":0,"why":"Вписанные углы, опирающиеся на дуги, дополняющие друг друга до окружности."},{"id":"0-14","type":"mc","t":"0","q":"Сумма углов выпуклого n-угольника равна…","opts":["180°(n − 2)","180°·n","360°","180°(n − 1)"],"correct":0,"why":"Диагонали из одной вершины режут его на n − 2 треугольника.","k":"f"},{"id":"0-15","type":"mc","t":"0","q":"Сумма внешних углов выпуклого многоугольника (по одному при каждой вершине) равна…","opts":["360°","180°","180°(n − 2)","зависит от n"],"correct":0,"why":"Обходя многоугольник, поворачиваешься ровно на полный оборот."},{"id":"0-16","type":"mc","t":"0","q":"Внешний угол треугольника равен…","opts":["сумме двух внутренних углов, не смежных с ним","разности двух внутренних углов","половине суммы двух других углов","удвоенному смежному внутреннему углу"],"correct":0,"why":"Вместе со смежным внутренним он даёт 180°."},{"id":"0-17","type":"mc","t":"0","q":"Длина дуги окружности радиуса R в φ градусов равна…","opts":["πRφ/180","πRφ/360","πR²φ/360","Rφ"],"correct":0,"why":"Вся окружность 2πR соответствует 360°. Формула Rφ верна, только если φ в радианах.","k":"f"},{"id":"0-18","type":"mc","t":"0","q":"Площадь сектора радиуса R с углом φ градусов равна…","opts":["πR²φ/360","πR²φ/180","πRφ/180","½Rφ"],"correct":0,"why":"Весь круг πR² соответствует 360°.","k":"f"},{"id":"0-19","type":"mc","t":"0","q":"Площадь сегмента (α — центральный угол в радианах) равна…","opts":["½R²(α − sin α)","½R²(α + sin α)","½R²α","R²(α − sin α)"],"correct":0,"why":"Сектор ½R²α минус треугольник ½R² sin α.","k":"f"},{"id":"0-20","type":"tf","t":"0","q":"Две стороны и угол, лежащий против одной из них, — признак равенства треугольников.","ok":false,"why":"Не признак: углы против другой стороны либо равны, либо дают в сумме 180°."},{"id":"0-21","type":"tf","t":"0","q":"Прямоугольные треугольники равны по гипотенузе и катету.","ok":true,"why":"Это признак равенства прямоугольных треугольников."},{"id":"0-22","type":"tf","t":"0","q":"Треугольник со сторонами 3, 4 и 8 существует.","ok":false,"why":"8 > 3 + 4 — нарушено неравенство треугольника."},{"id":"0-23","type":"tf","t":"0","q":"Если две медианы треугольника равны, он равнобедренный.","ok":true,"why":"Обратное свойство равнобедренного треугольника; так же для двух высот и двух биссектрис."},{"id":"0-24","type":"tf","t":"0","q":"Если из одной вершины треугольника совпали биссектриса и высота, он равнобедренный.","ok":true,"why":"Совпадение двух из трёх линий (медиана, биссектриса, высота) из одной вершины ⇒ равнобедренный."},{"id":"0-25","type":"tf","t":"0","q":"В равнобедренном треугольнике центры вписанной и описанной окружностей, точка пересечения медиан и ортоцентр лежат на одной прямой.","ok":true,"why":"Все они на высоте к основанию — оси симметрии."},{"id":"0-26","type":"tf","t":"0","q":"Центр вписанной окружности может лежать вне треугольника.","ok":false,"why":"Центр вписанной окружности всегда внутри."},{"id":"0-27","type":"tf","t":"0","q":"Против большей стороны треугольника лежит больший угол.","ok":true,"why":"И наоборот: против большего угла — большая сторона."},{"id":"0-28","type":"num","t":"0","q":"Найдите сумму углов выпуклого шестиугольника (в градусах).","ans":720,"hint":"180°(n − 2).","sol":"180°·4 = 720°."},{"id":"0-29","type":"num","t":"0","q":"Сколько сторон у выпуклого многоугольника, сумма углов которого 1440°?","ans":10,"hint":"180°(n − 2) = 1440°.","sol":"n − 2 = 8, n = 10."},{"id":"0-30","type":"num","t":"0","q":"Длина дуги окружности радиуса 9 в 40° равна kπ. Найдите k.","ans":2,"hint":"l = πRφ/180.","sol":"9·40/180 = 2."},{"id":"0-31","type":"num","t":"0","q":"Площадь сектора радиуса 6 с углом 60° равна kπ. Найдите k.","ans":6,"hint":"S = πR²φ/360.","sol":"36·60/360 = 6."},{"id":"0-32","type":"num","t":"0","q":"Медиана AA_1 равна 9, M — точка пересечения медиан. Найдите AM.","ans":6,"hint":"M делит медиану 2 : 1 от вершины.","sol":"AM = ⅔·9 = 6."},{"id":"1-01","type":"mc","t":"1","q":"Угол между биссектрисами двух смежных углов равен…","opts":["90°","180°","половине меньшего из углов","45°"],"correct":0,"why":"α/2 + (180° − α)/2 = 90°."},{"id":"1-02","type":"mc","t":"1","q":"Биссектрисы двух соседних углов параллелограмма пересекаются под углом…","opts":["90°","45°","половине острого угла","180° минус острый угол"],"correct":0,"why":"Соседние углы параллелограмма в сумме 180°, их половины — 90°."},{"id":"1-03","type":"mc","t":"1","q":"Биссектриса угла A параллелограмма ABCD пересекает сторону BC в точке K. Тогда…","opts":["AB = BK","AK = KD","BK = KC","AB = AK"],"correct":0,"why":"∠BKA = ∠KAD (накрест лежащие) = ∠BAK ⇒ △ABK равнобедренный."},{"id":"1-04","type":"mc","t":"1","q":"Биссектрисы углов A и D параллелограмма ABCD пересекаются на стороне BC. Тогда…","opts":["BC = 2AB","BC = AB","AB = 2BC","BC = AB√2"],"correct":0,"why":"Два равнобедренных треугольника: BK = AB и CK = CD."},{"id":"1-05","type":"mc","t":"1","q":"Биссектрисы противоположных углов параллелограмма…","opts":["параллельны или совпадают","перпендикулярны","пересекаются в центре параллелограмма","равны диагоналям"],"correct":0,"why":"Противоположные углы равны, их половины образуют равные углы с параллельными сторонами."},{"id":"1-06","type":"mc","t":"1","q":"Биссектрисы всех четырёх углов параллелограмма (не ромба) образуют…","opts":["прямоугольник","ромб","квадрат","трапецию"],"correct":0,"why":"Соседние биссектрисы перпендикулярны, противоположные параллельны."},{"id":"1-07","type":"mc","t":"1","q":"Биссектрисы двух углов при боковой стороне трапеции пересекаются…","opts":["под прямым углом в точке на средней линии","в середине другой боковой стороны","под углом 60°","на большем основании"],"correct":0,"why":"Точка пересечения равноудалена от обоих оснований."},{"id":"1-08","type":"tf","t":"1","q":"При параллельных прямых и секущей односторонние углы равны.","ok":false,"why":"Односторонние углы в сумме 180°; равны накрест лежащие и соответственные."},{"id":"1-09","type":"tf","t":"1","q":"Биссектриса угла A трапеции ABCD (AD ∥ BC) пересекает прямую BC в точке K. Тогда BK = AB.","ok":true,"why":"Накрест лежащие углы при BC ∥ AD."},{"id":"1-10","type":"tf","t":"1","q":"Каждая точка биссектрисы угла равноудалена от его сторон, и наоборот.","ok":true,"why":"Биссектриса — ГМТ, равноудалённых от сторон угла."},{"id":"1-11","type":"num","t":"1","q":"Биссектриса угла A параллелограмма ABCD делит сторону BC на отрезки BK = 7 и KC = 3. Найдите периметр параллелограмма.","ans":34,"hint":"AB = BK.","sol":"AB = 7, BC = 10, P = 2·17 = 34."},{"id":"1-12","type":"num","t":"1","q":"Один из углов параллелограмма равен 70°. Найдите угол между биссектрисами двух его соседних углов (в градусах).","ans":90,"hint":"Сумма соседних углов 180°.","sol":"35° + 55° = 90° — угол между биссектрисами 90°."},{"id":"2-01","type":"mc","t":"2","q":"I — точка пересечения биссектрис треугольника ABC. ∠AIB = …","opts":["90° + ∠C/2","90° − ∠C/2","180° − ∠C","∠C/2"],"correct":0,"why":"∠AIB = 180° − (∠A + ∠B)/2 = 90° + ∠C/2.","k":"f"},{"id":"2-02","type":"mc","t":"2","q":"Биссектрисы внешних углов при вершинах A и B пересекаются под углом…","opts":["90° − ∠C/2","90° + ∠C/2","180° − ∠C","∠C"],"correct":0,"why":"Точка пересечения — центр вневписанной окружности.","k":"f"},{"id":"2-03","type":"mc","t":"2","q":"Биссектриса внутреннего угла B и биссектриса внешнего угла C пересекаются под углом…","opts":["∠A/2","∠A","90° − ∠A/2","90° + ∠A/2"],"correct":0,"why":"Внешний угол: (∠A + ∠B)/2 = ∠B/2 + x.","k":"f"},{"id":"2-04","type":"mc","t":"2","q":"Угол между высотой и биссектрисой, проведёнными из вершины C, равен…","opts":["|∠A − ∠B|/2","|∠A − ∠B|","∠C/2","90° − ∠C/2"],"correct":0,"why":"|∠C/2 − (90° − ∠A)| = |∠A − ∠B|/2.","k":"f"},{"id":"2-05","type":"mc","t":"2","q":"В остроугольном треугольнике H — ортоцентр. ∠AHB = …","opts":["180° − ∠C","90° + ∠C/2","∠C","2∠C"],"correct":0,"why":"В четырёхугольнике CA_1HB_1 два прямых угла.","k":"f"},{"id":"2-06","type":"mc","t":"2","q":"Угол между высотой AA_1 и стороной AB (∠B острый) равен…","opts":["90° − ∠B","∠B","90° − ∠A","∠A/2"],"correct":0,"why":"Из прямоугольного △ABA_1.","k":"f"},{"id":"2-07","type":"tf","t":"2","q":"Угол между прямыми AI и BI равен 90° + ∠C/2.","ok":false,"why":"Это ∠AIB; угол между прямыми — меньший из смежных: 90° − ∠C/2."},{"id":"2-08","type":"tf","t":"2","q":"Если угол A треугольника тупой, то ∠AHB = ∠C.","ok":true,"why":"При тупом угле при A или B формула 180° − ∠C не работает: ∠AHB = ∠C."},{"id":"2-09","type":"tf","t":"2","q":"Угол между прямыми, содержащими высоты из A и B, равен ∠C (если ∠C острый).","ok":true,"why":"Иначе 180° − ∠C."},{"id":"2-10","type":"num","t":"2","q":"∠C = 50°. Найдите ∠AIB (в градусах).","ans":115,"hint":"∠AIB = 90° + ∠C/2.","sol":"90° + 25° = 115°."},{"id":"2-11","type":"num","t":"2","q":"∠A = 70°, ∠B = 30°. Найдите угол между высотой и биссектрисой, проведёнными из C (в градусах).","ans":20,"hint":"|∠A − ∠B|/2.","sol":"40°/2 = 20°."},{"id":"2-12","type":"num","t":"2","q":"В остроугольном треугольнике ∠C = 72°. Найдите ∠AHB (в градусах).","ans":108,"hint":"180° − ∠C.","sol":"180° − 72° = 108°."},{"id":"2-13","type":"num","t":"2","q":"∠C = 40°. Под каким углом (в градусах) пересекаются биссектрисы внешних углов при A и B?","ans":70,"hint":"90° − ∠C/2.","sol":"90° − 20° = 70°."},{"id":"3-01","type":"mc","t":"3","q":"∠C = 90°, CH = h, AH = b_c, BH = a_c. h² = …","opts":["a_c·b_c","a·b","c·a_c","a_c² + b_c²"],"correct":0,"why":"△ACH ~ △CBH.","k":"f"},{"id":"3-02","type":"mc","t":"3","q":"∠C = 90°, BH = a_c — проекция катета a = BC. a² = …","opts":["c·a_c","c·b_c","a_c·b_c","c² − h²"],"correct":0,"why":"△CBH ~ △ABC.","k":"f"},{"id":"3-03","type":"mc","t":"3","q":"Высота к гипотенузе прямоугольного треугольника h = …","opts":["ab/c","ab/2","c/2","(a + b)/2"],"correct":0,"why":"Площадь двумя способами: ab = ch.","k":"f"},{"id":"3-04","type":"mc","t":"3","q":"Отношение проекций катетов на гипотенузу a_c : b_c = …","opts":["a² : b²","a : b","b² : a²","√a : √b"],"correct":0,"why":"a² = c·a_c и b² = c·b_c.","k":"f"},{"id":"3-05","type":"mc","t":"3","q":"Катет, лежащий против угла 30°, равен…","opts":["половине гипотенузы","половине другого катета","гипотенузе, умноженной на √3/2","гипотенузе, делённой на √3"],"correct":0,"why":"sin 30° = ½."},{"id":"3-06","type":"mc","t":"3","q":"Гипотенуза равнобедренного прямоугольного треугольника с катетом a равна…","opts":["a√2","2a","a√3","a/√2"],"correct":0,"why":"Пифагор: c² = 2a².","k":"f"},{"id":"3-07","type":"mc","t":"3","q":"∠C = 90°, CH — высота. ∠ACH = …","opts":["∠B","∠A","45°","∠A/2"],"correct":0,"why":"Оба дополняют ∠A до 90°."},{"id":"3-08","type":"mc","t":"3","q":"Какая тройка чисел — НЕ пифагорова?","opts":["6, 8, 11","5, 12, 13","8, 15, 17","7, 24, 25"],"correct":0,"why":"36 + 64 = 100 ≠ 121."},{"id":"3-09","type":"mc","t":"3","q":"△ABC, △ACH, △CBH подобны. Для соответственных элементов x₁, x₂ малых треугольников и x большого…","opts":["x₁² + x₂² = x²","x₁ + x₂ = x","x₁·x₂ = x²","x₁² + x₂² = 2x²"],"correct":0,"why":"Коэффициенты подобия a/c и b/c, а a² + b² = c².","k":"f"},{"id":"3-10","type":"tf","t":"3","q":"Если c² = a² + b², то угол C прямой.","ok":true,"why":"Обратная теорема Пифагора."},{"id":"3-11","type":"tf","t":"3","q":"Если катет равен половине гипотенузы, то противолежащий ему угол равен 30°.","ok":true,"why":"Обратное свойство катета против угла 30°."},{"id":"3-12","type":"tf","t":"3","q":"tg A = b/a, где a — катет против угла A.","ok":false,"why":"tg A = противолежащий/прилежащий = a/b."},{"id":"3-13","type":"num","t":"3","q":"Катеты прямоугольного треугольника 6 и 8. Найдите высоту к гипотенузе.","ans":4.8,"hint":"h = ab/c.","sol":"c = 10, h = 48/10 = 4,8."},{"id":"3-14","type":"num","t":"3","q":"Высота из прямого угла делит гипотенузу на отрезки 4 и 16. Найдите высоту.","ans":8,"hint":"h² = a_c·b_c.","sol":"h = √64 = 8."},{"id":"3-15","type":"num","t":"3","q":"Гипотенуза 25, проекция катета на неё 9. Найдите этот катет.","ans":15,"hint":"катет² = c·проекция.","sol":"√(25·9) = 15."},{"id":"3-16","type":"num","t":"3","q":"Катеты 9 и 12. Найдите проекцию катета 9 на гипотенузу.","ans":5.4,"hint":"a² = c·a_c.","sol":"c = 15, проекция = 81/15 = 5,4."},{"id":"4-01","type":"mc","t":"4","q":"Медиана, проведённая к гипотенузе, равна…","opts":["половине гипотенузы","половине большего катета","высоте к гипотенузе","среднему арифметическому катетов"],"correct":0,"why":"Середина гипотенузы — центр описанной окружности: m_c = c/2 = R."},{"id":"4-02","type":"mc","t":"4","q":"Если медиана треугольника равна половине стороны, к которой проведена, то…","opts":["угол, из которого она проведена, прямой","треугольник равнобедренный","этот угол равен 60°","треугольник правильный"],"correct":0,"why":"Вершина лежит на окружности с диаметром — этой стороной."},{"id":"4-03","type":"mc","t":"4","q":"Радиус окружности, вписанной в прямоугольный треугольник (c — гипотенуза), r = …","opts":["(a + b − c)/2","(a + b + c)/2","c/2","ab/c"],"correct":0,"why":"Отрезки касательных из вершины прямого угла равны r.","k":"f"},{"id":"4-04","type":"mc","t":"4","q":"Биссектриса прямого угла l_c = …","opts":["ab√2/(a + b)","ab/(a + b)","2ab/(a + b)","√(ab)"],"correct":0,"why":"½ab = ½al·sin 45° + ½bl·sin 45°.","k":"f"},{"id":"4-05","type":"mc","t":"4","q":"Угол между медианой и высотой, проведёнными из вершины прямого угла, равен…","opts":["|∠A − ∠B|","|∠A − ∠B|/2","45°","90° − ∠A"],"correct":0,"why":"∠MCB = ∠B, ∠ACH = ∠B.","k":"f"},{"id":"4-06","type":"mc","t":"4","q":"Биссектриса прямого угла прямоугольного треугольника…","opts":["делит пополам угол между медианой и высотой из той же вершины","совпадает с медианой","перпендикулярна гипотенузе","делит гипотенузу пополам"],"correct":0,"why":"∠ACH = ∠BCM = ∠B."},{"id":"4-07","type":"mc","t":"4","q":"Сумма углов трапеции при большем основании равна 90°. Отрезок между серединами оснований равен…","opts":["(a − b)/2","(a + b)/2","√(ab)","a − b"],"correct":0,"why":"Продли боковые стороны: прямой угол, медианы к гипотенузам a/2 и b/2.","k":"f"},{"id":"4-08","type":"mc","t":"4","q":"Вершина прямого угла, центр вписанной окружности и две точки касания на катетах образуют…","opts":["квадрат со стороной r","ромб с углом 45°","прямоугольник со сторонами r и 2r","правильный треугольник"],"correct":0,"why":"Два прямых угла при точках касания, отрезки касательных равны r."},{"id":"4-09","type":"tf","t":"4","q":"Центр окружности, описанной около прямоугольного треугольника, — середина гипотенузы.","ok":true,"why":"Гипотенуза — диаметр."},{"id":"4-10","type":"tf","t":"4","q":"Медиана к гипотенузе делит прямоугольный треугольник на два равнобедренных.","ok":true,"why":"CM = AM = BM."},{"id":"4-11","type":"tf","t":"4","q":"Для прямоугольного треугольника r = p − c.","ok":true,"why":"(a + b − c)/2 = p − c."},{"id":"4-12","type":"num","t":"4","q":"Катеты 5 и 12. Найдите радиус вписанной окружности.","ans":2,"hint":"r = (a + b − c)/2.","sol":"c = 13, r = (5 + 12 − 13)/2 = 2."},{"id":"4-13","type":"num","t":"4","q":"Катеты 20 и 21. Найдите медиану, проведённую к гипотенузе.","ans":14.5,"hint":"m = c/2.","sol":"c = 29, m = 14,5."},{"id":"4-14","type":"num","t":"4","q":"Острые углы прямоугольного треугольника 25° и 65°. Найдите угол между медианой и высотой из вершины прямого угла (в градусах).","ans":40,"hint":"|∠A − ∠B|.","sol":"65° − 25° = 40°."},{"id":"5-01","type":"mc","t":"5","q":"Высота правильного треугольника со стороной a равна…","opts":["a√3/2","a√3/3","a√2/2","a√3"],"correct":0,"why":"Пифагор: a² − (a/2)².","k":"f"},{"id":"5-02","type":"mc","t":"5","q":"Площадь правильного треугольника со стороной a равна…","opts":["a²√3/4","a²√3/2","a²/2","a²√3/3"],"correct":0,"why":"½·a·a√3/2.","k":"f"},{"id":"5-03","type":"mc","t":"5","q":"R правильного треугольника со стороной a равен…","opts":["a√3/3","a√3/6","a√3/2","a/2"],"correct":0,"why":"R = ⅔h.","k":"f"},{"id":"5-04","type":"mc","t":"5","q":"r правильного треугольника со стороной a равен…","opts":["a√3/6","a√3/3","a/3","a√3/4"],"correct":0,"why":"r = ⅓h.","k":"f"},{"id":"5-05","type":"mc","t":"5","q":"Диагональ квадрата со стороной a равна…","opts":["a√2","2a","a√3","a/√2"],"correct":0,"why":"Пифагор.","k":"f"},{"id":"5-06","type":"mc","t":"5","q":"R квадрата со стороной a равен…","opts":["a√2/2","a/2","a√2","a"],"correct":0,"why":"Половина диагонали.","k":"f"},{"id":"5-07","type":"mc","t":"5","q":"r квадрата со стороной a равен…","opts":["a/2","a√2/2","a","a/4"],"correct":0,"why":"Расстояние от центра до стороны.","k":"f"},{"id":"5-08","type":"mc","t":"5","q":"R правильного шестиугольника со стороной a равен…","opts":["a","a√3","2a","a√3/2"],"correct":0,"why":"Шестиугольник — 6 правильных треугольников со стороной a.","k":"f"},{"id":"5-09","type":"mc","t":"5","q":"r правильного шестиугольника со стороной a равен…","opts":["a√3/2","a","a/2","a√3"],"correct":0,"why":"Высота правильного треугольника со стороной a.","k":"f"},{"id":"5-10","type":"mc","t":"5","q":"Площадь правильного шестиугольника со стороной a равна…","opts":["3√3a²/2","3√3a²","6a²","3√3a²/4"],"correct":0,"why":"6·a²√3/4.","k":"f"},{"id":"5-11","type":"mc","t":"5","q":"Угол правильного n-угольника равен…","opts":["180°(n − 2)/n","360°/n","180°(n − 2)","180°/n"],"correct":0,"why":"Сумма углов, делённая на n.","k":"f"},{"id":"5-12","type":"mc","t":"5","q":"Центральный угол правильного n-угольника равен…","opts":["360°/n","180°/n","180°(n − 2)/n","90°"],"correct":0,"why":"Полный оборот делится на n равных частей. Внешний угол — тоже 360°/n.","k":"f"},{"id":"5-13","type":"mc","t":"5","q":"Сторона правильного n-угольника через радиус описанной окружности…","opts":["2R sin(180°/n)","R sin(180°/n)","2R cos(180°/n)","2R sin(360°/n)"],"correct":0,"why":"Равнобедренный треугольник с вершиной в центре и углом 360°/n.","k":"f"},{"id":"5-14","type":"mc","t":"5","q":"r правильного n-угольника через R…","opts":["R cos(180°/n)","R sin(180°/n)","R/2","R cos(360°/n)"],"correct":0,"why":"Прямоугольный треугольник «центр — вершина — середина стороны».","k":"f"},{"id":"5-15","type":"tf","t":"5","q":"У правильного треугольника R = 2r.","ok":true,"why":"Центр делит высоту 2 : 1."},{"id":"5-16","type":"tf","t":"5","q":"Малая диагональ правильного шестиугольника со стороной a равна 2a.","ok":false,"why":"Малая a√3, большая 2a."},{"id":"5-17","type":"tf","t":"5","q":"Большие диагонали правильного шестиугольника — диаметры описанной окружности.","ok":true,"why":"Они проходят через центр, их длина 2a = 2R."},{"id":"5-18","type":"num","t":"5","q":"Сторона правильного треугольника 6√3. Найдите радиус описанной окружности.","ans":6,"hint":"R = a√3/3.","sol":"6√3·√3/3 = 6."},{"id":"5-19","type":"num","t":"5","q":"Сторона правильного шестиугольника 4. Найдите большую диагональ.","ans":8,"hint":"Большая диагональ 2a.","sol":"2·4 = 8."},{"id":"5-20","type":"num","t":"5","q":"Найдите угол правильного двенадцатиугольника (в градусах).","ans":150,"hint":"180°(n − 2)/n.","sol":"180·10/12 = 150°."},{"id":"5-21","type":"num","t":"5","q":"Диагональ квадрата равна 8√2. Найдите радиус вписанной окружности.","ans":4,"hint":"Сторона = d/√2, r = a/2.","sol":"a = 8, r = 4."},{"id":"6-01","type":"mc","t":"6","q":"h_a = …","opts":["2S/a","S/a","2S/(a + b)","aS/2"],"correct":0,"why":"S = ½a·h_a.","k":"f"},{"id":"6-02","type":"mc","t":"6","q":"h_a через две стороны и угол…","opts":["b sin C","b cos C","a sin A","c sin A"],"correct":0,"why":"Прямоугольный треугольник с гипотенузой b и углом C.","k":"f"},{"id":"6-03","type":"mc","t":"6","q":"h_a через стороны и радиус описанной окружности…","opts":["bc/(2R)","abc/(4R)","2R sin A","bc/R"],"correct":0,"why":"h_a = c sin B и sin B = b/(2R).","k":"f"},{"id":"6-04","type":"mc","t":"6","q":"h_a : h_b : h_c = …","opts":["1/a : 1/b : 1/c","a : b : c","a² : b² : c²","√a : √b : √c"],"correct":0,"why":"ah_a = bh_b = ch_c = 2S.","k":"f"},{"id":"6-05","type":"mc","t":"6","q":"Высота трапеции через площадь…","opts":["2S/(a + b)","S/(a + b)","2S/(a − b)","S/(2(a + b))"],"correct":0,"why":"S = (a + b)/2·h.","k":"f"},{"id":"6-06","type":"mc","t":"6","q":"Равнобедренная трапеция: высота из вершины меньшего основания делит большее основание на…","opts":["(a − b)/2 и (a + b)/2","a/2 и b/2","a − b и b","(a + b)/4 и 3(a + b)/4"],"correct":0,"why":"По симметрии с каждой стороны отсекается (a − b)/2.","k":"f"},{"id":"6-07","type":"mc","t":"6","q":"Высота равнобедренной трапеции с перпендикулярными диагоналями…","opts":["(a + b)/2","(a − b)/2","√(ab)","a + b"],"correct":0,"why":"Диагонали отсекают равнобедренные прямоугольные треугольники.","k":"f"},{"id":"6-08","type":"mc","t":"6","q":"У какого треугольника две высоты лежат вне треугольника?","opts":["у тупоугольного","у остроугольного","у прямоугольного","у равнобедренного"],"correct":0,"why":"Высоты из вершин острых углов падают на продолжения сторон."},{"id":"6-09","type":"tf","t":"6","q":"К большей стороне треугольника проведена бо́льшая высота.","ok":false,"why":"Наоборот: h = 2S/a — к большей стороне меньшая высота."},{"id":"6-10","type":"tf","t":"6","q":"В прямоугольном треугольнике катеты являются высотами.","ok":true,"why":"Каждый катет перпендикулярен другому."},{"id":"6-11","type":"tf","t":"6","q":"Если диагонали трапеции равны, она равнобедренная.","ok":true,"why":"Признак равнобедренной трапеции."},{"id":"6-12","type":"num","t":"6","q":"Стороны треугольника 10, 10 и 12. Найдите высоту, проведённую к стороне 12.","ans":8,"hint":"Высота к основанию — медиана.","sol":"√(100 − 36) = 8."},{"id":"6-13","type":"num","t":"6","q":"Площадь треугольника 24, одна из сторон 8. Найдите высоту к этой стороне.","ans":6,"hint":"h = 2S/a.","sol":"48/8 = 6."},{"id":"6-14","type":"num","t":"6","q":"Основания равнобедренной трапеции 4 и 10, боковая сторона 5. Найдите высоту.","ans":4,"hint":"Проекция боковой стороны (a − b)/2.","sol":"Проекция 3, h = √(25 − 9) = 4."},{"id":"6-15","type":"num","t":"6","q":"AC = 10, ∠C = 30°. Найдите высоту, проведённую из A к прямой BC.","ans":5,"hint":"h_a = b sin C.","sol":"10·½ = 5."},{"id":"7-01","type":"mc","t":"7","q":"m_a = …","opts":["½√(2b² + 2c² − a²)","½√(2a² + 2b² − c²)","√(2b² + 2c² − a²)","½√(b² + c² − a²)"],"correct":0,"why":"Удвой медиану: параллелограмм со сторонами b, c и диагоналями a и 2m_a.","k":"f"},{"id":"7-02","type":"mc","t":"7","q":"Параллелограмм со сторонами a, b: d₁² + d₂² = …","opts":["2(a² + b²)","a² + b²","4(a² + b²)","2ab"],"correct":0,"why":"Теорема косинусов для двух соседних углов, cos(180° − φ) = −cos φ.","k":"f"},{"id":"7-03","type":"mc","t":"7","q":"m_a² + m_b² + m_c² = …","opts":["¾(a² + b² + c²)","½(a² + b² + c²)","a² + b² + c²","(4/3)(a² + b² + c²)"],"correct":0,"why":"Сложи три формулы медиан.","k":"f"},{"id":"7-04","type":"mc","t":"7","q":"Медианы, проведённые к сторонам a и b, перпендикулярны ⇔ …","opts":["a² + b² = 5c²","a² + b² = c²","a² + b² = 2c²","a + b = 2c"],"correct":0,"why":"Пифагор в △AMB: AM = ⅔m_a, BM = ⅔m_b.","k":"f"},{"id":"7-05","type":"mc","t":"7","q":"S — площадь треугольника, S_m — площадь треугольника, составленного из его медиан. Тогда…","opts":["S = (4/3)·S_m","S = (3/4)·S_m","S = 2S_m","S = S_m"],"correct":0,"why":"Известное соотношение для «треугольника медиан».","k":"f"},{"id":"7-06","type":"mc","t":"7","q":"Три медианы делят треугольник на…","opts":["6 равновеликих треугольников","3 равных треугольника","4 равновеликих треугольника","6 равных треугольников"],"correct":0,"why":"Площади равны, но сами треугольники в общем случае не равны."},{"id":"7-07","type":"mc","t":"7","q":"Средняя линия треугольника…","opts":["параллельна третьей стороне и равна её половине","равна полусумме двух других сторон","перпендикулярна третьей стороне","делит площадь пополам"],"correct":0,"why":"Отсекает подобный треугольник с k = ½."},{"id":"7-08","type":"tf","t":"7","q":"Если медиана треугольника совпала с высотой, треугольник равнобедренный.","ok":true,"why":"Совпадение двух линий из одной вершины."},{"id":"7-09","type":"tf","t":"7","q":"Медиана делит треугольник на два равных треугольника.","ok":false,"why":"На два равновеликих, а равных — только в равнобедренном (медиана к основанию)."},{"id":"7-10","type":"tf","t":"7","q":"Три средние линии делят треугольник на 4 равных треугольника, подобных исходному с k = ½.","ok":true,"why":"Все четыре треугольника равны."},{"id":"7-11","type":"num","t":"7","q":"Стороны треугольника BC = 12, AC = 7, AB = 11. Найдите медиану AM.","ans":7,"hint":"m_a = ½√(2b² + 2c² − a²).","sol":"m² = (98 + 242 − 144)/4 = 49, m = 7."},{"id":"7-12","type":"num","t":"7","q":"Стороны параллелограмма 5 и 7, одна диагональ 8. Найдите квадрат другой диагонали.","ans":84,"hint":"d₁² + d₂² = 2(a² + b²).","sol":"2(25 + 49) − 64 = 84."},{"id":"7-13","type":"num","t":"7","q":"Медиана BB_1 = 12, M — точка пересечения медиан. Найдите MB_1.","ans":4,"hint":"M делит медиану 2 : 1 от вершины.","sol":"MB_1 = ⅓·12 = 4."},{"id":"7-14","type":"num","t":"7","q":"Площадь треугольника ABC равна 30, M — точка пересечения медиан. Найдите площадь △AMB.","ans":10,"hint":"S_{AMB} = ⅓S.","sol":"30/3 = 10."},{"id":"8-01","type":"mc","t":"8","q":"CL — биссектриса треугольника ABC. AL : LB = …","opts":["AC : BC","BC : AC","AC : AB","1 : 1"],"correct":0,"why":"Отрезок прилежит к той стороне, что выходит из того же конца: AL — к AC.","k":"f"},{"id":"8-02","type":"mc","t":"8","q":"CL — биссектриса (a = BC, b = AC, c = AB). AL = …","opts":["bc/(a + b)","ac/(a + b)","ab/(a + b)","c/2"],"correct":0,"why":"AL : LB = b : a, AL + LB = c.","k":"f"},{"id":"8-03","type":"mc","t":"8","q":"Длина биссектрисы через угол: l_c = …","opts":["2ab·cos(C/2)/(a + b)","ab·cos(C/2)/(a + b)","2ab·sin(C/2)/(a + b)","2ab·cos C/(a + b)"],"correct":0,"why":"S = S_{ACL} + S_{BCL} и sin C = 2 sin(C/2) cos(C/2).","k":"f"},{"id":"8-04","type":"mc","t":"8","q":"l_c² = …","opts":["ab − AL·LB","ab + AL·LB","AL·LB","a² + b² − AL·LB"],"correct":0,"why":"Продли CL до описанной окружности: ab = CL·CW, CL·LW = AL·LB.","k":"f"},{"id":"8-05","type":"mc","t":"8","q":"I — центр вписанной окружности, CL — биссектриса. CI : IL = …","opts":["(a + b) : c","c : (a + b)","(a + c) : b","2 : 1"],"correct":0,"why":"Теорема о биссектрисе в △ACL: CI : IL = AC : AL.","k":"f"},{"id":"8-06","type":"mc","t":"8","q":"Лемма о трезубце: биссектриса угла C пересекает описанную окружность в W. Тогда…","opts":["WA = WB = WI = WI_c","WA = WB = WC","WI = r","WA = WI = R"],"correct":0,"why":"∠WAI = ∠WIA = (∠A + ∠C)/2."},{"id":"8-07","type":"mc","t":"8","q":"В неравнобедренном треугольнике биссектриса из вершины лежит…","opts":["между медианой и высотой из той же вершины","за медианой: медиана между биссектрисой и высотой","за высотой: высота между биссектрисой и медианой","совпадает с медианой"],"correct":0,"why":"Высота, биссектриса, медиана — всегда в этом порядке."},{"id":"8-08","type":"mc","t":"8","q":"Биссектриса внешнего угла C делит прямую AB…","opts":["внешним образом в отношении b : a","пополам","внешним образом в отношении a : b","внутренним образом в отношении b : a"],"correct":0,"why":"Как и внутренняя, только точка на продолжении AB."},{"id":"8-09","type":"tf","t":"8","q":"Если биссектриса треугольника совпала с медианой, треугольник равнобедренный.","ok":true,"why":"Совпадение двух линий из одной вершины."},{"id":"8-10","type":"tf","t":"8","q":"Биссектриса угла C пересекает описанную окружность в середине дуги AB, не содержащей C.","ok":true,"why":"Там же дугу пересекает серединный перпендикуляр к AB."},{"id":"8-11","type":"tf","t":"8","q":"Точка пересечения биссектрис делит каждую биссектрису в отношении 2 : 1 от вершины.","ok":false,"why":"Так делит медианы их точка пересечения; I делит CL в отношении (a + b) : c."},{"id":"8-12","type":"num","t":"8","q":"AC = 6, BC = 9, AB = 10, CL — биссектриса. Найдите AL.","ans":4,"hint":"AL = bc/(a + b).","sol":"6·10/15 = 4."},{"id":"8-13","type":"num","t":"8","q":"AC = 6, BC = 8, AB = 7, CL — биссектриса. Найдите CL.","ans":6,"hint":"AL, LB по теореме о биссектрисе, затем l² = ab − AL·LB.","sol":"AL = 3, LB = 4, l² = 48 − 12 = 36, l = 6."},{"id":"8-14","type":"num","t":"8","q":"BC = 5, AC = 3, AB = 6. Найдите CI : IL (I — центр вписанной окружности).","ans":1.3333333333333333,"hint":"CI : IL = (a + b) : c.","sol":"(5 + 3)/6 = 4/3."},{"id":"8-15","type":"num","t":"8","q":"∠C = 120°, AC = BC = 6. Найдите биссектрису CL.","ans":3,"hint":"l = 2ab·cos(C/2)/(a + b).","sol":"2·36·½/12 = 3."},{"id":"9-01","type":"mc","t":"9","q":"S = ½ab·…","opts":["sin C","cos C","sin A","tg C"],"correct":0,"why":"C — угол между сторонами a и b.","k":"f"},{"id":"9-02","type":"mc","t":"9","q":"S = p·…","opts":["r","R","r/2","2r"],"correct":0,"why":"Три треугольника с вершиной в центре вписанной окружности.","k":"f"},{"id":"9-03","type":"mc","t":"9","q":"S = abc/…","opts":["4R","2R","4r","R"],"correct":0,"why":"S = ½ab sin C и sin C = c/(2R).","k":"f"},{"id":"9-04","type":"mc","t":"9","q":"Формула Герона: S = …","opts":["√(p(p − a)(p − b)(p − c))","√(p(p + a)(p + b)(p + c))","p(p − a)(p − b)(p − c)","√((p − a)(p − b)(p − c))"],"correct":0,"why":"p — полупериметр.","k":"f"},{"id":"9-05","type":"mc","t":"9","q":"S через радиус вневписанной окружности: S = …","opts":["r_a(p − a)","r_a·p","r_a(p + a)","½r_a·a"],"correct":0,"why":"Аналог S = pr.","k":"f"},{"id":"9-06","type":"mc","t":"9","q":"S = 2R²·…","opts":["sin A·sin B·sin C","cos A·cos B·cos C","(sin A + sin B + sin C)","sin 2A"],"correct":0,"why":"S = ½ab sin C, a = 2R sin A, b = 2R sin B.","k":"f"},{"id":"9-07","type":"mc","t":"9","q":"Вершину треугольника двигают по прямой, параллельной основанию. Площадь…","opts":["не меняется","растёт","уменьшается","меняется пропорционально боковой стороне"],"correct":0,"why":"Основание и высота те же («рельсы Евклида»)."},{"id":"9-08","type":"tf","t":"9","q":"ah_a = bh_b = ch_c = 2S.","ok":true,"why":"Площадь не зависит от выбора основания."},{"id":"9-09","type":"tf","t":"9","q":"Средняя линия отсекает от треугольника половину площади.","ok":false,"why":"Подобие с k = ½: отсекается ¼ площади."},{"id":"9-10","type":"num","t":"9","q":"a = 7, b = 8, угол между ними 30°. Найдите площадь.","ans":14,"hint":"S = ½ab sin C.","sol":"½·56·½ = 14."},{"id":"9-11","type":"num","t":"9","q":"Стороны треугольника 13, 14, 15. Найдите R.","ans":8.125,"hint":"R = abc/(4S), S = 84.","sol":"2730/336 = 8,125."},{"id":"9-12","type":"num","t":"9","q":"Полупериметр треугольника 21, радиус вписанной окружности 4. Найдите площадь.","ans":84,"hint":"S = pr.","sol":"21·4 = 84."},{"id":"9-13","type":"num","t":"9","q":"a = 10, b = 12, угол между ними 150°. Найдите площадь.","ans":30,"hint":"sin 150° = sin 30°.","sol":"½·120·½ = 30."},{"id":"10-01","type":"mc","t":"10","q":"Площадь трапеции = …","opts":["(a + b)/2·h","(a + b)·h","(a − b)/2·h","ab·h/2"],"correct":0,"why":"Средняя линия × высота.","k":"f"},{"id":"10-02","type":"mc","t":"10","q":"M — середина боковой стороны CD трапеции ABCD. S_{ABM} = …","opts":["½S","¼S","⅓S","⅔S"],"correct":0,"why":"Продли AM до прямой BC: площадь «перекладывается», BM — медиана.","k":"f"},{"id":"10-03","type":"mc","t":"10","q":"O — точка пересечения диагоналей трапеции ABCD. Площади △AOB и △COD…","opts":["равны","относятся как a : b","относятся как a² : b²","в сумме равны S_{AOD}"],"correct":0,"why":"△ABD и △ACD равновелики, △AOD у них общий."},{"id":"10-04","type":"mc","t":"10","q":"S_{AOB}² = …","opts":["S_{BOC}·S_{AOD}","S_{BOC} + S_{AOD}","S_{AOD}²","S_{BOC}·S_{COD}"],"correct":0,"why":"Площади при общей высоте и подобие с k = b/a.","k":"f"},{"id":"10-05","type":"mc","t":"10","q":"Площадь трапеции через S₁ = S_{BOC} и S₂ = S_{AOD}…","opts":["(√S₁ + √S₂)²","S₁ + S₂","2(S₁ + S₂)","(S₁ + S₂)²"],"correct":0,"why":"S₁ + S₂ + 2√(S₁S₂).","k":"f"},{"id":"10-06","type":"mc","t":"10","q":"Равнобедренная трапеция с перпендикулярными диагоналями (d — диагональ). S = …","opts":["d²/2","d²","d²/4","2d²"],"correct":0,"why":"S = ½d₁d₂ = ½d².","k":"f"},{"id":"10-07","type":"mc","t":"10","q":"Равнобедренная трапеция: проекция диагонали на большее основание равна…","opts":["(a + b)/2","(a − b)/2","a","b"],"correct":0,"why":"a − (a − b)/2.","k":"f"},{"id":"10-08","type":"tf","t":"10","q":"Если в четырёхугольнике ABCD (O — пересечение диагоналей) S_{AOB} = S_{COD}, то BC ∥ AD.","ok":true,"why":"Обратное свойство трапеции."},{"id":"10-09","type":"tf","t":"10","q":"Треугольники AOB и COD (боковые) в трапеции подобны.","ok":false,"why":"Они равновелики, а подобны треугольники при основаниях."},{"id":"10-10","type":"num","t":"10","q":"Основания трапеции 6 и 10, высота 7. Найдите площадь.","ans":56,"hint":"S = (a + b)/2·h.","sol":"8·7 = 56."},{"id":"10-11","type":"num","t":"10","q":"S_{BOC} = 9, S_{AOD} = 25. Найдите площадь трапеции.","ans":64,"hint":"S = (√S₁ + √S₂)².","sol":"(3 + 5)² = 64."},{"id":"10-12","type":"num","t":"10","q":"Высота равнобедренной трапеции с перпендикулярными диагоналями равна 9. Найдите площадь.","ans":81,"hint":"h = (a + b)/2, S = h².","sol":"81."},{"id":"11-01","type":"mc","t":"11","q":"16S² = …","opts":["2a²b² + 2b²c² + 2c²a² − a⁴ − b⁴ − c⁴","a⁴ + b⁴ + c⁴ − 2a²b² − 2b²c² − 2c²a²","(a² + b² + c²)²","2a²b² + 2b²c² + 2c²a²"],"correct":0,"why":"Это Герон, раскрытый по скобкам — удобен, когда стороны с корнями.","k":"f"},{"id":"11-02","type":"mc","t":"11","q":"Трапеция с основаниями a > b и боковыми сторонами c, d. Прямая через вершину ∥ боковой стороне даёт треугольник со сторонами…","opts":["c, d, a − b","c, d, a + b","c, d, (a + b)/2","a, b, c"],"correct":0,"why":"Параллельный перенос боковой стороны."},{"id":"11-03","type":"mc","t":"11","q":"Трапеция с основаниями a > b; S_△ — площадь треугольника со сторонами c, d, a − b (боковые стороны и разность оснований). Высота трапеции h = …","opts":["2S_△/(a − b)","2S_△/(a + b)","S_△/(a − b)","2S_△/c"],"correct":0,"why":"Высота треугольника к стороне a − b.","k":"f"},{"id":"11-04","type":"mc","t":"11","q":"Трапеция с основаниями a > b; S_△ — площадь треугольника со сторонами c, d, a − b (боковые стороны и разность оснований). S_трап = …·S_△","opts":["(a + b)/(a − b)","(a − b)/(a + b)","2","(a + b)/2"],"correct":0,"why":"S = (a + b)/2·h = (a + b)/2·2S_△/(a − b).","k":"f"},{"id":"11-05","type":"tf","t":"11","q":"Площадь треугольника со сторонами 13, 14, 15 равна 84.","ok":true,"why":"Классика: p = 21, √(21·8·7·6) = 84."},{"id":"11-06","type":"tf","t":"11","q":"Треугольники со сторонами 5, 5, 6 и 5, 5, 8 равновелики.","ok":true,"why":"У обоих площадь 12."},{"id":"11-07","type":"tf","t":"11","q":"Треугольник существует, если его наибольшая сторона меньше суммы двух других.","ok":true,"why":"Неравенство треугольника."},{"id":"11-08","type":"num","t":"11","q":"Стороны треугольника 5, 5, 6. Найдите площадь.","ans":12,"hint":"Высота к основанию.","sol":"h = 4, S = 12."},{"id":"11-09","type":"num","t":"11","q":"Стороны треугольника 9, 10, 17. Найдите площадь.","ans":36,"hint":"Герон: p = 18.","sol":"√(18·9·8·1) = 36."},{"id":"11-10","type":"num","t":"11","q":"Стороны треугольника 6, 25, 29. Найдите площадь.","ans":60,"hint":"Герон: p = 30.","sol":"√(30·24·5·1) = 60."},{"id":"11-11","type":"num","t":"11","q":"Основания трапеции 16 и 4, боковые стороны 13 и 5. Найдите площадь.","ans":50,"hint":"Треугольник 13, 5, 12, затем S = (a + b)/(a − b)·S_△.","sol":"△ 5, 12, 13 прямоугольный: S_△ = 30, h = 5, S = 10·5 = 50."},{"id":"12-01","type":"mc","t":"12","q":"Площадь выпуклого четырёхугольника через диагонали…","opts":["½d₁d₂ sin φ","d₁d₂ sin φ","½d₁d₂ cos φ","½(d₁ + d₂) sin φ"],"correct":0,"why":"Диагонали режут его на 4 треугольника с углом φ или 180° − φ.","k":"f"},{"id":"12-02","type":"mc","t":"12","q":"Площадь ромба через диагонали…","opts":["½d₁d₂","d₁d₂","¼d₁d₂","(d₁ + d₂)/2"],"correct":0,"why":"Диагонали перпендикулярны.","k":"f"},{"id":"12-03","type":"mc","t":"12","q":"Площадь параллелограмма…","opts":["ab sin α","½ab sin α","ab cos α","(a + b) sin α"],"correct":0,"why":"Два треугольника по ½ab sin α.","k":"f"},{"id":"12-04","type":"mc","t":"12","q":"Площадь квадрата через диагональ…","opts":["½d²","d²","¼d²","d²√2"],"correct":0,"why":"Ромб с равными диагоналями.","k":"f"},{"id":"12-05","type":"mc","t":"12","q":"Площадь описанного четырёхугольника…","opts":["pr","½pr","2pr","Pr (P — периметр)"],"correct":0,"why":"p — полупериметр, как у треугольника.","k":"f"},{"id":"12-06","type":"mc","t":"12","q":"Диагонали четырёхугольника ABCD перпендикулярны ⇔ …","opts":["AB² + CD² = BC² + AD²","AB + CD = BC + AD","AB·CD = BC·AD","∠A + ∠C = 180°"],"correct":0,"why":"Пифагор для четырёх прямоугольных треугольников.","k":"f"},{"id":"12-07","type":"mc","t":"12","q":"ABCD — прямоугольник, P — любая точка. Тогда…","opts":["PA² + PC² = PB² + PD²","PA + PC = PB + PD","PA·PC = PB·PD","PA² + PB² = PC² + PD²"],"correct":0,"why":"«Британский флаг».","k":"f"},{"id":"12-08","type":"mc","t":"12","q":"O — точка пересечения диагоналей любого выпуклого четырёхугольника. Верно…","opts":["S_{AOB}·S_{COD} = S_{BOC}·S_{AOD}","S_{AOB} = S_{COD}","S_{AOB} + S_{COD} = S_{BOC} + S_{AOD}","S_{AOB} : S_{COD} = S_{BOC} : S_{AOD}"],"correct":0,"why":"Каждая площадь — ½·(отрезок)·(отрезок)·sin φ.","k":"f"},{"id":"12-09","type":"tf","t":"12","q":"Для формулы ½d₁d₂ sin φ неважно, брать угол φ или 180° − φ.","ok":true,"why":"Их синусы равны."},{"id":"12-10","type":"tf","t":"12","q":"Диагонали прямоугольника перпендикулярны.","ok":false,"why":"Они равны; перпендикулярны — у ромба (и квадрата)."},{"id":"12-11","type":"num","t":"12","q":"Диагонали четырёхугольника 10 и 6, угол между ними 30°. Найдите площадь.","ans":15,"hint":"½d₁d₂ sin φ.","sol":"½·60·½ = 15."},{"id":"12-12","type":"num","t":"12","q":"Сторона ромба 6, угол 30°. Найдите площадь.","ans":18,"hint":"S = a² sin α.","sol":"36·½ = 18."},{"id":"12-13","type":"num","t":"12","q":"Диагонали ромба 10 и 24. Найдите сторону.","ans":13,"hint":"Половины диагоналей — катеты.","sol":"√(25 + 144) = 13."},{"id":"13-01","type":"mc","t":"13","q":"Теорема синусов: a/sin A = …","opts":["2R","R","2r","R/2"],"correct":0,"why":"R — радиус описанной окружности.","k":"f"},{"id":"13-02","type":"mc","t":"13","q":"Теорема косинусов: c² = …","opts":["a² + b² − 2ab cos C","a² + b² + 2ab cos C","a² + b² − ab cos C","a² − b² + 2ab cos C"],"correct":0,"why":"При C = 90° — Пифагор.","k":"f"},{"id":"13-03","type":"mc","t":"13","q":"cos C = …","opts":["(a² + b² − c²)/(2ab)","(a² + b² + c²)/(2ab)","(c² − a² − b²)/(2ab)","(a² + b² − c²)/(ab)"],"correct":0,"why":"Из теоремы косинусов.","k":"f"},{"id":"13-04","type":"mc","t":"13","q":"Угол C тупой ⇔ …","opts":["c² > a² + b²","c² < a² + b²","c > a + b","c² = a² + b²"],"correct":0,"why":"cos C < 0.","k":"f"},{"id":"13-05","type":"mc","t":"13","q":"Хорда окружности радиуса R равна…","opts":["2R sin α (α — вписанный угол на неё)","R sin α","2R cos α","2R tg α"],"correct":0,"why":"Теорема синусов для вписанного треугольника.","k":"f"},{"id":"13-06","type":"mc","t":"13","q":"a : b : c = …","opts":["sin A : sin B : sin C","A : B : C","cos A : cos B : cos C","sin 2A : sin 2B : sin 2C"],"correct":0,"why":"Из теоремы синусов.","k":"f"},{"id":"13-07","type":"mc","t":"13","q":"Даны две стороны и угол между ними. Третья сторона — по…","opts":["теореме косинусов","теореме синусов","формуле Герона","теореме Пифагора"],"correct":0,"why":"Угол между известными сторонами — теорема косинусов."},{"id":"13-08","type":"mc","t":"13","q":"Даны сторона и два угла. Остальные стороны — по…","opts":["теореме синусов","теореме косинусов","формуле Герона","формуле медианы"],"correct":0,"why":"Сторона и противолежащий угол известны, третий угол — из суммы."},{"id":"13-09","type":"mc","t":"13","q":"Треугольник со сторонами 4, 5 и 7 —","opts":["тупоугольный","остроугольный","прямоугольный","не существует"],"correct":0,"why":"49 > 16 + 25."},{"id":"13-10","type":"tf","t":"13","q":"sin A = sin(B + C) в любом треугольнике.","ok":true,"why":"A = 180° − (B + C)."},{"id":"13-11","type":"tf","t":"13","q":"cos A = cos(B + C) в любом треугольнике.","ok":false,"why":"cos A = −cos(B + C)."},{"id":"13-12","type":"num","t":"13","q":"a = 3, b = 5, угол между ними 120°. Найдите третью сторону.","ans":7,"hint":"c² = a² + b² − 2ab cos C, cos 120° = −½.","sol":"9 + 25 + 15 = 49, c = 7."},{"id":"13-13","type":"num","t":"13","q":"Стороны треугольника 5, 6, 7. Найдите косинус угла, лежащего против стороны 7.","ans":0.2,"hint":"cos C = (a² + b² − c²)/(2ab).","sol":"(25 + 36 − 49)/60 = 0,2."},{"id":"13-14","type":"num","t":"13","q":"a = 12, ∠A = 30°. Найдите радиус описанной окружности.","ans":12,"hint":"a/sin A = 2R.","sol":"2R = 24, R = 12."},{"id":"14-01","type":"mc","t":"14","q":"r = …","opts":["S/p","S/(2p)","2S/p","p/S"],"correct":0,"why":"S = pr, p — полупериметр.","k":"f"},{"id":"14-02","type":"mc","t":"14","q":"r через угол A и отрезок касательной…","opts":["(p − a)·tg(A/2)","(p − a)·sin(A/2)","p·tg(A/2)","(p − a)·ctg(A/2)"],"correct":0,"why":"Прямоугольный треугольник «вершина A — центр I — точка касания».","k":"f"},{"id":"14-03","type":"mc","t":"14","q":"Окружность радиуса r вписана в угол α. Расстояние от вершины до точки касания…","opts":["r·ctg(α/2)","r·tg(α/2)","r/sin(α/2)","r·cos(α/2)"],"correct":0,"why":"Прямоугольный треугольник: катет r против угла α/2.","k":"f"},{"id":"14-04","type":"mc","t":"14","q":"Окружность радиуса r вписана в угол α. Расстояние от вершины угла до центра окружности…","opts":["r/sin(α/2)","r/cos(α/2)","r·ctg(α/2)","r·sin(α/2)"],"correct":0,"why":"Гипотенуза того же треугольника.","k":"f"},{"id":"14-05","type":"mc","t":"14","q":"Описанная трапеция: точка касания делит боковую сторону на x и y. Тогда…","opts":["r² = xy","r = x + y","r² = x² + y²","r = (x + y)/2"],"correct":0,"why":"Боковая сторона видна из центра под 90°, r — высота прямоугольного треугольника.","k":"f"},{"id":"14-06","type":"mc","t":"14","q":"Равнобедренная трапеция с вписанной окружностью: боковая сторона c = …","opts":["(a + b)/2","(a − b)/2","√(ab)","a + b"],"correct":0,"why":"a + b = 2c.","k":"f"},{"id":"14-07","type":"mc","t":"14","q":"Равнобедренная трапеция с основаниями a и b описана около окружности. Её высота h = …","opts":["√(ab)","(a + b)/2","(a − b)/2","2√(ab)"],"correct":0,"why":"h² = c² − ((a − b)/2)² = ab.","k":"f"},{"id":"14-08","type":"ms","t":"14","q":"Отметь четырёхугольники, в которые ВСЕГДА можно вписать окружность.","stmts":[{"t":"ромб","ok":true},{"t":"квадрат","ok":true},{"t":"дельтоид","ok":true},{"t":"прямоугольник, не являющийся квадратом","ok":false},{"t":"равнобедренная трапеция","ok":false},{"t":"параллелограмм","ok":false}],"why":"Нужно a + c = b + d: у ромба и дельтоида это выполнено всегда."},{"id":"14-09","type":"tf","t":"14","q":"Центр вписанной окружности многоугольника — точка пересечения биссектрис его углов.","ok":true,"why":"Он равноудалён от всех сторон."},{"id":"14-10","type":"tf","t":"14","q":"В описанной трапеции высота равна диаметру вписанной окружности.","ok":true,"why":"Окружность касается двух параллельных оснований: h = 2r."},{"id":"14-11","type":"tf","t":"14","q":"Из центра вписанной окружности боковая сторона описанной трапеции видна под прямым углом.","ok":true,"why":"Биссектрисы односторонних углов перпендикулярны."},{"id":"14-12","type":"num","t":"14","q":"Стороны треугольника 13, 14, 15. Найдите радиус вписанной окружности.","ans":4,"hint":"r = S/p.","sol":"84/21 = 4."},{"id":"14-13","type":"num","t":"14","q":"Основания равнобедренной трапеции с вписанной окружностью 2 и 8. Найдите r.","ans":2,"hint":"h = √(ab) = 2r.","sol":"h = 4, r = 2."},{"id":"14-14","type":"num","t":"14","q":"Сторона правильного треугольника 6√3. Найдите радиус вписанной окружности.","ans":3,"hint":"r = a√3/6.","sol":"6√3·√3/6 = 3."},{"id":"14-15","type":"num","t":"14","q":"Окружность радиуса 3 вписана в угол 60°. Найдите расстояние от вершины угла до центра.","ans":6,"hint":"r/sin(α/2).","sol":"3/sin 30° = 6."},{"id":"15-01","type":"mc","t":"15","q":"R = a/…","opts":["(2 sin A)","sin A","(2 cos A)","(4 sin A)"],"correct":0,"why":"Теорема синусов.","k":"f"},{"id":"15-02","type":"mc","t":"15","q":"R = abc/…","opts":["(4S)","(2S)","S","(4p)"],"correct":0,"why":"Из S = abc/(4R).","k":"f"},{"id":"15-03","type":"mc","t":"15","q":"R равнобедренного треугольника (боковая сторона b, высота к основанию h)…","opts":["b²/(2h)","b²/h","h²/(2b)","b/(2h)"],"correct":0,"why":"R = b/(2 sin β), sin β = h/b.","k":"f"},{"id":"15-04","type":"mc","t":"15","q":"Расстояние от центра описанной окружности O до стороны BC…","opts":["R·|cos A|","R·sin A","R·|cos B|","R/2"],"correct":0,"why":"∠BOM = ∠A, M — середина BC.","k":"f"},{"id":"15-05","type":"mc","t":"15","q":"Формула Эйлера: OI² = …","opts":["R² − 2Rr","R² + 2Rr","R² − r²","(R − r)²"],"correct":0,"why":"Отсюда R ≥ 2r.","k":"f"},{"id":"15-06","type":"mc","t":"15","q":"Около какой из фигур в общем случае НЕЛЬЗЯ описать окружность?","opts":["ромб","прямоугольник","квадрат","равнобедренная трапеция"],"correct":0,"why":"У ромба общего вида противоположные углы в сумме не 180°."},{"id":"15-07","type":"mc","t":"15","q":"Центральный угол BOC (∠A острый) равен…","opts":["2∠A","∠A","180° − ∠A","∠A/2"],"correct":0,"why":"Центральный угол вдвое больше вписанного.","k":"f"},{"id":"15-08","type":"tf","t":"15","q":"Для любого треугольника R ≥ 2r.","ok":true,"why":"Равенство только у правильного."},{"id":"15-09","type":"tf","t":"15","q":"Центр описанной окружности остроугольного треугольника лежит внутри него.","ok":true,"why":"У прямоугольного — на гипотенузе, у тупоугольного — снаружи."},{"id":"15-10","type":"tf","t":"15","q":"Любая хорда окружности не длиннее её диаметра.","ok":true,"why":"Хорда ≤ 2R — удобная проверка ответа."},{"id":"15-11","type":"tf","t":"15","q":"Около параллелограмма общего вида можно описать окружность.","ok":false,"why":"Вписанный параллелограмм — только прямоугольник."},{"id":"15-12","type":"num","t":"15","q":"Стороны треугольника 5, 5, 6. Найдите радиус описанной окружности.","ans":3.125,"hint":"R = b²/(2h).","sol":"h = 4, R = 25/8 = 3,125."},{"id":"15-13","type":"num","t":"15","q":"Катеты прямоугольного треугольника 7 и 24. Найдите R.","ans":12.5,"hint":"R = c/2.","sol":"c = 25, R = 12,5."},{"id":"15-14","type":"num","t":"15","q":"BC = 8, ∠A = 150°. Найдите R.","ans":8,"hint":"R = a/(2 sin A).","sol":"8/(2·½) = 8."},{"id":"15-15","type":"num","t":"15","q":"R = 10, ∠A = 60°. Найдите расстояние от центра описанной окружности до BC.","ans":5,"hint":"R·cos A.","sol":"10·½ = 5."},{"id":"16-01","type":"mc","t":"16","q":"Около трапеции можно описать окружность ⇔ …","opts":["она равнобедренная","она прямоугольная","в неё можно вписать окружность","её диагонали перпендикулярны"],"correct":0,"why":"Углы при основании равны, сумма противоположных — 180°."},{"id":"16-02","type":"mc","t":"16","q":"Центр окружности, описанной около трапеции, лежит…","opts":["на оси симметрии — прямой через середины оснований","на большем основании","на средней линии","в точке пересечения диагоналей"],"correct":0,"why":"Серединные перпендикуляры к основаниям совпадают."},{"id":"16-03","type":"mc","t":"16","q":"R трапеции через диагональ d и угол α при основании…","opts":["d/(2 sin α)","d/sin α","d/(2 cos α)","2d sin α"],"correct":0,"why":"Окружность трапеции — окружность △ABD.","k":"f"},{"id":"16-04","type":"mc","t":"16","q":"R трапеции через боковую сторону c, диагональ d и высоту h…","opts":["cd/(2h)","cd/h","ch/(2d)","dh/(2c)"],"correct":0,"why":"R = abc/(4S) для △ABD, S_{ABD} = ½ah.","k":"f"},{"id":"16-05","type":"mc","t":"16","q":"Большее основание AD трапеции — диаметр описанной окружности. Тогда…","opts":["∠ABD = ∠ACD = 90°","∠ABC = 90°","трапеция прямоугольная","диагонали перпендикулярны"],"correct":0,"why":"Углы, опирающиеся на диаметр."},{"id":"16-06","type":"tf","t":"16","q":"Диагонали равнобедренной трапеции образуют с основанием равные углы.","ok":true,"why":"Из симметрии."},{"id":"16-07","type":"tf","t":"16","q":"Центр окружности, описанной около трапеции, всегда лежит внутри трапеции.","ok":false,"why":"Может лежать и вне — за большим основанием."},{"id":"16-08","type":"num","t":"16","q":"Основание AD трапеции — диаметр описанной окружности, AD = 25, AB = 15. Найдите BC.","ans":7,"hint":"∠ABD = 90°: AH = AB²/AD.","sol":"AH = 9, BC = 25 − 18 = 7."},{"id":"16-09","type":"num","t":"16","q":"Трапеция вписана в окружность радиуса 5, основания 6 и 8, центр внутри трапеции. Найдите высоту.","ans":7,"hint":"Расстояния от центра до оснований √(R² − (a/2)²).","sol":"4 + 3 = 7."},{"id":"17-01","type":"mc","t":"17","q":"Дельтоид — это четырёхугольник…","opts":["с двумя парами равных соседних сторон","с двумя парами равных противоположных сторон","с перпендикулярными диагоналями","с равными диагоналями"],"correct":0,"why":"Ромб — частный случай дельтоида."},{"id":"17-02","type":"mc","t":"17","q":"Диагонали дельтоида…","opts":["перпендикулярны","равны","делятся пополам","параллельны сторонам"],"correct":0,"why":"AC — ось симметрии и серединный перпендикуляр к BD."},{"id":"17-03","type":"mc","t":"17","q":"Площадь дельтоида ABCD (AB = AD, CB = CD)…","opts":["½·AC·BD","AC·BD","¼·AC·BD","AB·BC"],"correct":0,"why":"Диагонали перпендикулярны.","k":"f"},{"id":"17-04","type":"mc","t":"17","q":"Около дельтоида можно описать окружность, если…","opts":["∠B = ∠D = 90°","всегда","никогда","AC = BD"],"correct":0,"why":"∠B = ∠D, а сумма должна быть 180°."},{"id":"17-05","type":"mc","t":"17","q":"Касательные PA и PB к окружности с центром O и радиусом r. AB = …","opts":["2·PA·r/PO","PA·r/PO","2·PO·r/PA","PA + r"],"correct":0,"why":"AB/2 — высота прямоугольного △PAO.","k":"f"},{"id":"17-06","type":"tf","t":"17","q":"В дельтоид всегда можно вписать окружность.","ok":true,"why":"AB + CD = AD + BC выполнено."},{"id":"17-07","type":"tf","t":"17","q":"Если PA и PB — касательные из точки P, то ∠APB + ∠AOB = 180°.","ok":true,"why":"В PAOB два прямых угла."},{"id":"17-08","type":"tf","t":"17","q":"Ромб — частный случай дельтоида.","ok":true,"why":"Все четыре стороны равны."},{"id":"17-09","type":"num","t":"17","q":"Из точки P проведена касательная PA = 12 к окружности радиуса 5. Найдите PO.","ans":13,"hint":"OA ⊥ PA.","sol":"√(144 + 25) = 13."},{"id":"17-10","type":"num","t":"17","q":"Касательные PA и PB, PA = 4, r = 3. Найдите AB.","ans":4.8,"hint":"AB = 2·PA·r/PO.","sol":"PO = 5, AB = 24/5 = 4,8."},{"id":"18-01","type":"mc","t":"18","q":"Вписанный угол равен…","opts":["половине дуги, на которую опирается","дуге, на которую опирается","удвоенной дуге","180° минус дуга"],"correct":0,"why":"Центральный угол равен дуге, вписанный — её половине."},{"id":"18-02","type":"mc","t":"18","q":"Угол между касательной и хордой, проведённой в точку касания, равен…","opts":["половине дуги, заключённой между ними","дуге между ними","180° минус половина дуги","удвоенной дуге"],"correct":0,"why":"Он равен вписанному углу, опирающемуся на эту хорду с другой стороны."},{"id":"18-03","type":"mc","t":"18","q":"Угол между хордами, пересекающимися внутри круга, равен…","opts":["полусумме дуг, на которые опираются он и вертикальный ему","полуразности этих дуг","сумме этих дуг","половине большей из дуг"],"correct":0,"why":"Внешний угол треугольника и два вписанных угла."},{"id":"18-04","type":"mc","t":"18","q":"Угол между секущими с вершиной вне круга равен…","opts":["полуразности дальней и ближней дуг","полусумме дуг","разности дуг","половине дальней дуги"],"correct":0,"why":"Так же для касательной и секущей и для двух касательных."},{"id":"18-05","type":"mc","t":"18","q":"Угол между двумя касательными, проведёнными из точки P, равен…","opts":["180° минус меньшая дуга между точками касания","половине меньшей дуги","меньшей дуге","90° минус половина меньшей дуги"],"correct":0,"why":"∠P + ∠AOB = 180°."},{"id":"18-06","type":"mc","t":"18","q":"Вписанные углы, опирающиеся на одну хорду с разных сторон от неё, …","opts":["в сумме дают 180°","равны","в сумме дают 90°","отличаются на 90°"],"correct":0,"why":"Вместе их дуги составляют всю окружность."},{"id":"18-07","type":"mc","t":"18","q":"Из точки внутри круга (не на окружности) диаметр виден под…","opts":["тупым углом","прямым углом","острым углом","углом 60°"],"correct":0,"why":"С окружности — под прямым, снаружи — под острым."},{"id":"18-08","type":"tf","t":"18","q":"Прямой вписанный угол опирается на диаметр.","ok":true,"why":"Он опирается на дугу 180°."},{"id":"18-09","type":"tf","t":"18","q":"Равные хорды стягивают равные дуги.","ok":true,"why":"И наоборот."},{"id":"18-10","type":"tf","t":"18","q":"Диаметр виден из точек вне круга под тупым углом.","ok":false,"why":"Снаружи — под острым."},{"id":"18-11","type":"num","t":"18","q":"Хорды AB и CD пересекаются. Угол APC опирается на дугу 70°, вертикальный ему — на дугу 110°. Найдите ∠APC (в градусах).","ans":90,"hint":"Полусумма дуг.","sol":"(70° + 110°)/2 = 90°."},{"id":"18-12","type":"num","t":"18","q":"Меньшая дуга между точками касания двух касательных равна 110°. Найдите угол между касательными (в градусах).","ans":70,"hint":"180° − меньшая дуга.","sol":"180° − 110° = 70°."},{"id":"18-13","type":"num","t":"18","q":"Хорда стягивает дугу 80°. Найдите острый угол между хордой и касательной в её конце (в градусах).","ans":40,"hint":"Половина дуги.","sol":"80°/2 = 40°."},{"id":"18-14","type":"num","t":"18","q":"Две секущие из точки вне круга: дальняя дуга 150°, ближняя 40°. Найдите угол между секущими (в градусах).","ans":55,"hint":"Полуразность дуг.","sol":"(150° − 40°)/2 = 55°."},{"id":"19-01","type":"mc","t":"19","q":"Хорды AB и CD пересекаются в точке P. Тогда…","opts":["AP·PB = CP·PD","AP·PC = BP·PD","AP + PB = CP + PD","AP : PB = CP : PD"],"correct":0,"why":"△APC ~ △DPB.","k":"f"},{"id":"19-02","type":"mc","t":"19","q":"Секущие PAB и PCD из внешней точки P. Тогда…","opts":["PA·PB = PC·PD","PA·AB = PC·CD","PA + PB = PC + PD","PA : PB = PC : PD"],"correct":0,"why":"Внешняя часть × вся секущая.","k":"f"},{"id":"19-03","type":"mc","t":"19","q":"Касательная PT и секущая PAB. Тогда…","opts":["PT² = PA·PB","PT² = PA·AB","PT = PA + AB","PT² = PA² + PB²"],"correct":0,"why":"△PTA ~ △PBT.","k":"f"},{"id":"19-04","type":"mc","t":"19","q":"Степень точки P относительно окружности (центр O, радиус R) — произведение отрезков равно…","opts":["|PO² − R²|","PO² + R²","PO·R","(PO − R)²"],"correct":0,"why":"Проведи прямую через центр.","k":"f"},{"id":"19-05","type":"mc","t":"19","q":"Хорда на расстоянии d от центра окружности радиуса R равна…","opts":["2√(R² − d²)","√(R² − d²)","2√(R² + d²)","2(R − d)"],"correct":0,"why":"Перпендикуляр из центра делит хорду пополам.","k":"f"},{"id":"19-06","type":"mc","t":"19","q":"Диаметр, перпендикулярный хорде, …","opts":["делит её и обе стягиваемые ею дуги пополам","равен ей","делит её в отношении 1 : 2","касается её"],"correct":0,"why":"Центр лежит на серединном перпендикуляре к хорде."},{"id":"19-07","type":"mc","t":"19","q":"Касательная, параллельная хорде, касается окружности…","opts":["в середине дуги, стягиваемой хордой","в конце хорды","в любой точке дуги","в точке на продолжении хорды"],"correct":0,"why":"Радиус в точку касания ⊥ касательной, а значит, и хорде."},{"id":"19-08","type":"tf","t":"19","q":"Равные хорды равноудалены от центра.","ok":true,"why":"И наоборот."},{"id":"19-09","type":"tf","t":"19","q":"Дуги, заключённые между параллельными хордами, равны.","ok":true,"why":"Из симметрии относительно перпендикулярного диаметра."},{"id":"19-10","type":"tf","t":"19","q":"Любая прямая, проходящая через середину хорды, перпендикулярна ей.","ok":false,"why":"Перпендикулярен ей диаметр через её середину (если хорда — не диаметр)."},{"id":"19-11","type":"num","t":"19","q":"Хорды AB и CD пересекаются в P: AP = 6, PB = 4, CP = 3. Найдите PD.","ans":8,"hint":"AP·PB = CP·PD.","sol":"24/3 = 8."},{"id":"19-12","type":"num","t":"19","q":"Из точки P проведены секущая (PA = 5, PB = 20) и касательная PT. Найдите PT.","ans":10,"hint":"PT² = PA·PB.","sol":"√100 = 10."},{"id":"19-13","type":"num","t":"19","q":"R = 13, расстояние от центра до хорды 5. Найдите хорду.","ans":24,"hint":"2√(R² − d²).","sol":"2·12 = 24."},{"id":"19-14","type":"num","t":"19","q":"Вписанный угол, опирающийся на хорду, равен 30°, R = 7. Найдите хорду.","ans":7,"hint":"Хорда = 2R sin α.","sol":"14·½ = 7."},{"id":"19-15","type":"num","t":"19","q":"Точка P внутри окружности радиуса 10, PO = 6. Найдите произведение отрезков любой хорды, проходящей через P.","ans":64,"hint":"R² − PO².","sol":"100 − 36 = 64."},{"id":"20-01","type":"mc","t":"20","q":"Длина общей внешней касательной (радиусы R > r, расстояние между центрами d)…","opts":["√(d² − (R − r)²)","√(d² − (R + r)²)","√(d² + (R − r)²)","d − R + r"],"correct":0,"why":"Сдвинь касательную в центр меньшей окружности.","k":"f"},{"id":"20-02","type":"mc","t":"20","q":"Длина общей внутренней касательной…","opts":["√(d² − (R + r)²)","√(d² − (R − r)²)","d − R − r","√(d² + (R + r)²)"],"correct":0,"why":"Радиусы в точки касания смотрят в разные стороны: катет R + r.","k":"f"},{"id":"20-03","type":"mc","t":"20","q":"Окружности касаются внешним образом. Длина общей внешней касательной…","opts":["2√(Rr)","√(Rr)","R + r","2(R + r)"],"correct":0,"why":"(R + r)² − (R − r)² = 4Rr.","k":"f"},{"id":"20-04","type":"mc","t":"20","q":"Сколько общих касательных у окружностей, касающихся внешним образом?","opts":["3","4","2","1"],"correct":0,"why":"Две внешние и одна в точке касания."},{"id":"20-05","type":"mc","t":"20","q":"Сколько общих касательных у двух пересекающихся окружностей?","opts":["2","1","3","4"],"correct":0,"why":"Только две внешние."},{"id":"20-06","type":"mc","t":"20","q":"Окружности касаются внутренним образом. Расстояние между центрами…","opts":["R − r","R + r","√(R² − r²)","2√(Rr)"],"correct":0,"why":"Точка касания лежит на линии центров.","k":"f"},{"id":"20-07","type":"mc","t":"20","q":"Окружности касаются внешне, α — угол между общей внешней касательной и линией центров. sin α = …","opts":["(R − r)/(R + r)","(R + r)/(R − r)","r/R","2√(Rr)/(R + r)"],"correct":0,"why":"Прямоугольный треугольник с гипотенузой R + r и катетом R − r.","k":"f"},{"id":"20-08","type":"tf","t":"20","q":"Точка касания двух окружностей лежит на линии их центров.","ok":true,"why":"Общая касательная в ней перпендикулярна линии центров."},{"id":"20-09","type":"tf","t":"20","q":"Две общие внешние касательные двух окружностей разного радиуса пересекаются на линии центров.","ok":true,"why":"Из симметрии относительно линии центров. При равных радиусах они параллельны."},{"id":"20-10","type":"tf","t":"20","q":"Общая хорда двух пересекающихся окружностей перпендикулярна линии центров и делится ею пополам.","ok":true,"why":"Центры и точки пересечения — вершины дельтоида."},{"id":"20-11","type":"tf","t":"20","q":"Окружности касаются внешне в точке K, AB — их общая внешняя касательная. Тогда ∠AKB = 60°.","ok":false,"why":"∠AKB = 90°: MA = MK = MB."},{"id":"20-12","type":"num","t":"20","q":"Окружности радиусов 9 и 1 касаются внешним образом. Найдите отрезок общей внешней касательной.","ans":6,"hint":"2√(Rr).","sol":"2·3 = 6."},{"id":"20-13","type":"num","t":"20","q":"d = 10, R = 4, r = 2. Найдите отрезок общей внутренней касательной.","ans":8,"hint":"√(d² − (R + r)²).","sol":"√(100 − 36) = 8."},{"id":"20-14","type":"num","t":"20","q":"d = 13, R = 8, r = 3. Найдите отрезок общей внешней касательной.","ans":12,"hint":"√(d² − (R − r)²).","sol":"√(169 − 25) = 12."},{"id":"21-01","type":"ms","t":"21","q":"Отметь условия, каждое из которых гарантирует, что четырёхугольник ABCD вписанный.","stmts":[{"t":"∠A + ∠C = 180°","ok":true},{"t":"∠ABD = ∠ACD, причём B и C по одну сторону от AD","ok":true},{"t":"AP·PB = CP·PD, где P — пересечение прямых AB и CD (на обоих отрезках или на продолжениях обоих)","ok":true},{"t":"AB + CD = BC + AD","ok":false},{"t":"диагонали перпендикулярны","ok":false},{"t":"диагонали равны","ok":false}],"why":"AB + CD = BC + AD — признак описанного четырёхугольника."},{"id":"21-02","type":"mc","t":"21","q":"Теорема Птолемея для вписанного ABCD: AC·BD = …","opts":["AB·CD + BC·AD","AB·BC + CD·AD","AB·AD + BC·CD","AB² + CD²"],"correct":0,"why":"Произведение диагоналей = сумма произведений противоположных сторон.","k":"f"},{"id":"21-03","type":"mc","t":"21","q":"Во вписанном четырёхугольнике внешний угол при вершине равен…","opts":["внутреннему углу при противоположной вершине","внутреннему углу при той же вершине","половине противоположного угла","сумме двух соседних углов"],"correct":0,"why":"Он смежен с ∠A, а ∠A + ∠C = 180°."},{"id":"21-04","type":"mc","t":"21","q":"Вписанный параллелограмм — это…","opts":["прямоугольник","ромб","квадрат","любой параллелограмм"],"correct":0,"why":"Противоположные углы равны и в сумме 180°."},{"id":"21-05","type":"mc","t":"21","q":"Вписанный четырёхугольник с перпендикулярными диагоналями: AB² + CD² = …","opts":["4R²","2R²","R²","AC·BD"],"correct":0,"why":"Расстояние от центра до стороны равно половине противоположной стороны.","k":"f"},{"id":"21-06","type":"mc","t":"21","q":"Отрезок AB виден из точек C и D под прямым углом. Тогда точки A, B, C, D…","opts":["лежат на окружности с диаметром AB","образуют прямоугольник","лежат на одной прямой","образуют ромб"],"correct":0,"why":"ГМТ, из которых отрезок виден под 90°."},{"id":"21-07","type":"tf","t":"21","q":"В четырёхугольник можно вписать окружность ⇔ AB + CD = BC + AD.","ok":true,"why":"Признак описанного четырёхугольника."},{"id":"21-08","type":"tf","t":"21","q":"Вписанная трапеция — равнобедренная.","ok":true,"why":"Иначе сумма противоположных углов не 180°."},{"id":"21-09","type":"tf","t":"21","q":"Около любого дельтоида можно описать окружность.","ok":false,"why":"Только если ∠B = ∠D = 90°."},{"id":"21-10","type":"num","t":"21","q":"ABCD — вписанный четырёхугольник, ∠A = 105°. Найдите ∠C (в градусах).","ans":75,"hint":"∠A + ∠C = 180°.","sol":"180° − 105° = 75°."},{"id":"21-11","type":"num","t":"21","q":"Вписанный ABCD: AB = 3, BC = 4, CD = 5, DA = 6. Найдите произведение диагоналей AC·BD.","ans":39,"hint":"Птолемей.","sol":"3·5 + 4·6 = 39."},{"id":"22-01","type":"mc","t":"22","q":"Средняя линия трапеции…","opts":["(a + b)/2","(a − b)/2","√(ab)","2ab/(a + b)"],"correct":0,"why":"Полусумма оснований.","k":"f"},{"id":"22-02","type":"mc","t":"22","q":"Диагонали делят среднюю линию трапеции на части…","opts":["b/2, (a − b)/2, b/2","a/2, (a − b)/2, a/2","(a + b)/6 каждая","b/2, (a + b)/2, b/2"],"correct":0,"why":"Средние линии треугольников ABC, BCD и ABD.","k":"f"},{"id":"22-03","type":"mc","t":"22","q":"Отрезок между серединами диагоналей трапеции…","opts":["(a − b)/2","(a + b)/2","a − b","b/2"],"correct":0,"why":"Средний кусок средней линии.","k":"f"},{"id":"22-04","type":"mc","t":"22","q":"Отрезок через точку пересечения диагоналей, параллельный основаниям…","opts":["2ab/(a + b)","(a + b)/2","√(ab)","√((a² + b²)/2)"],"correct":0,"why":"Точка O делит его пополам.","k":"f"},{"id":"22-05","type":"mc","t":"22","q":"Отрезок, параллельный основаниям и делящий трапецию на две подобные…","opts":["√(ab)","2ab/(a + b)","(a + b)/2","√((a² + b²)/2)"],"correct":0,"why":"x/b = a/x.","k":"f"},{"id":"22-06","type":"mc","t":"22","q":"Отрезок, параллельный основаниям и делящий трапецию на две равновеликие…","opts":["√((a² + b²)/2)","√(ab)","(a + b)/2","2ab/(a + b)"],"correct":0,"why":"Среднее квадратическое оснований.","k":"f"},{"id":"22-07","type":"mc","t":"22","q":"Какие четыре точки трапеции лежат на одной прямой?","opts":["середины оснований, точка пересечения диагоналей и точка пересечения продолжений боковых сторон","середины боковых сторон и середины диагоналей и вершина A","середины диагоналей и вершины A и D","центр описанной окружности, середины боковых сторон и вершина B"],"correct":0,"why":"«Замечательное свойство трапеции»."},{"id":"22-08","type":"tf","t":"22","q":"Средняя линия трапеции делит пополам любой отрезок с концами на основаниях.","ok":true,"why":"Обобщённая теорема Фалеса."},{"id":"22-09","type":"tf","t":"22","q":"Если диагонали трапеции перпендикулярны, отрезок между серединами оснований равен средней линии.","ok":true,"why":"Медианы к гипотенузам прямоугольных треугольников AOD и BOC."},{"id":"22-10","type":"num","t":"22","q":"Основания трапеции 5 и 15. Найдите отрезок между серединами диагоналей.","ans":5,"hint":"(a − b)/2.","sol":"(15 − 5)/2 = 5."},{"id":"22-11","type":"num","t":"22","q":"Основания трапеции 3 и 6. Найдите отрезок, проходящий через точку пересечения диагоналей параллельно основаниям.","ans":4,"hint":"2ab/(a + b).","sol":"36/9 = 4."},{"id":"22-12","type":"num","t":"22","q":"Основания трапеции 4 и 9. Найдите отрезок, параллельный основаниям и делящий её на две подобные трапеции.","ans":6,"hint":"√(ab).","sol":"√36 = 6."},{"id":"22-13","type":"num","t":"22","q":"Основания трапеции 1 и 7. Найдите отрезок, параллельный основаниям и делящий её на две равновеликие части.","ans":5,"hint":"√((a² + b²)/2).","sol":"√25 = 5."},{"id":"23-01","type":"ms","t":"23","q":"Отметь признаки параллелограмма.","stmts":[{"t":"две противоположные стороны равны и параллельны","ok":true},{"t":"противоположные стороны попарно равны","ok":true},{"t":"диагонали точкой пересечения делятся пополам","ok":true},{"t":"противоположные углы попарно равны","ok":true},{"t":"две противоположные стороны равны, а две другие параллельны","ok":false},{"t":"диагонали равны","ok":false}],"why":"«Две стороны равны, две другие параллельны» бывает и у равнобедренной трапеции."},{"id":"23-02","type":"mc","t":"23","q":"Параллелограмм с равными диагоналями — это…","opts":["прямоугольник","ромб","квадрат","дельтоид"],"correct":0,"why":"Признак прямоугольника."},{"id":"23-03","type":"mc","t":"23","q":"Параллелограмм с перпендикулярными диагоналями — это…","opts":["ромб","прямоугольник","квадрат","трапеция"],"correct":0,"why":"Признак ромба."},{"id":"23-04","type":"mc","t":"23","q":"Середины сторон любого четырёхугольника — вершины…","opts":["параллелограмма","ромба","прямоугольника","трапеции"],"correct":0,"why":"Теорема Вариньона."},{"id":"23-05","type":"mc","t":"23","q":"Стороны параллелограмма Вариньона…","opts":["параллельны диагоналям и равны их половинам","параллельны сторонам четырёхугольника","равны диагоналям","равны полусуммам сторон"],"correct":0,"why":"Средние линии треугольников ABC и ACD."},{"id":"23-06","type":"mc","t":"23","q":"Площадь параллелограмма Вариньона…","opts":["½S","¼S","⅓S","S"],"correct":0,"why":"Отсекаются 4 треугольника площадью ¼ соответствующих частей.","k":"f"},{"id":"23-07","type":"mc","t":"23","q":"Периметр параллелограмма Вариньона…","opts":["d₁ + d₂","½(d₁ + d₂)","2(d₁ + d₂)","половина периметра четырёхугольника"],"correct":0,"why":"Две стороны d₁/2 и две d₂/2.","k":"f"},{"id":"23-08","type":"mc","t":"23","q":"Параллелограмм Вариньона — прямоугольник ⇔ …","opts":["диагонали исходного четырёхугольника перпендикулярны","диагонали исходного равны","исходный — параллелограмм","исходный — вписанный"],"correct":0,"why":"Его стороны параллельны диагоналям."},{"id":"23-09","type":"mc","t":"23","q":"Параллелограмм Вариньона — ромб ⇔ …","opts":["диагонали исходного четырёхугольника равны","диагонали исходного перпендикулярны","исходный — трапеция","исходный — описанный"],"correct":0,"why":"Его стороны равны половинам диагоналей."},{"id":"23-10","type":"ms","t":"23","q":"Отметь фигуры, у которых диагонали всегда равны.","stmts":[{"t":"прямоугольник","ok":true},{"t":"квадрат","ok":true},{"t":"равнобедренная трапеция","ok":true},{"t":"ромб","ok":false},{"t":"параллелограмм","ok":false},{"t":"дельтоид","ok":false}],"why":""},{"id":"23-11","type":"ms","t":"23","q":"Отметь фигуры, у которых диагонали всегда перпендикулярны.","stmts":[{"t":"ромб","ok":true},{"t":"квадрат","ok":true},{"t":"дельтоид","ok":true},{"t":"прямоугольник","ok":false},{"t":"равнобедренная трапеция","ok":false}],"why":""},{"id":"23-12","type":"ms","t":"23","q":"Отметь фигуры, около которых всегда можно описать окружность.","stmts":[{"t":"прямоугольник","ok":true},{"t":"квадрат","ok":true},{"t":"равнобедренная трапеция","ok":true},{"t":"ромб","ok":false},{"t":"дельтоид","ok":false},{"t":"параллелограмм","ok":false}],"why":""},{"id":"23-13","type":"tf","t":"23","q":"Параллелограмм, у которого диагональ — биссектриса угла, является ромбом.","ok":true,"why":"Признак ромба."},{"id":"23-14","type":"tf","t":"23","q":"Середины двух противоположных сторон и середины диагоналей любого четырёхугольника — вершины параллелограмма.","ok":true,"why":"Снова средние линии."},{"id":"24-01","type":"mc","t":"24","q":"MN ∥ BC (M ∈ AB, N ∈ AC). MN : BC = …","opts":["AM : AB","AM : MB","MB : AB","AN : NC"],"correct":0,"why":"Коэффициент подобия △AMN ~ △ABC — отсчёт от вершины.","k":"f"},{"id":"24-02","type":"mc","t":"24","q":"MN ∥ BC (M ∈ AB, N ∈ AC). AM : MB = …","opts":["AN : NC","AN : AC","MN : BC","NC : AN"],"correct":0,"why":"Обобщённая теорема Фалеса.","k":"f"},{"id":"24-03","type":"mc","t":"24","q":"MN ∥ BC, если (обратная теорема)…","opts":["AM/AB = AN/AC (отрезки от вершины угла)","AM = AN","MN = BC/2","AM/MB = NC/AN"],"correct":0,"why":"Равные отношения отрезков, отсчитанных от вершины."},{"id":"24-04","type":"mc","t":"24","q":"Параллельные прямые высекают на сторонах угла…","opts":["пропорциональные отрезки","равные отрезки","отрезки в отношении 1 : 2","отрезки, равные расстоянию между прямыми"],"correct":0,"why":"Теорема о пропорциональных отрезках."},{"id":"24-05","type":"mc","t":"24","q":"Прямая через середину стороны треугольника, параллельная другой стороне, …","opts":["проходит через середину третьей стороны","делит третью сторону в отношении 1 : 2","перпендикулярна третьей стороне","проходит через точку пересечения медиан"],"correct":0,"why":"Это средняя линия."},{"id":"24-06","type":"tf","t":"24","q":"Теорему Менелая всегда можно заменить приёмом «параллельная прямая + Фалес».","ok":true,"why":"Отношения переносятся параллельными прямыми."},{"id":"24-07","type":"num","t":"24","q":"MN ∥ BC (M ∈ AB, N ∈ AC), AM = 4, MB = 6, AC = 15. Найдите AN.","ans":6,"hint":"AN : AC = AM : AB.","sol":"15·4/10 = 6."},{"id":"24-08","type":"num","t":"24","q":"MN ∥ BC, AM : MB = 1 : 3, BC = 12. Найдите MN.","ans":3,"hint":"MN : BC = AM : AB.","sol":"12·¼ = 3."},{"id":"25-01","type":"ms","t":"25","q":"Отметь признаки подобия треугольников.","stmts":[{"t":"два угла одного равны двум углам другого","ok":true},{"t":"две стороны пропорциональны, а углы между ними равны","ok":true},{"t":"три стороны пропорциональны","ok":true},{"t":"две стороны пропорциональны, а углы против одной из них равны","ok":false},{"t":"одна сторона и один угол равны","ok":false}],"why":""},{"id":"25-02","type":"mc","t":"25","q":"Площади подобных треугольников относятся как…","opts":["k²","k","k³","√k"],"correct":0,"why":"Длины — как k, площади — как k².","k":"f"},{"id":"25-03","type":"mc","t":"25","q":"Радиусы вписанных окружностей подобных треугольников относятся как…","opts":["k","k²","√k","1"],"correct":0,"why":"Радиус — линейный элемент.","k":"f"},{"id":"25-04","type":"mc","t":"25","q":"D ∈ AB, ∠ACD = ∠B. Тогда…","opts":["AC² = AD·AB","AC² = AD·DB","CD² = AD·DB","AB² = AD·AC"],"correct":0,"why":"△ACD ~ △ABC (общий угол A).","k":"f"},{"id":"25-05","type":"mc","t":"25","q":"Трапеция ABCD (AD = a, BC = b), O — пересечение диагоналей. △BOC ~ △DOA с коэффициентом…","opts":["b/a","a/b","(a − b)/a","b/(a + b)"],"correct":0,"why":"BO : OD = CO : OA = b : a.","k":"f"},{"id":"25-06","type":"mc","t":"25","q":"Прямоугольные треугольники подобны, если…","opts":["у них равны острые углы","равны гипотенузы","равны по одному катету","у них общий катет"],"correct":0,"why":"Достаточно одного острого угла."},{"id":"25-07","type":"mc","t":"25","q":"△ABC ~ △KLM (вершины в порядке соответствия). AB/KL = …","opts":["BC/LM = AC/KM","BC/KM = AC/LM","AC/LM","KM/AC"],"correct":0,"why":"Соответственные стороны — по соответственным вершинам.","k":"f"},{"id":"25-08","type":"tf","t":"25","q":"Равнобедренные треугольники с равными углами при вершине подобны.","ok":true,"why":"Тогда равны и углы при основании."},{"id":"25-09","type":"tf","t":"25","q":"Периметры подобных треугольников относятся как k².","ok":false,"why":"Периметр — линейная величина: как k."},{"id":"25-10","type":"num","t":"25","q":"Треугольники подобны с k = 3, площадь меньшего 5. Найдите площадь большего.","ans":45,"hint":"Площади — как k².","sol":"5·9 = 45."},{"id":"25-11","type":"num","t":"25","q":"D ∈ AB, ∠ACD = ∠B, AC = 8, AB = 16. Найдите AD.","ans":4,"hint":"AC² = AD·AB.","sol":"64/16 = 4."},{"id":"26-01","type":"mc","t":"26","q":"Теорема Менелая: прямая пересекает прямые AB, BC, CA в точках C₁, A₁, B₁. Тогда…","opts":["(AC₁/C₁B)·(BA₁/A₁C)·(CB₁/B₁A) = 1","(AC₁/C₁B)·(BA₁/A₁C)·(CB₁/B₁A) = 0","(AC₁/AB)·(BA₁/BC)·(CB₁/CA) = 1","(AC₁/C₁B) + (BA₁/A₁C) + (CB₁/B₁A) = 1"],"correct":0,"why":"Обход: A → C₁ → B → A₁ → C → B₁ → A.","k":"f"},{"id":"26-02","type":"mc","t":"26","q":"Как обходить точки в теореме Менелая?","opts":["вершина → точка → вершина → точка …, пока не вернёшься в начало","сначала все вершины, потом все точки","только по точкам на секущей","в любом порядке"],"correct":0,"why":"A → C₁ → B → A₁ → C → B₁ → A."},{"id":"26-03","type":"mc","t":"26","q":"Какой треугольник брать для теоремы Менелая?","opts":["тот, у которого искомый отрезок — сторона, а остальные известные точки лежат на одной секущей","самый большой на чертеже","тот, где есть прямой угол","любой, лишь бы секущая его пересекала"],"correct":0,"why":"Тогда в формуле будет искомое отношение."},{"id":"26-04","type":"mc","t":"26","q":"Теорема Чевы: отрезки AA₁, BB₁, CC₁ (точки на сторонах) пересекаются в одной точке ⇔ …","opts":["(AC₁/C₁B)·(BA₁/A₁C)·(CB₁/B₁A) = 1","то же произведение равно 0","сумма тех же отношений равна 1","AA₁ = BB₁ = CC₁"],"correct":0,"why":"Медианы, биссектрисы, высоты — частные случаи.","k":"f"},{"id":"26-05","type":"tf","t":"26","q":"Секущая в теореме Менелая может пересекать продолжения всех трёх сторон.","ok":true,"why":"Либо две стороны и продолжение третьей, либо три продолжения."},{"id":"26-06","type":"num","t":"26","q":"AM — медиана треугольника ABC, K ∈ AC, AK : KC = 1 : 2, P — пересечение BK и AM. Найдите AP : PM.","ans":1,"hint":"Менелай для △AMC и прямой BK.","sol":"(AP/PM)·(MB/BC)·(CK/KA) = 1: (AP/PM)·½·2 = 1."},{"id":"26-07","type":"num","t":"26","q":"K ∈ AB, AK : KB = 2 : 1, M — середина BC, P — пересечение AM и CK. Найдите AP : PM.","ans":4,"hint":"Менелай для △ABM и прямой K–P–C.","sol":"(AK/KB)·(BC/CM)·(MP/PA) = 1: 2·2·(MP/PA) = 1."},{"id":"27-01","type":"mc","t":"27","q":"Треугольники с общей высотой: S₁ : S₂ = …","opts":["a₁ : a₂ (отношение оснований)","a₁² : a₂²","1 : 1","√a₁ : √a₂"],"correct":0,"why":"S = ½ah.","k":"f"},{"id":"27-02","type":"mc","t":"27","q":"Треугольники с общим (или равным) углом: S₁ : S₂ = …","opts":["(b₁c₁) : (b₂c₂) — произведения сторон при угле","(b₁ + c₁) : (b₂ + c₂)","b₁² : b₂²","b₁ : b₂"],"correct":0,"why":"S = ½bc sin A.","k":"f"},{"id":"27-03","type":"mc","t":"27","q":"Общая сторона AB: S_{ABC} : S_{ABD} = …","opts":["CP : DP (P — пересечение CD и AB)","AC : AD","BC : BD","CD : AB"],"correct":0,"why":"Высоты из C и D относятся как CP : DP.","k":"f"},{"id":"27-04","type":"mc","t":"27","q":"Параллелограмм ABCD, точка M на стороне BC. S_{AMD} = …","opts":["½S","¼S","⅓S","зависит от положения M"],"correct":0,"why":"Основание AD и высота параллелограмма.","k":"f"},{"id":"27-05","type":"mc","t":"27","q":"Точка P внутри параллелограмма ABCD. S_{PAB} + S_{PCD} = …","opts":["½S","¼S","S_{PBC}","зависит от положения P"],"correct":0,"why":"Сумма высот к AB и CD равна высоте параллелограмма.","k":"f"},{"id":"27-06","type":"mc","t":"27","q":"Отрезки между серединами противоположных сторон делят четырёхугольник на 4 части. Верно…","opts":["суммы площадей противоположных частей равны","все части равновелики","все части подобны","противоположные части равны"],"correct":0,"why":"Следствие из свойств медиан."},{"id":"27-07","type":"mc","t":"27","q":"Трапеция: S_{BOC} : S_{AOD} = …","opts":["b² : a²","b : a","a² : b²","√b : √a"],"correct":0,"why":"Подобие с k = b/a.","k":"f"},{"id":"27-08","type":"tf","t":"27","q":"Площади треугольников с углами, дающими в сумме 180°, тоже относятся как произведения сторон при этих углах.","ok":true,"why":"sin(180° − α) = sin α."},{"id":"27-09","type":"num","t":"27","q":"D ∈ BC, BD : DC = 3 : 5, S_{ABC} = 64. Найдите S_{ABD}.","ans":24,"hint":"Общая высота из A.","sol":"64·3/8 = 24."},{"id":"27-10","type":"num","t":"27","q":"K ∈ AB, L ∈ AC, AK : AB = 1 : 2, AL : AC = 2 : 5, S_{ABC} = 40. Найдите S_{AKL}.","ans":8,"hint":"Общий угол A.","sol":"40·½·⅖ = 8."},{"id":"28-01","type":"mc","t":"28","q":"Вписанная окружность касается AB в C₁. AC₁ = …","opts":["p − a","p − b","p − c","p"],"correct":0,"why":"Отрезок от вершины = p − противолежащая сторона.","k":"f"},{"id":"28-02","type":"mc","t":"28","q":"Вписанная окружность касается BC в A₁. BA₁ = …","opts":["p − b","p − a","p − c","b/2"],"correct":0,"why":"Противолежащая вершине B сторона — b.","k":"f"},{"id":"28-03","type":"mc","t":"28","q":"Правило для отрезков касательных к вписанной окружности: от вершины до точки касания…","opts":["p минус противолежащая сторона","p минус прилежащая сторона","половина прилежащей стороны","p/2"],"correct":0,"why":"x + y = c, y + z = a, z + x = b."},{"id":"28-04","type":"mc","t":"28","q":"Вневписанная окружность касается BC и продолжений AB, AC. От A до точек касания на продолжениях…","opts":["p","p − a","a","p + a"],"correct":0,"why":"AP + AQ = AB + BC + CA.","k":"f"},{"id":"28-05","type":"mc","t":"28","q":"Вневписанная окружность касается BC в A₂. BA₂ = …","opts":["p − c","p − b","p − a","c/2"],"correct":0,"why":"BA₂ = BP = p − AB.","k":"f"},{"id":"28-06","type":"mc","t":"28","q":"A₁ и A₂ — точки касания вписанной и вневписанной окружностей со стороной BC. A₁A₂ = …","opts":["|b − c|","|b − c|/2","a/2","b + c − a"],"correct":0,"why":"Точки симметричны относительно середины BC.","k":"f"},{"id":"28-07","type":"mc","t":"28","q":"Треугольник A₁B₁C₁ из точек касания вписанной окружности: ∠B₁A₁C₁ = …","opts":["90° − ∠A/2","90° + ∠A/2","∠A","180° − ∠A"],"correct":0,"why":"△BA₁C₁ и △CA₁B₁ равнобедренные.","k":"f"},{"id":"28-08","type":"tf","t":"28","q":"A, C₁, I, B₁ лежат на окружности с диаметром AI.","ok":true,"why":"Радиусы в точки касания ⊥ сторонам."},{"id":"28-09","type":"tf","t":"28","q":"Точка касания вписанной окружности со стороной — это основание биссектрисы.","ok":false,"why":"Разные точки; совпадают только в равнобедренном (у основания)."},{"id":"28-10","type":"tf","t":"28","q":"В прямоугольном треугольнике (∠C = 90°) отрезок касательной от C до вписанной окружности равен r.","ok":true,"why":"Квадрат со стороной r."},{"id":"28-11","type":"num","t":"28","q":"BC = 9, AC = 7, AB = 8. Найдите отрезок от B до точки касания вписанной окружности.","ans":5,"hint":"p − b.","sol":"p = 12, 12 − 7 = 5."},{"id":"28-12","type":"num","t":"28","q":"Периметр треугольника 30, BC = 11. Найдите отрезок касательной из A к вписанной окружности.","ans":4,"hint":"p − a.","sol":"15 − 11 = 4."},{"id":"28-13","type":"num","t":"28","q":"AC = 10, AB = 6. Найдите расстояние между точками касания вписанной и вневписанной окружностей со стороной BC.","ans":4,"hint":"|b − c|.","sol":"10 − 6 = 4."},{"id":"29-01","type":"mc","t":"29","q":"r_a = …","opts":["S/(p − a)","S/p","S/(p + a)","(p − a)/S"],"correct":0,"why":"S = r_a(p − a).","k":"f"},{"id":"29-02","type":"mc","t":"29","q":"r_a = p·…","opts":["tg(A/2)","sin(A/2)","ctg(A/2)","tg A"],"correct":0,"why":"Отрезок касательной из A равен p.","k":"f"},{"id":"29-03","type":"mc","t":"29","q":"∠BI_aC = …","opts":["90° − ∠A/2","90° + ∠A/2","∠A/2","180° − ∠A"],"correct":0,"why":"Биссектрисы внешних углов B и C.","k":"f"},{"id":"29-04","type":"mc","t":"29","q":"r·r_a = …","opts":["(p − b)(p − c)","p(p − a)","(p − a)(p − b)","p²"],"correct":0,"why":"Перемножь r = S/p и r_a = S/(p − a), затем Герон.","k":"f"},{"id":"29-05","type":"mc","t":"29","q":"1/r = …","opts":["1/r_a + 1/r_b + 1/r_c","r_a + r_b + r_c","1/(r_a·r_b·r_c)","(r_a + r_b + r_c)/3"],"correct":0,"why":"(p − a + p − b + p − c)/S = p/S.","k":"f"},{"id":"29-06","type":"mc","t":"29","q":"S = …","opts":["√(r·r_a·r_b·r_c)","r·r_a","√(r_a·r_b·r_c)","r_a + r_b + r_c"],"correct":0,"why":"Перемножь четыре радиуса и примени Герона.","k":"f"},{"id":"29-07","type":"mc","t":"29","q":"Прямоугольный треугольник (∠C = 90°): r_c = …","opts":["p","p − c","c/2","r"],"correct":0,"why":"r_c = S/(p − c) = p.","k":"f"},{"id":"29-08","type":"tf","t":"29","q":"Точки A, I и I_a лежат на одной прямой.","ok":true,"why":"На биссектрисе угла A."},{"id":"29-09","type":"tf","t":"29","q":"B и C лежат на окружности с диаметром II_a.","ok":true,"why":"∠IBI_a = ∠ICI_a = 90°."},{"id":"29-10","type":"tf","t":"29","q":"Центр вневписанной окружности может лежать внутри треугольника.","ok":false,"why":"Всегда вне."},{"id":"29-11","type":"num","t":"29","q":"Стороны 13, 14, 15. Найдите радиус вневписанной окружности, касающейся стороны 14.","ans":12,"hint":"r_a = S/(p − a).","sol":"84/(21 − 14) = 12."},{"id":"29-12","type":"num","t":"29","q":"Катеты 3 и 4. Найдите радиус вневписанной окружности, касающейся гипотенузы.","ans":6,"hint":"r_c = p.","sol":"p = 6."},{"id":"30-01","type":"mc","t":"30","q":"AA₁ и BB₁ — высоты. △A₁B₁C ~ △ABC с коэффициентом…","opts":["|cos C|","sin C","cos A","½"],"correct":0,"why":"CA₁ = AC·|cos C|.","k":"f"},{"id":"30-02","type":"mc","t":"30","q":"AH (H — ортоцентр) = …","opts":["2R·|cos A|","2R·sin A","R·|cos A|","2R·|cos B|"],"correct":0,"why":"Вдвое больше расстояния от O до BC.","k":"f"},{"id":"30-03","type":"mc","t":"30","q":"AH равно удвоенному…","opts":["расстоянию от центра описанной окружности до BC","радиусу R","расстоянию от O до AB","отрезку OH"],"correct":0,"why":"AH = 2R|cos A|, расстояние от O до BC = R|cos A|."},{"id":"30-04","type":"mc","t":"30","q":"AH·HA₁ = …","opts":["BH·HB₁","BH·HA₁","AH²","HA₁·HB₁"],"correct":0,"why":"Степень точки H относительно окружности с диаметром AB.","k":"f"},{"id":"30-05","type":"mc","t":"30","q":"Прямая Эйлера: O, M, H на одной прямой и OM : MH = …","opts":["1 : 2","2 : 1","1 : 1","1 : 3"],"correct":0,"why":"M — точка пересечения медиан.","k":"f"},{"id":"30-06","type":"mc","t":"30","q":"В остроугольном треугольнике высоты являются … треугольника A₁B₁C₁.","opts":["биссектрисами углов","медианами","высотами","серединными перпендикулярами"],"correct":0,"why":"Свойство ортотреугольника."},{"id":"30-07","type":"mc","t":"30","q":"Радиус окружности, описанной около △AHB, равен…","opts":["R","R/2","2R","r"],"correct":0,"why":"△AHB симметричен △AH'B, где H' лежит на описанной окружности."},{"id":"30-08","type":"mc","t":"30","q":"Какие четыре точки лежат на одной окружности (AA₁, BB₁ — высоты, H — ортоцентр)?","opts":["C, A₁, H, B₁","A, B, C, H","A, A₁, H, B","O, H, A, B"],"correct":0,"why":"Два прямых угла на отрезке CH."},{"id":"30-09","type":"tf","t":"30","q":"Точка, симметричная ортоцентру H относительно BC, лежит на описанной окружности.","ok":true,"why":"Известное свойство ортоцентра."},{"id":"30-10","type":"tf","t":"30","q":"Точка, симметричная H относительно середины BC, лежит на описанной окружности.","ok":true,"why":"Она диаметрально противоположна A."},{"id":"30-11","type":"tf","t":"30","q":"Ортоцентр тупоугольного треугольника лежит внутри треугольника.","ok":false,"why":"Вне треугольника."},{"id":"30-12","type":"num","t":"30","q":"R = 6, ∠A = 60°. Найдите AH.","ans":6,"hint":"AH = 2R·cos A.","sol":"12·½ = 6."},{"id":"30-13","type":"num","t":"30","q":"AB = 10, ∠C = 60°, треугольник остроугольный. Найдите A₁B₁.","ans":5,"hint":"A₁B₁ = AB·cos C.","sol":"10·½ = 5."},{"id":"30-14","type":"num","t":"30","q":"AH = 3, HA₁ = 4, BH = 6. Найдите HB₁.","ans":2,"hint":"AH·HA₁ = BH·HB₁.","sol":"12/6 = 2."},{"id":"D-01","type":"mc","t":"D","q":"В задаче есть медиана. Типичное построение —","opts":["удвоить медиану: получится параллелограмм","провести высоту из той же вершины","продлить медиану до описанной окружности","провести среднюю линию"],"correct":0,"why":"Даёт формулу медианы и равные треугольники."},{"id":"D-02","type":"mc","t":"D","q":"Трапеция, известны все четыре стороны. Построение —","opts":["через вершину меньшего основания провести прямую ∥ боковой стороне","провести обе диагонали","вписать окружность","продлить основания"],"correct":0,"why":"Получится треугольник c, d, a − b с той же высотой."},{"id":"D-03","type":"mc","t":"D","q":"Трапеция, известны диагонали. Построение —","opts":["перенести диагональ: прямая через C ∥ BD до прямой AD","провести высоту","провести среднюю линию","продлить боковые стороны"],"correct":0,"why":"Треугольник d₁, d₂, a + b той же площади."},{"id":"D-04","type":"mc","t":"D","q":"В задаче есть касательная к окружности. Первое построение —","opts":["радиус в точку касания (он ⊥ касательной)","диаметр, параллельный касательной","хорда через точку касания","вторая касательная из центра"],"correct":0,"why":"Сразу появляется прямой угол."},{"id":"D-05","type":"mc","t":"D","q":"Нужно найти отношение отрезков. Инструмент —","opts":["параллельная прямая (Фалес) или теорема Менелая","теорема косинусов","формула Герона","описанная окружность"],"correct":0,"why":"Отношения переносятся параллельными прямыми."},{"id":"D-06","type":"mc","t":"D","q":"В задаче биссектриса. Что искать или строить?","opts":["равнобедренные треугольники; продлить её до описанной окружности (трезубец)","удвоить биссектрису","провести медиану к той же стороне","провести перпендикуляр к биссектрисе через вершину угла"],"correct":0,"why":"Биссектриса + параллельная прямая ⇒ равнобедренный треугольник."},{"id":"D-07","type":"mc","t":"D","q":"На одном отрезке стоят два прямых угла. Построение —","opts":["окружность на этом отрезке как на диаметре","вписанная окружность","серединный перпендикуляр","средняя линия"],"correct":0,"why":"Четыре точки на одной окружности ⇒ равные вписанные углы."},{"id":"D-08","type":"mc","t":"D","q":"Касающиеся окружности. Построение —","opts":["линия центров через точку касания и общая касательная в ней","общая хорда","радиусы к точкам пересечения","серединный перпендикуляр к линии центров"],"correct":0,"why":"Точка касания лежит на линии центров."}]};
+const TOPICS = BANK.topics;
+const ORDER = BANK.order.filter(t => TOPICS[t] !== undefined);
+let ITEMS = BANK.items.slice();
+let BYID = {};
+const reindex = () => { BYID = Object.fromEntries(ITEMS.map(i => [i.id, i])); };
+reindex();
+let EXTRA = 0;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+function plural(n, one, few, many){ const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one; if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few; return many; }
+const FN = new Set(['sin', 'cos', 'tg', 'ctg', 'arcsin', 'arccos', 'arctg']);
+/* Bank markup: r_a, d_1, S_{ABM}, S_трап, ^2. Latin letters in italic, function names upright — as in the cheat sheet. */
+function fmt(s){
+  s = String(s); let out = '', i = 0;
+  while (i < s.length) {
+    const ch = s[i];
+    if (ch === '\n') { out += '<br>'; i++; continue; }
+    if (ch === '_') {
+      const nx = s[i + 1] || '';
+      if (nx === '{') { const j = s.indexOf('}', i + 2); if (j > 0) { out += '<sub>' + fmt(s.slice(i + 2, j)) + '</sub>'; i = j + 1; continue; } }
+      if (/[а-яё]/i.test(nx)) { let j = i + 1; while (j < s.length && /[а-яё]/i.test(s[j])) j++; out += '<sub>' + esc(s.slice(i + 1, j)) + '</sub>'; i = j; continue; }
+      if (/[a-z]/i.test(nx)) { out += '<sub><i>' + nx + '</i></sub>'; i += 2; continue; }
+      if (/[0-9△]/.test(nx)) { out += '<sub>' + nx + '</sub>'; i += 2; continue; }
+    }
+    if (ch === '^' && /[0-9]/.test(s[i + 1] || '')) { out += '<sup>' + s[i + 1] + '</sup>'; i += 2; continue; }
+    if (/[A-Za-z]/.test(ch)) { let j = i; while (j < s.length && /[A-Za-z]/.test(s[j])) j++; const w = s.slice(i, j);
+      out += FN.has(w) ? w : '<i>' + w + '</i>'; i = j; continue; }
+    out += esc(ch); i++;
+  }
+  return out;
+}
+const terminating = y => Math.abs(Math.round(y * 1000) - y * 1000) < 1e-6;
+function fmtNum(x){
+  let s = null;
+  if (!terminating(x)) for (let d = 2; d <= 12 && !s; d++) { const n = Math.round(x * d); if (Math.abs(n / d - x) < 1e-9) s = n + '/' + d; }
+  if (!s) s = String(Math.round(x * 1000) / 1000).replace('.', ',');
+  return s.replace('-', '−');
+}
+function parseNum(s){
+  s = String(s).trim().replace(/\s+/g, '').replace(/[−–—]/g, '-').replace(/°$/, '').replace(/,/g, '.');
+  const m = /^(-?\d+(?:\.\d+)?)[\/:](-?\d+(?:\.\d+)?)$/.exec(s);
+  if (m) { const a = +m[1], b = +m[2]; return b ? a / b : NaN; }
+  if (/^-?(\d+\.?\d*|\.\d+)$/.test(s)) return Number(s);
+  return NaN;
+}
+const numMatch = (x, y) => Math.abs(x - y) <= 1e-6 * Math.max(1, Math.abs(y)) + 1e-9 || (!terminating(y) && Math.abs(x - y) < 0.006);
+
+/* kinds of cards */
+const kindOf = it => it.type === 'mc' ? (it.k === 'f' ? 'f' : 'm') : it.type;
+const KIND = { f: 'Формула', m: 'Факт', tf: 'Верно или неверно?', num: 'Вычисли', ms: 'Отметь все верные' };
+const KSTAT = [['f', 'Формулы'], ['m', 'Факты: выбор ответа'], ['tf', 'Верно или неверно'], ['ms', 'Несколько верных'], ['num', 'Вычисления']];
+const MIXES = [['all', 'Всё'], ['f', 'Формулы'], ['facts', 'Факты'], ['num', 'Вычисления']];
+const MIXNAME = { all: 'Все карточки', f: 'Формулы', facts: 'Факты', num: 'Вычисления' };
+const inMix = (it, mix) => mix === 'f' ? kindOf(it) === 'f' : mix === 'facts' ? ['m', 'tf', 'ms'].includes(kindOf(it)) : mix === 'num' ? it.type === 'num' : true;
+const tNo = t => t === 'T' ? 'sin' : t === 'D' ? 'доп' : t;
+const tRef = t => t === 'T' ? 'Тригонометрия · первая страница шпаргалки' : t === 'D' ? 'Дополнительные построения · конец шпаргалки' : `Тема ${t} · ${TOPICS[t]}`;
+const tShort = t => t === 'T' ? 'тригонометрия' : t === 'D' ? 'доп. построения' : 'тема ' + t;
+
+const MIN = 6e4, DAY = 864e5;
+const INTERVALS = [10 * MIN, DAY, 3 * DAY, 7 * DAY, 16 * DAY, 35 * DAY];
+const FAST = { f: 15, m: 10, tf: 8, ms: 20, num: 30 };   // a new card answered this fast skips the next-day check
+const SLOW = { f: 25, m: 20, tf: 15, ms: 40, num: 60 };  // correct but slower than this: listed as "not automatic yet"
+const ACTIVE_DAY = 10;
+function dayKey(t){ const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function dayShift(n){ const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return d; }
+
+/* the user's own answer for the error list */
+function answerLine(it){
+  if (it.type === 'mc') {
+    const a = `<b>${fmt(it.opts[it.correct])}</b>`, q = it.q.trim(), k = q.lastIndexOf('…');
+    if (k >= 0) {
+      const pre = q.slice(0, k), post = q.slice(k + 1);
+      return fmt(pre) + (/[\p{L}\p{N})}]$/u.test(pre) ? ' ' : '') + a + (/^[\p{L}\p{N}(]/u.test(post) ? ' ' : '') + fmt(post);
+    }
+    if (/[—:]$/.test(q)) return fmt(q) + ' ' + a;
+    return fmt(q) + ' → ' + a;
+  }
+  if (it.type === 'tf') return `<b>${it.ok ? 'Верно' : 'Неверно'}:</b> ${fmt(it.q)}`;
+  if (it.type === 'num') return `${fmt(it.q)} → <b>${fmtNum(it.ans)}</b>`;
+  return `${fmt(it.q)} → <b>${it.stmts.filter(s => s.ok).map(s => fmt(s.t)).join('; ')}</b>`;
+}
+function yourAnswer(it, ch){
+  if (ch === 'idk') return 'не знаю';
+  if (it.type === 'mc') return Number.isInteger(ch) && it.opts[ch] !== undefined ? fmt(it.opts[ch]) : '';
+  if (it.type === 'tf') return ch === 1 ? '«верно»' : ch === 0 ? '«неверно»' : '';
+  if (it.type === 'num') return typeof ch === 'string' && ch ? esc(ch) : 'не решил';
+  if (it.type === 'ms' && Array.isArray(ch)) return ch.filter(si => it.stmts[si]).map(si => `«${fmt(it.stmts[si].t)}» — ${it.stmts[si].ok ? 'пропустил' : 'лишнее'}`).join('; ');
+  return '';
+}
+
+/* ================= progress: this device + (for the owner) the account ================= */
+const LS_KEY = 'planim-theory-v1';
+const GOALS = [20, 30, 50, 80], LENS = [10, 20, 30];
+const blank = () => ({ v: 1, upd: 0, it: {}, errs: {}, days: {}, sess: [], top: {}, typ: {},
+  tot: { ans: 0, ok: 0, help: 0, hint: 0, sec: 0 }, set: { goal: 30, len: 20, recall: true, mix: 'all' } });
+function sanitize(o){
+  const b = blank();
+  if (!o || typeof o !== 'object') return b;
+  const obj = x => x && typeof x === 'object' && !Array.isArray(x);
+  for (const k of ['it', 'errs', 'days', 'top', 'typ']) if (obj(o[k])) b[k] = JSON.parse(JSON.stringify(o[k]));
+  if (Array.isArray(o.sess)) b.sess = JSON.parse(JSON.stringify(o.sess.filter(Array.isArray).slice(-40)));
+  if (obj(o.tot)) for (const k in b.tot) b.tot[k] = +o.tot[k] || 0;
+  if (obj(o.set)) {
+    if (GOALS.includes(+o.set.goal)) b.set.goal = +o.set.goal;
+    if (LENS.includes(+o.set.len)) b.set.len = +o.set.len;
+    if (typeof o.set.recall === 'boolean') b.set.recall = o.set.recall;
+    if (MIXES.some(m => m[0] === o.set.mix)) b.set.mix = o.set.mix;
+  }
+  for (const id in b.it) if (!Array.isArray(b.it[id]) || b.it[id].length < 5) delete b.it[id];
+  for (const id in b.errs) if (!Array.isArray(b.errs[id]) || b.errs[id].length < 4) delete b.errs[id];
+  for (const k in b.days) if (!Array.isArray(b.days[k])) delete b.days[k];
+  b.upd = +o.upd || 0;
+  return b;
+}
+let S = blank();
+try { const raw = localStorage.getItem(LS_KEY); if (raw) S = sanitize(JSON.parse(raw)); } catch (e) {}
+function saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {} }
+function commit(){ S.upd = Date.now(); saveLocal(); schedulePush(1500); renderBadges(); }
+
+const cloud = { ref: null, ok: false, pushing: false, again: false, timer: null, retries: 0 };
+function setSync(){
+  const el = $('sync'); if (!el) return;
+  el.textContent = cloud.ok
+    ? 'Прогресс сохраняется в твоём аккаунте: он общий для телефона и компьютера.'
+    : 'Прогресс сохраняется в этом браузере.';
+}
+function schedulePush(ms){ if (!cloud.ok) return; clearTimeout(cloud.timer); cloud.timer = setTimeout(push, ms); }
+async function push(){
+  if (!cloud.ok) return;
+  if (cloud.pushing) { cloud.again = true; return; }
+  cloud.pushing = true; cloud.timer = null;
+  try { await cloud.ref.set(JSON.parse(JSON.stringify(S))); cloud.retries = 0; }
+  catch (e) {
+    if (e && e.code === 'unavailable' && cloud.retries < 2) { cloud.retries++; setTimeout(() => schedulePush(0), 2500 + Math.random() * 2500); }
+    else if (!(e && e.code === 'resource_exhausted')) { cloud.ok = false; setSync(); }
+  }
+  cloud.pushing = false;
+  if (cloud.again) { cloud.again = false; schedulePush(400); }
+}
+async function initCloud(){
+  try {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    if (!db || !user) return;
+    if (!(await user.isOwner())) return;
+    const ref = db.doc('progress/theory');
+    const snap = await ref.get();
+    cloud.ref = ref; cloud.ok = true;
+    const remote = snap.exists ? snap.data() : null;
+    if (remote && (+remote.upd || 0) > S.upd) { S = sanitize(remote); saveLocal(); refreshAll(); }
+    else if (S.upd > ((remote && +remote.upd) || 0)) schedulePush(0);
+    loadExtra(db);
+  } catch (e) { cloud.ok = false; }
+  setSync();
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && cloud.ok && cloud.timer) { clearTimeout(cloud.timer); push(); }
+});
+
+/* Cards Claude adds later (after looking at the error list) live in the `bank` collection. */
+function validItem(o, docId){
+  if (!o || typeof o !== 'object') return null;
+  const str = x => typeof x === 'string' && x.trim().length > 0 && x.length < 2000;
+  const opt = x => str(x) ? x : '';
+  const id = 'x-' + String(o.id || docId).replace(/[^\w-]/g, '').slice(0, 40);
+  const t = TOPICS[String(o.t)] !== undefined ? String(o.t) : '0';
+  const base = { id, t, src: 'add', why: opt(o.why) };
+  if (o.type === 'mc' && str(o.q) && Array.isArray(o.opts) && o.opts.length === 4 && o.opts.every(str) && new Set(o.opts).size === 4
+      && Number.isInteger(o.correct) && o.correct >= 0 && o.correct < 4)
+    return { ...base, type: 'mc', q: o.q, opts: o.opts.slice(), correct: o.correct, ...(o.k === 'f' ? { k: 'f' } : {}) };
+  if (o.type === 'tf' && str(o.q) && typeof o.ok === 'boolean') return { ...base, type: 'tf', q: o.q, ok: o.ok };
+  if (o.type === 'num' && str(o.q) && Number.isFinite(o.ans)) return { ...base, type: 'num', q: o.q, ans: o.ans, hint: opt(o.hint), sol: opt(o.sol) };
+  if (o.type === 'ms' && str(o.q) && Array.isArray(o.stmts) && o.stmts.length >= 3 && o.stmts.length <= 7
+      && o.stmts.every(s => s && str(s.t) && typeof s.ok === 'boolean') && o.stmts.some(s => s.ok) && o.stmts.some(s => !s.ok))
+    return { ...base, type: 'ms', q: o.q, stmts: o.stmts.map(s => ({ t: s.t, ok: s.ok })) };
+  return null;
+}
+async function loadExtra(db){
+  try {
+    const qs = await db.collection('bank').get();
+    let added = 0;
+    for (const d of qs.docs) { const it = validItem(d.data(), d.id); if (it && !BYID[it.id]) { ITEMS.push(it); added++; } }
+    if (added) { EXTRA = added; reindex(); refreshAll(); }
+  } catch (e) {}
+}
+
+/* ================= spaced repetition ================= */
+const st = id => S.it[id] || [0, 0, 0, 0, 0]; // [box, due, seen, ok, last]
+function pruneDays(){ const keys = Object.keys(S.days).sort(); while (keys.length > 120) delete S.days[keys.shift()]; }
+function bumpDay(clean, sec){
+  const k = dayKey(Date.now()), d = S.days[k] || (S.days[k] = [0, 0, 0]);
+  d[0]++; if (clean) d[1]++; d[2] += sec; S.tot.sec += sec; pruneDays();
+}
+/* res: {ok, help, sec, chosen, retry}. Clean = right on the first try without a hint. */
+function record(it, res){
+  const now = Date.now(), k = kindOf(it);
+  let [box, , seen, okc] = st(it.id);
+  const first = seen === 0, clean = res.ok && !res.help && !res.retry;
+  seen++; if (res.ok) okc++;
+  if (clean) box = first && res.sec <= FAST[k] ? 2 : Math.min(box + 1, 5);
+  else if (res.ok) box = 1;
+  else box = 0;
+  S.it[it.id] = [box, now + INTERVALS[box], seen, okc, now];
+  const e = S.errs[it.id];
+  if (!res.ok) S.errs[it.id] = [(e ? e[0] : 0) + 1, 0, res.chosen === undefined ? null : res.chosen, now];
+  else if (e && !res.retry) { if (clean) { e[1]++; if (e[1] >= 2) delete S.errs[it.id]; } else e[1] = 0; }
+  if (!res.retry) {
+    S.tot.ans++; if (clean) S.tot.ok++; else if (res.ok) S.tot.help++;
+    const a = S.top[it.t] || (S.top[it.t] = [0, 0]); a[0]++; if (clean) a[1]++;
+    const ty = S.typ[k] || (S.typ[k] = [0, 0]); ty[0]++; if (clean) ty[1]++;
+  }
+  bumpDay(clean, res.sec || 0);
+}
+const topicSeen = t => (S.top[t] || [0])[0];
+function pickFresh(fresh, n){
+  const pool = shuffle(fresh.slice()), out = [], used = {};
+  while (out.length < n && pool.length) {
+    let bi = 0, bs = Infinity;
+    pool.forEach((it, j) => { const sc = (used[it.t] || 0) * 4 + Math.min(topicSeen(it.t), 40) * 0.08 + Math.random(); if (sc < bs) { bs = sc; bi = j; } });
+    const it = pool.splice(bi, 1)[0]; out.push(it); used[it.t] = (used[it.t] || 0) + 1;
+  }
+  return out;
+}
+function interleave(list){
+  const rest = list.slice(), out = [];
+  while (rest.length) {
+    const a = out[out.length - 1], b = out[out.length - 2];
+    let bi = 0, bs = Infinity;
+    rest.forEach((it, j) => {
+      let sc = Math.random() * 0.5;
+      if (a && a.t === it.t) sc += 3;
+      if (b && b.t === it.t) sc += 1;
+      if (a && b && kindOf(a) === kindOf(it) && kindOf(b) === kindOf(it)) sc += 2;
+      if (sc < bs) { bs = sc; bi = j; }
+    });
+    out.push(rest.splice(bi, 1)[0]);
+  }
+  return out;
+}
+function buildSession(len, opt){
+  const now = Date.now();
+  let pool = ITEMS.slice();
+  if (opt.errs) pool = pool.filter(i => S.errs[i.id]);
+  else if (opt.topic != null) pool = pool.filter(i => i.t === opt.topic);
+  else if (opt.mix && opt.mix !== 'all') pool = pool.filter(i => inMix(i, opt.mix));
+  if (opt.errs || opt.topic != null) {
+    const pr = i => S.errs[i.id] ? 0 : st(i.id)[2] > 0 && st(i.id)[1] <= now ? 1 : st(i.id)[2] === 0 ? 2 : 3;
+    const sorted = shuffle(pool.slice()).sort((x, y) => pr(x) - pr(y) || st(x.id)[0] - st(y.id)[0] || st(x.id)[4] - st(y.id)[4]);
+    return interleave(sorted.slice(0, len));
+  }
+  const seen = pool.filter(i => st(i.id)[2] > 0), fresh = pool.filter(i => st(i.id)[2] === 0);
+  const due = seen.filter(i => st(i.id)[1] <= now).sort((x, y) => st(x.id)[0] - st(y.id)[0] || st(x.id)[1] - st(y.id)[1]);
+  const out = due.slice(0, Math.min(due.length, fresh.length ? Math.ceil(len * 0.6) : len));
+  out.push(...pickFresh(fresh, len - out.length));
+  if (out.length < len) {
+    const later = seen.filter(i => !out.includes(i)).sort((x, y) => st(x.id)[1] - st(y.id)[1]);
+    for (const i of later) { if (out.length >= len) break; out.push(i); }
+  }
+  return interleave(out);
+}
+function queueInfo(mix){
+  const now = Date.now(), pool = ITEMS.filter(i => inMix(i, mix || 'all'));
+  return { due: pool.filter(i => st(i.id)[2] > 0 && st(i.id)[1] <= now).length, fresh: pool.filter(i => st(i.id)[2] === 0).length,
+    seen: pool.filter(i => st(i.id)[2] > 0).length, mastered: pool.filter(i => st(i.id)[0] >= 3).length, total: pool.length };
+}
+
+/* ================= active-time clock ================= */
+const clock = { acc: 0, since: 0, on: false };
+function clockStart(){ clock.acc = 0; clock.on = true; clock.since = document.visibilityState === 'visible' ? performance.now() : 0; }
+function clockRead(){ return (clock.acc + (clock.since ? performance.now() - clock.since : 0)) / 1000; }
+function clockStop(){ const t = clockRead(); clock.on = false; clock.since = 0; clock.acc = 0; return Math.round(Math.min(t, 180) * 10) / 10; }
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { if (clock.since) { clock.acc += performance.now() - clock.since; clock.since = 0; } }
+  else if (clock.on && !clock.since) clock.since = performance.now();
+});
+
+/* ================= tabs ================= */
+let current = 'ser';
+const TABS = ['ser', 'top', 'errs', 'stats'];
+function showTab(name){
+  current = name;
+  for (const t of TABS) { $('t-' + t).setAttribute('aria-selected', String(t === name)); $('p-' + t).hidden = t !== name; }
+  if (name === 'ser' && !SE.active) renderStart();
+  if (name === 'top') renderTopics();
+  if (name === 'errs') renderErrs();
+  if (name === 'stats') renderStats();
+  try { localStorage.setItem(LS_KEY + '-tab', name); } catch (e) {}
+}
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('button[data-tab]'); if (b) showTab(b.dataset.tab); });
+const errIds = () => Object.keys(S.errs).filter(id => BYID[id]);
+function renderBadges(){
+  const n = errIds().length, c = $('errCnt');
+  c.textContent = n; if (n) c.removeAttribute('data-zero'); else c.setAttribute('data-zero', '');
+}
+function renderHeader(){
+  const n = ITEMS.length;
+  $('hdSub').textContent = `Планиметрия · по шпаргалке · ${n} ${plural(n, 'карточка', 'карточки', 'карточек')}`;
+}
+function refreshAll(){
+  renderBadges(); renderHeader(); setSync();
+  if (current === 'ser' && !SE.active && $('serDone').hidden) renderStart();
+  if (current === 'top') renderTopics();
+  if (current === 'errs') renderErrs();
+  if (current === 'stats') renderStats();
+}
+
+/* ================= streak ================= */
+function streak(){
+  let n = 0, k = 0;
+  const on = off => { const d = S.days[dayKey(dayShift(off).getTime())]; return d && d[0] >= ACTIVE_DAY; };
+  if (!on(0)) k = -1;
+  while (on(k - n)) n++;
+  return n;
+}
+function bestStreak(){
+  const keys = Object.keys(S.days).filter(k => S.days[k][0] >= ACTIVE_DAY).sort();
+  let best = 0, run = 0, prev = null;
+  for (const k of keys) { const t = new Date(k + 'T12:00:00').getTime(); run = prev && Math.round((t - prev) / DAY) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = t; }
+  return best;
+}
+
+/* ================= series: start screen ================= */
+const SE = { active: false, list: [], i: 0, res: [], retried: new Set(), opt: {}, label: '' };
+function renderStart(){
+  $('serRun').hidden = true; $('serDone').hidden = true;
+  const mix = S.set.mix, q = queueInfo(mix), today = S.days[dayKey(Date.now())] || [0, 0, 0], goal = S.set.goal, sk = streak();
+  const pct = Math.min(100, Math.round(today[0] / goal * 100));
+  const wd = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+  let week = '';
+  for (let k = -6; k <= 0; k++) { const d = dayShift(k), r = S.days[dayKey(d.getTime())];
+    week += `<span class="${r && r[0] >= ACTIVE_DAY ? 'on' : ''}${k === 0 ? ' now' : ''}" title="${dayKey(d.getTime())}">${wd[d.getDay()]}</span>`; }
+  const ne = errIds().length;
+  $('serStart').innerHTML =
+    `<div class="today">` +
+      `<div class="trow2"><span>Сегодня: <b>${today[0]}</b> из <b>${goal}</b></span><span>Серия дней: <b>${sk}</b></span></div>` +
+      `<div class="goalbar" aria-hidden="true"><i class="${pct >= 100 ? 'full' : ''}" style="width:${pct}%"></i></div>` +
+      `<div class="week" aria-label="Последние 7 дней">${week}</div>` +
+      `<div class="queue">${MIXNAME[mix]}: к повторению <b>${q.due}</b> · новых <b>${q.fresh}</b> · освоено <b>${q.mastered}</b> из ${q.total}</div>` +
+    `</div>` +
+    `<div class="startbar"><button class="btn primary" id="go">Начать серию</button>` +
+      `<span class="lenpick"><span class="seglbl">Карточек:</span><span class="seg" role="group" aria-label="Длина серии">${LENS.map(n => `<button data-len="${n}" aria-pressed="${S.set.len === n}">${n}</button>`).join('')}</span></span></div>` +
+    `<div class="mixrow"><span class="seglbl">Что тренировать</span><span class="seg wide" role="group" aria-label="Что тренировать">${MIXES.map(([k, l]) => `<button data-mix="${k}" aria-pressed="${mix === k}">${l}</button>`).join('')}</span></div>` +
+    (ne ? `<div class="actions" style="margin-bottom:12px"><button class="btn" id="goErr">Повторить ошибки (${ne})</button></div>` : '') +
+    `<details class="algo"><summary>Как учить теорию</summary><ol>` +
+      `<li><b>Сначала вспомни, потом смотри.</b> В карточках с формулой варианты скрыты: восстанови формулу сам — на листке или вслух — и только потом открой варианты. Узнать формулу среди вариантов легче, чем вспомнить, а на экзамене вариантов не будет.</li>` +
+      `<li><b>Забыл формулу — выведи её.</b> Почти всё выводится в 1–3 строки из семи корней К1–К7 (вкладка «Темы»). Выведенная формула держится дольше заученной.</li>` +
+      `<li><b>Не знаешь — нажми «Не знаю».</b> Угаданный ответ уберёт карточку на несколько дней, а пробел останется. После «Не знаю» карточка вернётся через несколько заданий, потом завтра.</li>` +
+      `<li><b>Понемногу каждый день.</b> 20–30 карточек в день надёжнее, чем 200 раз в неделю. Карточка освоена после трёх правильных ответов с перерывами в 1 и 3 дня; если новую ответил быстро и верно — после двух.</li>` +
+      `<li><b>Раз в пару дней — «Ошибки».</b> Карточка уходит оттуда после двух правильных ответов подряд.</li>` +
+    `</ol></details>`;
+}
+$('serStart').addEventListener('click', e => {
+  const l = e.target.closest('[data-len]');
+  if (l) { S.set.len = +l.dataset.len; commit(); renderStart(); return; }
+  const m = e.target.closest('[data-mix]');
+  if (m) { S.set.mix = m.dataset.mix; commit(); renderStart(); return; }
+  if (e.target.closest('#go')) startSession({ mix: S.set.mix }, S.set.mix === 'all' ? 'Смешанная серия' : 'Серия: ' + MIXNAME[S.set.mix].toLowerCase());
+  if (e.target.closest('#goErr')) startSession({ errs: true }, 'Работа над ошибками');
+});
+function startSession(opt, label){
+  const len = opt.errs ? Math.min(20, errIds().length) : (opt.topic != null ? 15 : S.set.len);
+  SE.list = buildSession(len, opt); SE.i = 0; SE.res = []; SE.retried = new Set(); SE.opt = opt; SE.label = label;
+  if (current !== 'ser') showTab('ser');
+  $('serStart').innerHTML = ''; $('serDone').hidden = true;
+  if (!SE.list.length) { $('serDone').hidden = false; $('serDone').innerHTML = '<p>Здесь пока нет карточек.</p><div class="actions"><button class="btn" data-act="home">Назад</button></div>'; return; }
+  SE.active = true; $('serRun').hidden = false;
+  renderCard();
+  window.scrollTo({ top: 0 });
+}
+
+/* ================= series: one card ================= */
+const C = { it: null, phase: '', order: [], chosen: null, ok: null, help: false, idk: false, retry: false, picks: new Set(), tries: 0, hint: false, wrongIn: '', recorded: false, sec: 0 };
+function updateBar(doneN){
+  $('sTrack').style.width = (doneN / SE.list.length * 100) + '%';
+  $('sProg').textContent = `${SE.i + 1} / ${SE.list.length}`;
+}
+function renderCard(){
+  const it = SE.list[SE.i];
+  Object.assign(C, { it, chosen: null, ok: null, help: false, idk: false, retry: SE.retried.has(it.id) && SE.res.some(r => r.id === it.id),
+    picks: new Set(), tries: 0, hint: false, wrongIn: '', recorded: false, sec: 0 });
+  C.order = it.type === 'mc' ? shuffle([0, 1, 2, 3]) : it.type === 'ms' ? shuffle([...it.stmts.keys()]) : [];
+  C.phase = kindOf(it) === 'f' && S.set.recall ? 'recall' : 'ask';
+  $('sTitle').textContent = SE.label + (C.retry ? ' · повтор' : '');
+  updateBar(SE.i);
+  clockStart();
+  const k = kindOf(it);
+  $('sCard').innerHTML = `<div class="card"><div class="kind"><span class="lbl">${KIND[k]}</span>${it.src === 'add' ? '<span class="src">дополнительно</span>' : ''}</div>` +
+    `<div class="qt">${fmt(it.q)}</div><div class="zone" id="zone">${zoneHTML()}</div></div>`;
+}
+const nextBtn = () => `<button class="btn primary next" data-act="next">${SE.i + 1 >= SE.list.length ? 'Итог серии' : 'Дальше'}</button>`;
+const verdict = (ok, text) => `<div class="verdict ${ok ? 'ok' : 'bad'}">${text}</div>`;
+function afterHTML(){
+  const it = C.it;
+  return (it.why ? `<p class="why">${fmt(it.why)}</p>` : '') +
+    `<div class="ref"><span class="lbl">В шпаргалке</span><span class="tchip">${esc(tRef(it.t))}</span></div>` + nextBtn();
+}
+const idkBtn = () => `<div class="actions"><button class="linkbtn" data-act="idk">Не знаю</button></div>`;
+function zoneHTML(){
+  const it = C.it;
+  if (it.type === 'mc') return zoneMC();
+  if (it.type === 'tf') return zoneTF();
+  if (it.type === 'num') return zoneNum();
+  return zoneMS();
+}
+function zoneMC(){
+  const it = C.it;
+  if (C.phase === 'recall') return `<div class="thinkbox">Сначала вспомни формулу сам — проговори или запиши на листке. Потом открой варианты и проверь себя.</div>` +
+    `<div class="actions"><button class="btn primary" data-act="show">Показать варианты</button><button class="linkbtn" data-act="idk">Не помню</button></div>`;
+  const done = C.phase === 'done';
+  const h = `<div class="opts" role="group" aria-label="Варианты ответа">` + C.order.map((oi, j) => {
+    let cls = 'opt';
+    if (done) cls += oi === it.correct ? ' right' : oi === C.chosen ? ' wrong' : ' dim';
+    return `<button class="${cls}" data-oi="${oi}"${done ? ' disabled' : ''}><span class="k">${j + 1}</span><span>${fmt(it.opts[oi])}</span></button>`;
+  }).join('') + `</div>`;
+  if (!done) return h + idkBtn();
+  return h + verdict(C.ok, C.ok ? 'Правильно' : C.idk ? 'Запомни ответ' : 'Ошибка') + afterHTML();
+}
+function zoneTF(){
+  const it = C.it, done = C.phase === 'done';
+  const btn = (v, j, label) => {
+    let cls = 'opt tfb';
+    if (done) cls += v === it.ok ? ' right' : v === C.chosen ? ' wrong' : ' dim';
+    return `<button class="${cls}" data-tf="${v ? 1 : 0}"${done ? ' disabled' : ''}><span class="k">${j}</span><span>${label}</span></button>`;
+  };
+  const h = `<div class="tfrow" role="group" aria-label="Ответ">${btn(true, 1, 'Верно')}${btn(false, 2, 'Неверно')}</div>`;
+  if (!done) return h + idkBtn();
+  return h + verdict(C.ok, C.ok ? 'Правильно' : `${C.idk ? 'Запомни' : 'Ошибка'}: утверждение ${it.ok ? 'верное' : 'неверное'}`) + afterHTML();
+}
+function zoneNum(){
+  const it = C.it;
+  if (C.phase === 'done') {
+    let h = C.ok ? verdict(true, `Ответ ${fmtNum(it.ans)} — правильно${C.hint ? ' (с подсказкой)' : C.tries > 1 ? ' (не с первой попытки)' : ''}`)
+                 : verdict(false, `Ответ: ${fmtNum(it.ans)}`);
+    if (!C.ok && it.hint) h += `<div class="hintline"><b>Формула.</b> ${fmt(it.hint)}</div>`;
+    if (it.sol) h += `<div class="sol"><b>Решение.</b> ${fmt(it.sol)}</div>`;
+    return h + afterHTML();
+  }
+  let h = `<div class="ansrow"><input id="ansIn" inputmode="${it.ans < 0 ? 'text' : 'decimal'}" autocomplete="off" enterkeyhint="done" placeholder="ответ" aria-label="Ответ">` +
+    `<button class="btn primary" data-act="check">Проверить</button></div><div class="nfb bad" id="nfb" hidden></div>`;
+  if (C.hint) h += `<div class="hintline"><b>Подсказка.</b> ${fmt(it.hint)}</div>`;
+  h += `<div class="actions">${!C.hint && it.hint ? '<button class="btn small" data-act="hint">Подсказка</button>' : ''}<button class="btn small" data-act="giveup">Показать ответ</button></div>`;
+  return h;
+}
+function zoneMS(){
+  const it = C.it, done = C.phase === 'done';
+  let h = `<div class="stms">`;
+  C.order.forEach(si => {
+    const s = it.stmts[si], on = C.picks.has(si);
+    let cls = 'stm', tag = '';
+    if (done) {
+      if (s.ok) { cls += on ? ' good' : ' badm'; tag = on ? 'верно' : 'пропущено'; }
+      else { cls += on ? ' badm' : ' quiet'; tag = on ? 'лишнее' : 'не подходит'; }
+    }
+    h += `<button class="${cls}" data-si="${si}" aria-pressed="${on}"${done ? ' disabled' : ''}><span class="bx"></span><span>${fmt(s.t)}</span>${done ? `<span class="tg">${tag}</span>` : ''}</button>`;
+  });
+  h += `</div>`;
+  if (!done) return h + `<div class="actions"><button class="btn primary" data-act="mscheck">Проверить</button><button class="linkbtn" data-act="idk">Не знаю</button></div>`;
+  const wrong = it.stmts.filter((s, si) => C.picks.has(si) !== s.ok).length;
+  return h + verdict(!wrong, !wrong ? 'Всё правильно' : C.idk ? 'Запомни ответ' : `Ошибок: ${wrong} из ${it.stmts.length}`) + afterHTML();
+}
+function redrawZone(){ $('zone').innerHTML = zoneHTML(); }
+function answer(res){
+  if (C.phase === 'done' || !C.it) return;
+  const it = C.it, sec = clockStop();
+  C.ok = res.ok; C.help = !!res.help; C.sec = sec; C.phase = 'done';
+  record(it, { ok: res.ok, help: res.help, sec, chosen: res.chosen, retry: C.retry });
+  C.recorded = true;
+  SE.res.push({ id: it.id, ok: res.ok, clean: res.ok && !res.help, sec, retry: C.retry });
+  if (!res.ok && !C.retry && !SE.retried.has(it.id)) { SE.retried.add(it.id); SE.list.splice(Math.min(SE.list.length, SE.i + 4), 0, it); }
+  updateBar(SE.i + 1);
+  commit();
+  redrawZone();
+  const v = $('zone').querySelector('.verdict'); if (v) v.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function reveal(){ if (C.phase !== 'recall') return; C.phase = 'ask'; redrawZone(); }
+function chooseMC(oi){ if (C.phase !== 'ask' || C.it.type !== 'mc' || oi === undefined) return; C.chosen = oi; answer({ ok: oi === C.it.correct, chosen: oi }); }
+function chooseTF(v){ if (C.phase !== 'ask' || C.it.type !== 'tf') return; C.chosen = v; answer({ ok: v === C.it.ok, chosen: v ? 1 : 0 }); }
+function togglePick(si){
+  if (C.phase !== 'ask' || C.it.type !== 'ms') return;
+  if (C.picks.has(si)) C.picks.delete(si); else C.picks.add(si);
+  const b = $('zone').querySelector(`[data-si="${si}"]`); if (b) b.setAttribute('aria-pressed', String(C.picks.has(si)));
+}
+function checkMS(){
+  if (C.phase !== 'ask' || C.it.type !== 'ms') return;
+  const wrongIdx = C.it.stmts.map((s, si) => C.picks.has(si) !== s.ok ? si : -1).filter(x => x >= 0);
+  answer({ ok: !wrongIdx.length, chosen: wrongIdx });
+}
+function dontKnow(){
+  const it = C.it; if (!it || C.phase === 'done' || it.type === 'num') return;
+  C.idk = true; C.chosen = null;
+  answer({ ok: false, chosen: 'idk' });
+}
+function checkNum(){
+  const it = C.it, inp = $('ansIn'); if (!inp || C.phase === 'done') return;
+  const raw = inp.value.trim(), x = parseNum(raw), fb = $('nfb');
+  if (!Number.isFinite(x)) { fb.hidden = false; fb.textContent = 'Введи число: например 12; 2,5; −0,8 или 4/3.'; return; }
+  C.tries++;
+  if (numMatch(x, it.ans)) { answer({ ok: true, help: C.hint || C.tries > 1 }); return; }
+  C.wrongIn = raw.slice(0, 24);
+  fb.hidden = false; fb.textContent = 'Пока не так. Попробуй ещё раз, открой подсказку или ответ.';
+  inp.classList.add('badv'); inp.select();
+}
+$('sCard').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || !C.it) return;
+  if (b.dataset.oi !== undefined) { chooseMC(+b.dataset.oi); return; }
+  if (b.dataset.tf !== undefined) { chooseTF(b.dataset.tf === '1'); return; }
+  if (b.dataset.si !== undefined) { togglePick(+b.dataset.si); return; }
+  const act = b.dataset.act;
+  if (act === 'show') reveal();
+  else if (act === 'idk') dontKnow();
+  else if (act === 'mscheck') checkMS();
+  else if (act === 'check') checkNum();
+  else if (act === 'hint') { C.hint = true; S.tot.hint++; const keep = $('ansIn') ? $('ansIn').value : ''; redrawZone(); if ($('ansIn')) $('ansIn').value = keep; }
+  else if (act === 'giveup') answer({ ok: false, chosen: C.wrongIn || null });
+  else if (act === 'next') nextCard();
+});
+$('sCard').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'ansIn') { e.preventDefault(); checkNum(); } });
+function nextCard(){
+  if (!C.recorded) return;
+  if (SE.i + 1 >= SE.list.length) return finishSession();
+  SE.i++; renderCard();
+  const top = $('serRun').getBoundingClientRect().top + window.scrollY - 64;
+  if (window.scrollY > top) window.scrollTo({ top });
+}
+document.addEventListener('keydown', e => {
+  if (current !== 'ser' || !SE.active || !C.it || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target && e.target.tagName === 'INPUT') return;
+  const it = C.it, onBtn = !!(e.target && e.target.closest && e.target.closest('button'));
+  if (C.phase === 'recall') { if ((e.key === ' ' || e.key === 'Enter') && !onBtn) { e.preventDefault(); reveal(); } return; }
+  if (C.phase === 'ask') {
+    if (it.type === 'mc' && /^[1-4]$/.test(e.key)) { e.preventDefault(); chooseMC(C.order[+e.key - 1]); }
+    else if (it.type === 'tf' && /^[12]$/.test(e.key)) { e.preventDefault(); chooseTF(e.key === '1'); }
+    else if (it.type === 'ms' && /^[1-9]$/.test(e.key)) { const si = C.order[+e.key - 1]; if (si !== undefined) { e.preventDefault(); togglePick(si); } }
+    else if (it.type === 'ms' && e.key === 'Enter' && !onBtn) { e.preventDefault(); checkMS(); }
+    return;
+  }
+  if (C.phase === 'done' && e.key === 'Enter' && !onBtn) { e.preventDefault(); nextCard(); }
+});
+function finishSession(){
+  SE.active = false; C.it = null;
+  const first = SE.res.filter(r => !r.retry), okN = first.filter(r => r.clean).length;
+  const avg = first.length ? first.reduce((a, r) => a + r.sec, 0) / first.length : null;
+  const prev = S.sess.length ? S.sess[S.sess.length - 1] : null;
+  S.sess.push([Date.now(), first.length, okN, avg == null ? null : Math.round(avg * 10) / 10]);
+  S.sess = S.sess.slice(-40); commit();
+  $('serRun').hidden = true; $('serDone').hidden = false;
+  const uniq = arr => [...new Set(arr)].map(id => BYID[id]).filter(Boolean);
+  const bad = uniq(first.filter(r => !r.ok).map(r => r.id));
+  const slow = uniq(first.filter(r => r.ok && (!r.clean || r.sec > SLOW[kindOf(BYID[r.id] || { type: 'mc' })])).map(r => r.id)).slice(0, 6);
+  let cmp = '';
+  if (avg != null) {
+    const sx = v => v < 10 ? String(Math.round(v * 10) / 10).replace('.', ',') : String(Math.round(v));
+    cmp = `<p class="cmp">В среднем <b>${sx(avg)} с</b> на карточку`;
+    if (prev && prev[3] != null) { const d = Math.round((avg - prev[3]) * 10) / 10; cmp += d <= -0.5 ? ` · <span class="up">на ${sx(-d)} с быстрее</span>, чем в прошлой серии` : d >= 0.5 ? ` · <span class="down">на ${sx(d)} с дольше</span>, чем в прошлой серии` : ' · примерно как в прошлой серии'; }
+    cmp += `</p>`;
+  }
+  const li = it => `<li><span class="k2">${KIND[kindOf(it)].replace('?', '')} · ${tShort(it.t)}</span><span class="s">${answerLine(it)}</span>${it.why ? `<span class="m">${fmt(it.why)}</span>` : ''}</li>`;
+  $('serDone').innerHTML =
+    `<h2>${okN} из ${first.length}</h2><p>${SE.opt.errs ? 'ошибок исправлено с первого раза' : 'правильно с первого раза'}${SE.res.length > first.length ? ` · повторов: ${SE.res.length - first.length}` : ''}</p>` + cmp +
+    (bad.length ? `<p>Ошибки — перечитай правильные ответы (карточки уже в «Ошибках»):</p><ul class="mlist">${bad.map(li).join('')}</ul>` : '<p>Без ошибок.</p>') +
+    (slow.length ? `<p>Правильно, но долго или с подсказкой — пока не на автомате:</p><ul class="mlist">${slow.map(li).join('')}</ul>` : '') +
+    `<div class="actions"><button class="btn primary" data-act="again">Ещё серия</button>` +
+    (errIds().length ? `<button class="btn" data-act="errs">Повторить ошибки</button>` : '') +
+    `<button class="btn small" data-act="home">К началу</button></div>`;
+  window.scrollTo({ top: 0 });
+}
+$('serDone').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.act === 'again') startSession(SE.opt.errs ? { mix: S.set.mix } : SE.opt, SE.opt.errs ? (S.set.mix === 'all' ? 'Смешанная серия' : 'Серия: ' + MIXNAME[S.set.mix].toLowerCase()) : SE.label);
+  if (b.dataset.act === 'errs') startSession({ errs: true }, 'Работа над ошибками');
+  if (b.dataset.act === 'home') { $('serDone').hidden = true; renderStart(); }
+});
+
+/* ================= errors ================= */
+function renderErrs(){
+  const ids = errIds().sort((a, b) => S.errs[b][0] - S.errs[a][0] || S.errs[b][3] - S.errs[a][3]);
+  if (!ids.length) { $('errsBody').innerHTML = '<div class="empty">Ошибок пока нет. Сюда попадает каждая карточка, на которой ты ошибся или нажал «Не знаю», и уходит после двух правильных ответов подряд.</div>'; return; }
+  $('errsBody').innerHTML =
+    `<p class="lead">${ids.length} ${plural(ids.length, 'карточка', 'карточки', 'карточек')}. Карточка уходит из списка после двух правильных ответов подряд.</p>` +
+    `<div class="actions" style="margin-bottom:12px"><button class="btn primary" id="errTrain">Тренировать ошибки</button></div>` +
+    `<div class="box"><ul class="mlist">${ids.map(id => {
+      const it = BYID[id], e = S.errs[id], ya = yourAnswer(it, e[2]);
+      return `<li><span class="k2">${KIND[kindOf(it)].replace('?', '')} · ${tShort(it.t)} · ошибок: ${e[0]}${e[1] ? ` · правильно подряд: ${e[1]} из 2` : ''}</span>` +
+        `<span class="s">${answerLine(it)}</span>` + (ya ? `<span class="m"><b>Ты ответил:</b> ${ya}</span>` : '') +
+        (it.why ? `<span class="m">${fmt(it.why)}</span>` : '') + `</li>`;
+    }).join('')}</ul></div>`;
+}
+$('errsBody').addEventListener('click', e => { if (e.target.closest('#errTrain')) startSession({ errs: true }, 'Работа над ошибками'); });
+
+/* ================= topics ================= */
+const ROOTS = [
+  ['К1', 'Сумма углов треугольника 180°; при параллельных прямых накрест лежащие углы равны, односторонние в сумме 180°; внешний угол треугольника равен сумме двух внутренних, не смежных с ним.', 'Углы между биссектрисами и высотами (1, 2), углы с окружностью (18), признаки параллелограмма (23).'],
+  ['К2', 'Теорема косинусов c² = a² + b² − 2ab cos C (при C = 90° — Пифагор).', 'Медиана и d_1² + d_2² = 2(a² + b²) (7), вид угла по сторонам (13), высота по сторонам (6, 11), общая касательная (20).'],
+  ['К3', 'Площадь S = ½ah_a = ½ab sin C.', 'S = pr и S = abc/(4R) (9), биссектриса (8), площадь через диагонали (12), отношения площадей (27), r_a (29).'],
+  ['К4', 'Теорема синусов a/sin A = 2R.', 'Радиусы описанных окружностей (15, 16), хорда = 2R sin α (19).'],
+  ['К5', 'Подобие: длины относятся как k, площади — как k²; теорема Фалеса.', 'Прямоугольный треугольник с высотой (3), трапеция (10, 22), степень точки (19), Менелай (26), высоты (30).'],
+  ['К6', 'Вписанный угол равен половине дуги, на которую опирается.', 'Углы с окружностью (18), степень точки (19), вписанность (21), трезубец (8).'],
+  ['К7', 'Касательная ⊥ радиусу в точке касания; отрезки касательных из одной точки равны.', 'Отрезки p − a (28), r = (a + b − c)/2 (4), дельтоид (17), общая касательная (20), описанный четырёхугольник (21).'],
+];
+const openTopics = new Set();
+const topicItems = t => ITEMS.filter(i => i.t === t);
+const mastery = items => items.length ? items.reduce((s, i) => s + Math.min(st(i.id)[0], 3) / 3, 0) / items.length : 0;
+function renderTopics(){
+  $('topBody').innerHTML =
+    `<p class="lead">Номера тем — как в шпаргалке «Планиметрия: формулы и факты». Нажми на тему: откроются её карточки с ответами и кнопка тренировки.</p>` +
+    `<details class="algo"><summary>Семь корней: из них выводится почти всё</summary><ol class="roots">${ROOTS.map(([k, a, b]) =>
+      `<li><span class="kk">${k}</span><span>${fmt(a)}</span><span class="tp">→ ${fmt(b)}</span></li>`).join('')}</ol></details>` +
+    `<div class="legend"><span><i class="st"></i>не встречалась</span><span><i class="st prog"></i>в процессе</span><span><i class="st mast"></i>освоена</span><span><i class="st err"></i>в ошибках</span></div>` +
+    `<div class="box">${ORDER.map(t => {
+      const items = topicItems(t); if (!items.length) return '';
+      const pc = Math.round(mastery(items) * 100), seenN = items.filter(i => st(i.id)[2] > 0).length, done = items.filter(i => st(i.id)[0] >= 3).length;
+      const errN = items.filter(i => S.errs[i.id]).length, open = openTopics.has(t);
+      let body = '';
+      if (open) body = `<div class="tbody"><div class="actions"><button class="btn small primary" data-train="${esc(t)}">Тренировать тему</button></div>` +
+        items.map(i => { const s = st(i.id), cls = S.errs[i.id] ? 'err' : s[0] >= 3 ? 'mast' : s[2] > 0 ? 'prog' : '';
+          return `<div class="tr"><span class="st ${cls}"></span><span>${answerLine(i)}${i.type === 'tf' && !i.ok && i.why ? `<small>${fmt(i.why)}</small>` : ''}</span></div>`; }).join('') + `</div>`;
+      return `<div class="topic"><button data-topic="${esc(t)}" aria-expanded="${open}"><span class="no">${tNo(t)}</span>` +
+        `<span class="nm">${esc(TOPICS[t])}<small>${items.length} ${plural(items.length, 'карточка', 'карточки', 'карточек')} · изучено ${seenN} · освоено ${done}${errN ? ` · в ошибках ${errN}` : ''}</small></span>` +
+        `<span class="pc">${pc}%</span><span class="meter"><i class="${pc >= 67 ? 'good' : ''}" style="width:${pc}%"></i></span></button>${body}</div>`;
+    }).join('')}</div>`;
+}
+$('topBody').addEventListener('click', e => {
+  const tr = e.target.closest('[data-train]');
+  if (tr) { const t = tr.dataset.train; startSession({ topic: t }, t === 'T' || t === 'D' ? TOPICS[t] : `Тема ${t}: ${TOPICS[t]}`); return; }
+  const b = e.target.closest('[data-topic]'); if (!b) return;
+  const t = b.dataset.topic; if (openTopics.has(t)) openTopics.delete(t); else openTopics.add(t);
+  renderTopics();
+});
+
+/* ================= stats ================= */
+function renderStats(){
+  const q = queueInfo('all'), tot = S.tot, acc = tot.ans ? Math.round(tot.ok / tot.ans * 100) : null, mins = Math.round(tot.sec / 60);
+  let h = `<div class="tiles">` +
+    `<div class="tile"><b>${tot.ans}</b><span>${plural(tot.ans, 'ответ', 'ответа', 'ответов')}</span></div>` +
+    `<div class="tile"><b>${acc === null ? '—' : acc + '%'}</b><span>правильно с первого раза</span></div>` +
+    `<div class="tile"><b>${mins}</b><span>${plural(mins, 'минута', 'минуты', 'минут')} тренировки</span></div>` +
+    `<div class="tile"><b>${streak()}<small> / ${bestStreak()}</small></b><span>серия дней / лучшая</span></div>` +
+    `<div class="tile"><b>${q.seen}<small>/${q.total}</small></b><span>карточек изучено</span></div>` +
+    `<div class="tile"><b>${q.mastered}<small>/${q.total}</small></b><span>карточек освоено</span></div></div>`;
+  const ss = S.sess.filter(x => x[3] != null).slice(-15);
+  h += `<h3 class="sec-h">Время на карточку по сериям</h3><div class="chart">`;
+  if (ss.length >= 2) {
+    const vals = ss.map(x => x[3]), mx = Math.max(...vals, 1) * 1.15, Wc = 320, Hc = 110, pl = 30, pr = 8, pt = 10, pb = 18;
+    const xp = i => pl + (Wc - pl - pr) * (i / (ss.length - 1)), yp = v => pt + (Hc - pt - pb) * (1 - v / mx);
+    const pts = vals.map((v, i) => `${xp(i).toFixed(1)},${yp(v).toFixed(1)}`).join(' ');
+    const tickV = [...new Set([0, Math.round(mx / 2), Math.round(mx)])];
+    h += `<svg viewBox="0 0 ${Wc} ${Hc}" role="img" aria-label="Среднее время на карточку по последним сериям">` +
+      tickV.map(v => `<line x1="${pl}" x2="${Wc - pr}" y1="${yp(v).toFixed(1)}" y2="${yp(v).toFixed(1)}" stroke="var(--grid)" stroke-width="1"/>` +
+        `<text x="${pl - 6}" y="${yp(v).toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="10" fill="var(--muted)">${v} с</text>`).join('') +
+      `<polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` +
+      vals.map((v, i) => `<circle cx="${xp(i).toFixed(1)}" cy="${yp(v).toFixed(1)}" r="2.6" fill="var(--accent)"/>`).join('') +
+      `<text x="${xp(vals.length - 1).toFixed(1)}" y="${(yp(vals[vals.length - 1]) - 9).toFixed(1)}" text-anchor="end" font-size="11" font-weight="600" fill="var(--ink)">${Math.round(vals[vals.length - 1])} с</text>` +
+      `<text x="${pl}" y="${Hc - 3}" font-size="10" fill="var(--muted)">старые</text><text x="${Wc - pr}" y="${Hc - 3}" text-anchor="end" font-size="10" fill="var(--muted)">последняя</text></svg>` +
+      `<p>Среднее время от появления карточки до ответа. Факт, который знаешь наизусть, вспоминается за несколько секунд.</p>`;
+  } else h += `<p>График появится после двух серий: по нему видно, как формулы и факты переходят на автомат.</p>`;
+  h += `</div>`;
+  const start = dayShift(-((new Date().getDay() + 6) % 7) - 28);
+  let cells = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'].map(d => `<span class="dn">${d}</span>`).join('');
+  const todayKey = dayKey(Date.now());
+  for (let k = 0; k < 35; k++) {
+    const d = new Date(start); d.setDate(start.getDate() + k);
+    const key = dayKey(d.getTime()), r = S.days[key], n = r ? r[0] : 0, fut = key > todayKey;
+    const lv = fut ? 'fut' : n === 0 ? '' : n < ACTIVE_DAY ? 'h1' : n < S.set.goal ? 'h2' : n < S.set.goal * 2 ? 'h3' : 'h4';
+    cells += `<span class="${lv}" title="${key}: ${n}"></span>`;
+  }
+  h += `<h3 class="sec-h">Активность за 5 недель</h3><div class="heatwrap"><div class="heat">${cells}</div><p class="note">Чем темнее клетка, тем больше карточек в этот день. День засчитывается в серию с ${ACTIVE_DAY} ответов.</p></div>`;
+  const rows = ORDER.map(t => ({ t, v: S.top[t] || [0, 0] })).filter(x => x.v[0] >= 5);
+  const weak = rows.filter(x => x.v[1] / x.v[0] < 0.75).sort((a, b) => a.v[1] / a.v[0] - b.v[1] / b.v[0]).slice(0, 6);
+  h += `<h3 class="sec-h">Слабые места</h3>`;
+  if (weak.length) h += `<div class="box">${weak.map(({ t, v }) => { const p = Math.round(v[1] / v[0] * 100);
+      return `<div class="srow"><span class="t">${t === 'T' || t === 'D' ? '' : t + '. '}${esc(TOPICS[t])}<span class="weak">слабое место</span><small>${v[0]} ${plural(v[0], 'ответ', 'ответа', 'ответов')}</small></span>` +
+        `<span class="pct">${p}%<small><button class="btn small" data-train="${esc(t)}" style="margin-top:4px">Тренировать</button></small></span>` +
+        `<span class="meter"><i class="low" style="width:${p}%"></i></span></div>`; }).join('')}</div>`;
+  else h += `<div class="empty">${rows.length ? 'Слабых тем нет: по всем темам, где было хотя бы 5 ответов, правильно с первого раза от 75%.' : 'Появятся, когда по темам накопится хотя бы 5 ответов.'}</div>`;
+  h += `<h3 class="sec-h">По видам карточек</h3><div class="box">${KSTAT.map(([k, name]) => { const v = S.typ[k] || [0, 0], p = v[0] ? Math.round(v[1] / v[0] * 100) : null;
+    return `<div class="srow"><span class="t">${name}<small>${v[0]} ${plural(v[0], 'ответ', 'ответа', 'ответов')}</small></span><span class="pct">${p === null ? '—' : p + '%'}</span>` +
+      `<span class="meter"><i class="${p !== null && p < 60 ? 'low' : ''}" style="width:${p || 0}%"></i></span></div>`; }).join('')}` +
+    `<div class="srow"><span class="t">Подсказок в вычислениях<small>чем меньше, тем лучше</small></span><span class="pct">${tot.hint}</span></div></div>`;
+  const cnt = k => ITEMS.filter(i => inMix(i, k)).length;
+  h += `<h3 class="sec-h">Настройки</h3><div class="box">` +
+    `<div class="setrow"><span>Цель на день</span><span class="seg" role="group" aria-label="Цель на день">${GOALS.map(n => `<button data-goal="${n}" aria-pressed="${S.set.goal === n}">${n}</button>`).join('')}</span></div>` +
+    `<div class="setrow"><span>Варианты в формулах</span><span class="seg" role="group" aria-label="Варианты в формулах"><button data-recall="1" aria-pressed="${S.set.recall}">сначала скрыты</button><button data-recall="0" aria-pressed="${!S.set.recall}">сразу</button></span></div>` +
+    `<div class="setrow"><span>В тренажёре</span><span class="note">формул ${cnt('f')} · фактов ${cnt('facts')} · вычислений ${cnt('num')}${EXTRA ? ` · дополнительных: ${EXTRA}` : ''}</span></div></div>` +
+    `<p class="note">Нашёл ошибку в карточке или факт из шпаргалки, которого здесь нет? Напиши в чат — исправлю или добавлю. Задачи на первый ход — в соседнем тренажёре «<a href="../index.html#t=pervyi-hod" target="_top">Первый ход</a>».</p>`;
+  $('statsBody').innerHTML = h;
+  setSync();
+}
+$('statsBody').addEventListener('click', e => {
+  const g = e.target.closest('[data-goal]'); if (g) { S.set.goal = +g.dataset.goal; commit(); renderStats(); return; }
+  const rc = e.target.closest('[data-recall]'); if (rc) { S.set.recall = rc.dataset.recall === '1'; commit(); renderStats(); return; }
+  const tr = e.target.closest('[data-train]'); if (tr) { const t = tr.dataset.train; startSession({ topic: t }, t === 'T' || t === 'D' ? TOPICS[t] : `Тема ${t}: ${TOPICS[t]}`); }
+});
+$('resetBox').addEventListener('click', e => {
+  if (e.target.closest('#reset')) {
+    $('resetBox').innerHTML = `<div class="confirm"><p>Удалить всю статистику, повторения и список ошибок?</p>` +
+      `<button class="btn small danger" id="resetYes">Да, сбросить</button><button class="btn small" id="resetNo">Отмена</button></div>`;
+  } else if (e.target.closest('#resetYes')) { const keep = S.set; S = blank(); S.set = keep; commit(); renderStats(); restoreReset(); }
+  else if (e.target.closest('#resetNo')) restoreReset();
+});
+function restoreReset(){ $('resetBox').innerHTML = '<button class="btn small danger" id="reset">Сбросить прогресс</button>'; }
+
+/* ================= boot ================= */
+renderHeader(); renderBadges(); setSync(); renderStart();
+try { const t = localStorage.getItem(LS_KEY + '-tab'); if (t && t !== 'ser' && TABS.includes(t)) showTab(t); } catch (e) {}
+initCloud();
+</script>
+
+</body></html>

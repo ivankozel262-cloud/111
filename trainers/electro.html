@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Электродинамика 11–15 — тренажёр</title>
+<style>
+:root{--bg:#fbfaf7;--card:#ffffff;--fg:#1d1d1b;--muted:#6b6b66;--grid:#e3e1da;--line:#d6d3ca;--acc:#2f5d8a;--accbg:#e8eff6;--ok:#2e7d4f;--okbg:#e9f4ed;--bad:#b3412f;--badbg:#f8ebe8;--warnbg:#f6f1e3;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#17181a;--card:#1f2023;--fg:#e9e8e4;--muted:#9a9993;--grid:#34353a;--line:#3d3e43;--acc:#8db4dc;--accbg:#22303d;--ok:#7cc79a;--okbg:#1d2e24;--bad:#ec907f;--badbg:#36221f;--warnbg:#2e2a20;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+header{max-width:820px;margin:0 auto;padding:18px 16px 6px}
+h1{font-size:21px;margin:0 0 2px;font-weight:650;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+nav{max-width:820px;margin:0 auto;padding:8px 16px;display:flex;gap:4px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav button{border:0;background:none;color:var(--muted);font:inherit;font-size:15px;padding:7px 11px;border-radius:7px;cursor:pointer}
+nav button.on{background:var(--accbg);color:var(--acc);font-weight:600}
+#errn:not(:empty){display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--bad);color:#fff;font-size:12px;line-height:18px;text-align:center}
+main{max-width:820px;margin:0 auto;padding:12px 16px 60px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.panel h3{margin:0 0 8px;font-size:18px}
+.panel>p:first-child{margin-top:0}.panel>p:last-child{margin-bottom:0}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+.lab{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;padding:8px 14px;border-radius:20px;cursor:pointer}
+.chip:hover{border-color:var(--acc);color:var(--acc)}.chip.sm{font-size:14px;padding:6px 11px}
+button{font:inherit;cursor:pointer}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btns button,#exchk,#exgo,#errgo{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:8px 16px;border-radius:8px}
+button.pri{background:var(--acc)!important;border-color:var(--acc)!important;color:var(--card)!important;font-weight:600}
+button.ghost{background:none!important;color:var(--muted)!important}
+button.bad{border:1px solid var(--bad);background:var(--badbg);color:var(--bad);padding:5px 12px;border-radius:7px}
+#rn{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:5px 12px;border-radius:7px}
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px}
+.back{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:6px 12px;border-radius:8px;font-weight:600}
+.back:hover{border-color:var(--acc);color:var(--acc)}
+.sw{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:14px;margin-left:auto}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:4px 9px;border-radius:7px;font-size:14px}
+.mini:hover{border-color:var(--acc);color:var(--acc)}.mini.on{background:var(--accbg);border-color:var(--acc);color:var(--acc);font-weight:600}
+#exback{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:8px 16px;border-radius:8px}
+.cardhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.tag{display:inline-block;background:var(--accbg);color:var(--acc);font-weight:700;font-size:13.5px;padding:1px 8px;border-radius:6px}
+.ttl{font-weight:600;font-size:15px}.prog{margin-left:auto;color:var(--muted);font-size:14px}
+.q{font-size:16.5px;line-height:1.55}
+.q i,.sol i,.stm i,.opts i,.chrow i{font-family:"Times New Roman",Times,serif;font-size:1.08em}
+.figwrap{margin:12px 0 4px;overflow-x:auto}
+svg.fig{display:block;max-width:100%;height:auto;width:var(--fw,340px)}
+svg .g{stroke:var(--grid);stroke-width:.8}
+svg .ax{stroke:var(--fg);stroke-width:1.1;fill:none}svg .ah{fill:var(--fg)}
+svg .tk{fill:var(--muted);font-size:10px;font-family:inherit}
+svg .lb{fill:var(--fg);font-size:11.5px;font-family:inherit}
+svg .cv{stroke:var(--acc);stroke-width:2;fill:none}
+svg .dot{fill:var(--fg)}svg .dot2{fill:var(--acc)}
+svg .w{stroke:var(--fg);stroke-width:1.4;fill:none}
+svg .w2{stroke:var(--fg);stroke-width:1.6}svg .w3{stroke:var(--fg);stroke-width:3.2}
+svg .el{stroke:var(--fg);stroke-width:1.4;fill:var(--card)}
+svg .g2{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3;fill:none}
+.two{display:flex;gap:14px;flex-wrap:wrap}
+table.tbl{border-collapse:collapse;margin:10px 0;font-size:15px}
+table.tbl td,table.tbl th{border:1px solid var(--line);padding:4px 10px;text-align:center}
+table.st{border-collapse:collapse;width:100%;margin:14px 0 4px;font-size:15px}
+table.st th{font-weight:600;color:var(--muted);font-size:13.5px;text-align:left;border-bottom:1px solid var(--line);padding:5px 6px}
+table.st td{border-bottom:1px solid var(--grid);padding:5px 6px}
+#ansbox{margin-top:14px}
+.ansrow{display:flex;align-items:center;gap:10px}
+.ansrow input{font:inherit;font-size:17px;width:150px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.ansrow input:focus{outline:2px solid var(--acc);outline-offset:1px}
+.unit{color:var(--muted)}
+.stm{display:flex;flex-direction:column;gap:6px}
+label.st{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1px solid var(--grid);border-radius:8px;cursor:pointer}
+label.st:hover{border-color:var(--line)}label.st input{margin-top:5px;transform:scale(1.15)}
+.leg{font-size:14px;color:var(--muted);margin-bottom:6px}
+.chrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--grid)}
+.seg{display:flex;gap:4px;flex-shrink:0}
+.seg label{position:relative}.seg input{position:absolute;opacity:0}
+.seg b{display:inline-block;width:36px;text-align:center;padding:5px 0;border:1px solid var(--line);border-radius:7px;cursor:pointer;font-weight:600}
+.seg input:checked+b{background:var(--acc);border-color:var(--acc);color:var(--card)}
+.seg input:focus-visible+b{outline:2px solid var(--acc)}
+.seg input:disabled+b{cursor:default}
+.opts{display:flex;flex-direction:column;gap:6px}
+label.opt{display:flex;gap:10px;align-items:center;padding:7px 10px;border:1px solid var(--grid);border-radius:8px;cursor:pointer}
+.mopts{margin:0 0 8px;padding-left:22px;font-size:15px}
+.fb{margin-top:14px;padding:12px 14px;border-radius:10px;border:1px solid}
+.fb.ok{background:var(--okbg);border-color:var(--ok)}.fb.bad{background:var(--badbg);border-color:var(--bad)}
+.verdict{font-weight:600;margin-bottom:6px}.fb.ok .verdict{color:var(--ok)}.fb.bad .verdict{color:var(--bad)}
+.sol{line-height:1.55}
+.trap{margin-top:8px;padding:6px 10px;background:var(--warnbg);border-radius:7px;font-size:15px}
+.ref,.book{margin-top:6px;font-size:13.5px;color:var(--muted)}
+.hint{margin-top:10px;color:var(--bad);font-size:14.5px}
+.pts{font-weight:700;margin-top:10px}
+.heat{display:flex;gap:3px;flex-wrap:wrap;margin:10px 0 2px}
+.hc{width:14px;height:14px;border-radius:3px;background:var(--grid)}
+.hc.l1{background:color-mix(in srgb,var(--acc) 35%,var(--grid))}.hc.l2{background:color-mix(in srgb,var(--acc) 65%,var(--grid))}.hc.l3{background:var(--acc)}
+.elist{padding-left:0;list-style:none}.elist li{padding:5px 0;border-bottom:1px solid var(--grid)}
+#sync{max-width:820px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:13px}
+.theory h3{margin-top:18px}.theory h3:first-child{margin-top:0}
+.theory .f{font-family:"Times New Roman",Times,serif;font-size:18px;background:var(--bg);border:1px solid var(--grid);border-radius:7px;padding:6px 12px;display:inline-block;margin:4px 0}
+.theory ul{padding-left:20px}.theory li{margin:3px 0}
+.theory table{border-collapse:collapse;font-size:14.5px;margin:8px 0;width:100%}
+.theory td,.theory th{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+.theory th{font-weight:600;background:var(--bg)}
+@media (max-width:560px){.sw{margin-left:0}.chrow{flex-direction:column;align-items:flex-start}.panel{padding:14px 13px}.q{font-size:16px}}
+</style>
+</head>
+<body>
+<header><h1>Электродинамика: задания 11–15</h1><div class="sub">Первая часть ЕГЭ по физике · типы из сборника Демидовой 2027 и ЕГЭ 2025–2026 · новые числа в каждой карточке</div></header>
+<nav><button data-tab="train" class="on">Тренировка</button><button data-tab="exam">Как на ЕГЭ</button><button data-tab="errors">Ошибки<span id="errn"></span></button><button data-tab="stats">Итоги</button><button data-tab="optics">Оптика</button><button data-tab="help">Как пользоваться</button></nav>
+<main>
+<section id="train"></section>
+<section id="exam" hidden></section>
+<section id="errors" hidden></section>
+<section id="stats" hidden></section>
+<section id="optics" hidden><div class="panel theory">
+<h3>Плоское зеркало</h3>
+<ul>
+<li>Угол падения равен углу отражения: <span class="f">α = γ</span>. Оба угла отсчитывают <b>от перпендикуляра</b> к зеркалу, а не от поверхности.</li>
+<li>Если луч составляет с плоскостью зеркала угол β, то угол падения α = 90° − β.</li>
+<li>Угол между падающим и отражённым лучами: <span class="f">2α</span>.</li>
+<li>Изображение мнимое, прямое, того же размера, симметрично предмету относительно плоскости зеркала: расстояние предмет → зеркало = зеркало → изображение.</li>
+<li>Предмет отошёл от зеркала на <i>x</i> — расстояние «предмет — изображение» выросло на <b>2<i>x</i></b>.</li>
+<li>Зеркало повернули на угол φ — отражённый луч повернулся на <b>2φ</b>.</li>
+</ul>
+<h3>Тонкая линза</h3>
+<div class="f">1/<i>F</i> = 1/<i>d</i> + 1/<i>f</i> &nbsp;&nbsp; <i>D</i> = 1/<i>F</i> &nbsp;&nbsp; Γ = <i>H</i>/<i>h</i> = <i>f</i>/<i>d</i></div>
+<ul>
+<li><i>d</i> — расстояние от предмета до линзы, <i>f</i> — от линзы до изображения, <i>F</i> — фокусное. Для собирающей <i>F</i> &gt; 0, для рассеивающей <i>F</i> &lt; 0; мнимое изображение — <i>f</i> &lt; 0.</li>
+<li>Оптическая сила в диоптриях: <i>D</i> = 1/<i>F</i>, где <i>F</i> <b>в метрах</b>. 25 см → 4 дптр.</li>
+<li>Три удобных луча: через центр линзы — не преломляется; параллельный оси — идёт через фокус; через фокус — выходит параллельно оси.</li>
+</ul>
+<table><tr><th>Где предмет (собирающая)</th><th>Изображение</th></tr>
+<tr><td><i>d</i> &gt; 2<i>F</i></td><td>действительное, перевёрнутое, уменьшенное, между <i>F</i> и 2<i>F</i></td></tr>
+<tr><td><i>d</i> = 2<i>F</i></td><td>действительное, перевёрнутое, равное, в 2<i>F</i></td></tr>
+<tr><td><i>F</i> &lt; <i>d</i> &lt; 2<i>F</i></td><td>действительное, перевёрнутое, увеличенное, дальше 2<i>F</i></td></tr>
+<tr><td><i>d</i> = <i>F</i></td><td>изображения нет (лучи идут параллельно)</td></tr>
+<tr><td><i>d</i> &lt; <i>F</i></td><td>мнимое, прямое, увеличенное, с той же стороны, что предмет</td></tr>
+<tr><td>рассеивающая, любое <i>d</i></td><td>мнимое, прямое, уменьшенное, между линзой и фокусом</td></tr>
+</table>
+<h3>Преломление (для №15)</h3>
+<div class="f"><i>n</i> = <i>c</i>/<i>v</i> &nbsp;&nbsp; <i>n</i><sub>1</sub> sin α = <i>n</i><sub>2</sub> sin β &nbsp;&nbsp; λ = <i>v</i>/ν &nbsp;&nbsp; sin α<sub>пр</sub> = 1/<i>n</i></div>
+<ul>
+<li>Углы падения α и преломления β отсчитывают от нормали. Из воздуха в стекло луч прижимается к нормали (β &lt; α).</li>
+<li>При переходе в другую среду <b>частота не меняется</b> (её задаёт источник). В среде с бо́льшим <i>n</i> скорость и длина волны меньше.</li>
+<li>Показатель преломления — свойство вещества: от угла падения он не зависит.</li>
+<li>Из плоскопараллельной пластинки луч выходит <b>параллельно падающему</b>, при любом <i>n</i>; смещается только в сторону.</li>
+<li>Полное внутреннее отражение — только при переходе в среду с меньшим <i>n</i> (из стекла в воздух) и при α ≥ α<sub>пр</sub>. Больше <i>n</i> — меньше предельный угол.</li>
+</ul>
+<h3>Линза: как меняется изображение (для №15)</h3>
+<ul>
+<li>Предмет дальше фокуса: отодвигаем предмет — изображение приближается к линзе (к фокусу) и уменьшается; придвигаем — удаляется и растёт.</li>
+<li>Предмет между фокусом и линзой (изображение мнимое): придвигаем к линзе — изображение тоже ближе к линзе и меньше.</li>
+<li>Линзу заменили на более сильную (больше <i>D</i>, меньше <i>F</i>) при том же <i>d</i> &gt; <i>F</i>: изображение ближе к линзе и меньше.</li>
+</ul>
+<h3>Частые ошибки</h3>
+<ul>
+<li>Угол отсчитали от зеркала, а не от перпендикуляра.</li>
+<li>Подставили <i>F</i> в сантиметрах в <i>D</i> = 1/<i>F</i>.</li>
+<li>В задаче по клеточкам перепутали «точку изображения» с фокусом: сначала найди фокус по лучу, параллельному оси.</li>
+</ul>
+</div></section>
+<section id="help" hidden><div class="panel theory">
+<h3>Как заниматься</h3>
+<ul>
+<li><b>Тренировка</b> — серия из 12 карточек. Можно взять все номера сразу, один номер или одну тему из конспекта. Сначала идут ошибки, потом то, что пора повторить, потом новые типы.</li>
+<li>Ошибся — этот тип вернётся через 3–4 карточки <b>с другими числами</b>. Из списка ошибок он уходит после двух верных ответов подряд.</li>
+<li>Повторения растягиваются: 10 минут → 1 день → 3 → 7 → 16 → 35 дней. Если ответ верный, но долгий, интервал не растёт.</li>
+<li>Ориентир по времени: №11–13 — до минуты, №14 — до двух, №15 — до полутора.</li>
+<li><b>Как на ЕГЭ</b> — пять заданий подряд (11–15) с баллами по правилам: 14 и 15 — 2 балла, 1 балл за одну ошибку.</li>
+<li>Десятичную дробь можно писать с запятой. Ответ — в тех единицах, что указаны справа от поля.</li>
+<li>Клавиша Enter — «Проверить», затем «Дальше». Кнопка «← Меню» (или Esc) — выйти из серии в меню; «Другой номер» сразу запускает серию по другому номеру. Ответы, которые ты уже дал, сохраняются.</li>
+</ul>
+<h3>Что внутри</h3>
+<p>43 типа: №11 — закон Кулона и постоянный ток (9), №12 — магнитное поле и индукция (9), №13 — колебательный контур и оптика (7), №14 — выбор верных утверждений (8), №15 — «как изменится» и соответствие (10). Типы взяты из 30 вариантов сборника Демидовой 2027, проекта демоверсии ФИПИ 2027, а также из материалов ФИПИ по ЕГЭ 2025 и 2026: разбор ошибок ЕГЭ-2025, методические рекомендации 2026, навигатор подготовки 2025. Сами задачи составлены заново, числа меняются каждый раз, ответы считает программа.</p>
+<p class="muted small">Номера 11–15 в 2025, 2026 и 2027 годах проверяют одно и то же: структура первой части не менялась. Новые типы (шарики соприкоснули, d(t) конденсатора, правило Ленца, ключ закорачивает резистор, преломление, линза в №15) в разборе карточки помечены строкой «Откуда тип».</p>
+<p class="muted small">Оптики в конспекте по электродинамике нет — она появляется в №13 в вариантах сборника, поэтому коротко разобрана во вкладке «Оптика».</p>
+</div></section>
+</main>
+<div id="sync"></div>
+<script>
+window.BOOK={"coulomb": [1, 2, 9, 10, 13, 14], "i_qt": [3, 4, 5, 6, 11, 12], "iu": [16], "photo": [7, 8], "selfind": [1, 2, 3, 4, 5, 6, 7, 8, 10, 17, 18, 23, 24, 25, 26], "dphi": [9], "faraday": [13, 14, 21, 22], "ampere": [1, 2, 7, 17, 18], "lorentz": [5, 7, 11, 14, 15, 16, 17, 19, 20, 21, 23, 26], "rotating": [11, 12], "mirror": [10, 11, 12, 17, 18, 19, 20, 29, 30], "lens": [13, 14, 15, 16, 25, 26, 27, 28], "lc_change": [1, 2, 3, 4, 21, 22, 27, 28], "radio": [7, 8, 15, 16, 17, 18], "beads": [11, 12, 19, 20, 29, 30], "lc_table": [13], "cores": [3, 4, 15, 16], "coilcoil": [7, 8, 17, 18, 23, 24], "plate": [5, 6, 25, 26], "ion": [5, 6, 9, 10, 13, 14, 25, 26], "resist": [3, 4], "electrometer": [15, 16, 23, 24]};
+// ====== Генераторы задач 11–15 (электродинамика + оптика №13) ======
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const P=a=>a[Math.floor(Math.random()*a.length)];
+const SH=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rnd=(x,d=6)=>Math.round(x*10**d)/10**d;
+const isNice=(x,d=3)=>Math.abs(x*10**d-Math.round(x*10**d))<1e-6;
+const f=(x,d=3)=>{x=rnd(x,d);let s=String(x);if(s.includes('e'))s=x.toFixed(d);return s.replace('.',',').replace('-','−');};
+const sup=e=>'10<sup>'+(e<0?'−'+(-e):e)+'</sup>';
+const sci=(m,e)=>(m===1?'':f(m)+'·')+sup(e);
+function retry(fn,n=400){for(let i=0;i<n;i++){const r=fn();if(r)return r;}throw new Error('retry failed');}
+function raz(k){const s=f(k);if(s.includes(','))return 'в '+s+' раза';const n=Math.round(k)%100,l=n%10;return 'в '+s+((l>=2&&l<=4&&!(n>=12&&n<=14))?' раза':' раз');}
+const END={f:['ась','ась'],m:['ся','ся'],n:['ось','ось'],p:['ись','ись']};
+function chg(k,g){const e=END[g][0];if(Math.abs(k-1)<1e-9)return 'не изменил'+e;return (k>1?'увеличил':'уменьшил')+e+' '+raz(k>1?k:1/k);}
+const sgn=x=>x>0?1:x<0?-1:0;
+
+// ---------- SVG ----------
+function arrow(x1,y1,x2,y2,cls='ax'){const a=Math.atan2(y2-y1,x2-x1),L=7,w=3.5;
+ const p1=[x2-L*Math.cos(a)+w*Math.sin(a),y2-L*Math.sin(a)-w*Math.cos(a)],p2=[x2-L*Math.cos(a)-w*Math.sin(a),y2-L*Math.sin(a)+w*Math.cos(a)];
+ return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${cls}"/><polygon points="${x2},${y2} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}" class="ah"/>`;}
+function plot(o){
+ const W=o.w||320,H=o.h||200,ml=46,mr=22,mt=18,mb=30,ymin=o.ymin||0;
+ const X=x=>rnd(ml+x/o.xmax*(W-ml-mr),2),Y=y=>rnd(mt+(o.ymax-y)/(o.ymax-ymin)*(H-mt-mb),2);
+ let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg">`;
+ for(const x of o.xt)s+=`<line x1="${X(x)}" y1="${Y(ymin)}" x2="${X(x)}" y2="${Y(o.ymax)}" class="g"/>`;
+ for(const y of o.yt)s+=`<line x1="${X(0)}" y1="${Y(y)}" x2="${X(o.xmax)}" y2="${Y(y)}" class="g"/>`;
+ s+=arrow(X(0),Y(0),W-6,Y(0));s+=arrow(X(0),Y(ymin)+(ymin<0?0:0),X(0),6);
+ const xl=o.xlab||(x=>f(x)),yl=o.ylab||(y=>f(y));
+ for(const x of o.xt)s+=`<text x="${X(x)}" y="${Y(0)+13}" class="tk" text-anchor="middle">${xl(x)}</text>`;
+ for(const y of o.yt)if(Math.abs(y)>1e-12)s+=`<text x="${X(0)-4}" y="${Y(y)+4}" class="tk" text-anchor="end">${yl(y)}</text>`;
+ s+=`<text x="${X(0)-4}" y="${ymin<0?Y(0)+4:Y(0)+13}" class="tk" text-anchor="end">0</text>`;
+ s+=`<text x="${W-4}" y="${Y(0)-6}" class="lb" text-anchor="end">${o.xn}</text><text x="${X(0)+6}" y="12" class="lb">${o.yn}</text>`;
+ if(o.poly)s+=`<polyline points="${o.poly.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" class="cv"/>`;
+ if(o.fn){let pts=[];for(let i=0;i<=240;i++){const x=o.x0+(o.x1-o.x0)*i/240;pts.push(X(x)+','+Y(o.fn(x)));}s+=`<polyline points="${pts.join(' ')}" class="cv"/>`;}
+ if(o.dots)for(const p of o.dots)s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="2.6" class="dot"/>`;
+ return s+'</svg>';}
+function resistor(x,y,label,vert){return vert?`<rect x="${x-6}" y="${y-16}" width="12" height="32" class="el"/><text x="${x+10}" y="${y+4}" class="lb">${label}</text>`
+ :`<rect x="${x-17}" y="${y-6}" width="34" height="12" class="el"/><text x="${x}" y="${y-10}" class="lb" text-anchor="middle">${label}</text>`;}
+function meter(x,y,ch){return `<circle cx="${x}" cy="${y}" r="10" class="el"/><text x="${x}" y="${y+4}" class="lb" text-anchor="middle">${ch}</text>`;}
+function battery(x,y){return `<line x1="${x-9}" y1="${y-4}" x2="${x+9}" y2="${y-4}" class="w2"/><line x1="${x-5}" y1="${y+4}" x2="${x+5}" y2="${y+4}" class="w3"/><rect x="${x-10}" y="${y-3}" width="20" height="6" style="fill:var(--card);stroke:none"/><line x1="${x-9}" y1="${y-4}" x2="${x+9}" y2="${y-4}" class="w2"/><line x1="${x-5}" y1="${y+4}" x2="${x+5}" y2="${y+4}" class="w3"/>`;}
+function svgSeries(l1,l2,vOn){ // источник слева, R1 и R2 сверху, вольтметр над R1 или R2
+ const W=300,H=150;let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg">`;
+ s+=`<polyline points="40,72 40,40 260,40 260,130 40,130 40,72" class="w"/>`+battery(40,72);
+ s+=resistor(110,40,'',0)+resistor(190,40,'',0)+`<text x="110" y="62" class="lb" text-anchor="middle">${l1}</text><text x="190" y="62" class="lb" text-anchor="middle">${l2}</text>`;
+ if(vOn){const cx=vOn===1?110:190;s+=`<polyline points="${cx-30},40 ${cx-30},12 ${cx-10},12" class="w"/><polyline points="${cx+10},12 ${cx+30},12 ${cx+30},40" class="w"/>`+meter(cx,12,'V')+`<circle cx="${cx-30}" cy="40" r="2.5" class="dot"/><circle cx="${cx+30}" cy="40" r="2.5" class="dot"/>`;}
+ return s+'</svg>';}
+function svgParallel(l1,l2,aOn){const W=300,H=165;let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg">`;
+ s+=`<polyline points="40,95 40,40 110,40" class="w"/><line x1="110" y1="40" x2="240" y2="40" class="w"/><polyline points="110,40 110,100 240,100 240,40" class="w"/><polyline points="240,40 270,40 270,150 40,150 40,95" class="w"/>`+battery(40,95);
+ s+=resistor(190,40,'',0)+resistor(190,100,'',0)+`<text x="190" y="28" class="lb" text-anchor="middle">${l1}</text><text x="190" y="88" class="lb" text-anchor="middle">${l2}</text>`;
+ if(aOn)s+=meter(140,40,'A');
+ s+=`<circle cx="110" cy="40" r="2.5" class="dot"/><circle cx="240" cy="40" r="2.5" class="dot"/>`;
+ return s+'</svg>';}
+
+// ---------- банк типов ----------
+// card: {q, fig, kind:'num'|'multi'|'change'|'choice'|'match', ans, unit, rows, stmts, opts, sol, trap}
+const G=[];
+const add=(id,line,topic,title,book,gen)=>G.push({id,line,topic,title,book,gen});
+// statements helper
+function stmts(pool,total=5){const tr=SH(pool.filter(s=>s.ok)),fl=SH(pool.filter(s=>!s.ok));
+ let k=Math.min(tr.length,P([2,2,3]));if(fl.length<total-k)k=total-fl.length;k=Math.max(1,Math.min(k,tr.length));
+ const ch=SH(tr.slice(0,k).concat(fl.slice(0,total-k)));return {stmts:ch,ans:ch.map((s,i)=>s.ok?i+1:0).filter(x=>x).join('')};}
+
+// ======================= №11 =======================
+add('coul',11,1,'Закон Кулона: во сколько раз','coulomb',()=>{
+ if(Math.random()<0.35){return retry(()=>{const m=P([2,3,4]),a=P([1.3,1.5,2.5,2.6,1.2,3.5]),b=rnd(a*m);
+  return {q:`Два неподвижных точечных заряда действуют друг на друга с силами, модуль которых равен <i>F</i>. Во сколько раз <b>уменьшится</b> модуль этих сил, если один заряд увеличить ${raz(a)}, другой заряд уменьшить ${raz(b)}, а расстояние между ними оставить прежним?`,
+  kind:'num',ans:m,unit:'',sol:`<i>F</i> ~ |<i>q</i><sub>1</sub>||<i>q</i><sub>2</sub>|/<i>r</i><sup>2</sup>. Новая сила: <i>F</i>·${f(a)}/${f(b)} = <i>F</i>/${f(m)}. Уменьшится ${raz(m)}.`,trap:'Множители зарядов перемножаются, а не складываются.'};});}
+ return retry(()=>{const F0=P([12,16,18,20,24,36,40,48,54,60,72,80]);
+  const C=[['заряд каждого из тел увеличить '+raz(2),4],['заряд каждого из тел увеличить '+raz(3),9],['заряд каждого из тел уменьшить '+raz(2),1/4],['заряд одного из тел уменьшить '+raz(2),1/2],['заряд одного из тел увеличить '+raz(3),3],['заряд одного из тел уменьшить '+raz(3),1/3],
+   ['расстояние между зарядами увеличить '+raz(2),1/4],['расстояние между зарядами увеличить '+raz(3),1/9],['расстояние между зарядами уменьшить '+raz(2),4],['расстояние между зарядами уменьшить '+raz(3),9],['расстояние между зарядами увеличить '+raz(4),1/16]];
+  let ch=[P(C)];if(Math.random()<0.4){const c2=P(C);if(c2[0].split(' ')[0]!==ch[0][0].split(' ')[0])ch.push(c2);}
+  const k=ch.reduce((a,c)=>a*c[1],1),F=F0*k;if(!isNice(F,2)||F<0.5||F>2000)return null;
+  return {q:`Силы электростатического взаимодействия между двумя точечными неподвижными заряженными телами равны по модулю ${F0} нН. Каким станет модуль этих сил, если ${ch.map(c=>c[0]).join(', а ')}?`,
+   kind:'num',ans:F,unit:'нН',sol:`<i>F</i> = <i>k</i>|<i>q</i><sub>1</sub>||<i>q</i><sub>2</sub>|/<i>r</i><sup>2</sup>. Множитель: ${ch.map(c=>f(c[1])).join(' · ')} = ${f(k)}. <i>F</i> = ${F0} · ${f(k)} = ${f(F)} нН.`,
+   trap:'Расстояние входит в квадрате; «каждого из тел» — оба заряда.'};});});
+
+add('iqt',11,3,'Сила тока по графику q(t)','i_qt',()=>retry(()=>{
+ const I=P([0.2,0.25,0.4,0.5,0.6,0.8,1,1.5,2,2.5,3,4]),tE=P([2,4,5,6,8]),qE=I*tE;if(!isNice(qE,2)||qE>24)return null;
+ const withR=Math.random()<0.4,Rr=P([2,4,5,10,20]);const st=tE>=6?2:1,xt=[];for(let t=st;t<=tE+1;t+=st)xt.push(t);
+ const yt=[1,2,3,4].map(i=>rnd(qE*i/4,4));if(!yt.every(y=>isNice(y,2)))return null;
+ const fig=plot({xmax:tE+1.4,ymax:qE*1.3,xt,yt,xn:'t, с',yn:'q, Кл',poly:[[0,0],[tE+1,qE*(tE+1)/tE]],dots:[[tE,qE]]});
+ if(withR){const Pw=I*I*Rr;return {q:`По проводнику сопротивлением ${Rr} Ом течёт постоянный ток. Заряд, прошедший через поперечное сечение проводника, растёт со временем согласно графику. Определите мощность, выделяющуюся в проводнике.`,fig,kind:'num',ans:Pw,unit:'Вт',
+  sol:`<i>I</i> = Δ<i>q</i>/Δ<i>t</i> = ${f(qE)}/${tE} = ${f(I)} А (наклон графика). <i>P</i> = <i>I</i><sup>2</sup><i>R</i> = ${f(I)}<sup>2</sup>·${Rr} = ${f(Pw)} Вт.`,trap:'Сначала ток — это наклон графика q(t), а не значение q.'};}
+ return {q:'По проводнику течёт постоянный ток. Заряд, прошедший через поперечное сечение проводника, растёт со временем согласно графику. Определите силу тока.',fig,kind:'num',ans:I,unit:'А',sol:`<i>I</i> = Δ<i>q</i>/Δ<i>t</i> — наклон графика: ${f(qE)} Кл / ${tE} с = ${f(I)} А.`,trap:'Бери точку на пересечении клеток, а не «примерно».'};}));
+
+add('qit',11,3,'Заряд по графику I(t) — площадь','',()=>retry(()=>{
+ const Im=P([2,3,4,5,6]),t1=P([1,2,3]),t2=t1+P([1,2,3]),t3=t2+P([0,1,2]);const pts=[[0,0],[t1,Im],[t2,Im]];if(t3>t2)pts.push([t3,0]);
+ const T=t3>t2?t3:t2;const q=Im*t1/2+Im*(t2-t1)+(t3-t2)*Im/2;const mA=Math.random()<0.4;
+ const xt=[];for(let t=1;t<=T+1;t++)xt.push(t);const yt=[];for(let i=1;i<=Im+1;i++)yt.push(i);
+ const fig=plot({xmax:T+1.5,ymax:Im+1.4,xt,yt,xn:'t, с',yn:mA?'I, мА':'I, А',poly:pts.concat(t3>t2?[[T+1,0]]:[[T+1,Im]])});
+ return {q:`На рисунке показан график зависимости силы тока в проводнике от времени. Какой заряд прошёл через поперечное сечение проводника за ${T} с?`,fig,kind:'num',ans:q,unit:mA?'мКл':'Кл',
+  sol:`Заряд — площадь под графиком <i>I</i>(<i>t</i>): ${f(Im*t1/2)}${t2>t1?' + '+f(Im*(t2-t1)):''}${t3>t2?' + '+f((t3-t2)*Im/2):''} = ${f(q)} ${mA?'мКл':'Кл'}.`,trap:'q = I·t только при постоянном токе; при меняющемся — площадь (треугольники + прямоугольник).'};}));
+
+add('riu',11,3,'ВАХ: сопротивление и заряд','',()=>retry(()=>{
+ const Rr=P([2,2.5,4,5,8,10,20,25]),Ue=P([4,5,6,8,10,12,20]),Ie=Ue/Rr;if(!isNice(Ie,2)||Ie<0.2||Ie>8)return null;
+ const ut=[1,2,3,4].map(i=>Ue*i/4),it=[1,2,3,4].map(i=>Ie*i/4);if(!ut.concat(it).every(v=>isNice(v,2)))return null;
+ const fig=plot({xmax:Ue*1.3,ymax:Ie*1.3,xt:ut,yt:it,xn:'U, В',yn:'I, А',poly:[[0,0],[Ue*1.2,Ie*1.2]],dots:[[Ue,Ie]]});
+ if(Math.random()<0.5){const U0=ut[R(1,3)],t=P([2,4,5,10]),q=U0/Rr*t;if(!isNice(q,2))return null;
+  return {q:`На рисунке — график зависимости силы тока в проводнике от напряжения на его концах. Какой заряд пройдёт через поперечное сечение проводника за ${t} с, если приложить напряжение ${f(U0)} В?`,fig,kind:'num',ans:q,unit:'Кл',sol:`По графику <i>R</i> = <i>U</i>/<i>I</i> = ${f(Ue)}/${f(Ie)} = ${f(Rr)} Ом. <i>I</i> = ${f(U0)}/${f(Rr)} = ${f(U0/Rr)} А, <i>q</i> = <i>It</i> = ${f(q)} Кл.`,trap:'Ось I — вертикальная: R = U/I, а не наклон I/U.'};}
+ return {q:'На рисунке — график зависимости силы тока в проводнике от напряжения на его концах. Чему равно сопротивление проводника?',fig,kind:'num',ans:Rr,unit:'Ом',sol:`<i>R</i> = <i>U</i>/<i>I</i> по любой точке: ${f(Ue)} В / ${f(Ie)} А = ${f(Rr)} Ом.`,trap:'Наклон графика I(U) — это 1/R, а не R.'};}));
+
+add('ser',11,3,'Последовательное соединение и вольтметр','photo',()=>retry(()=>{
+ const R1=P([1,2,3,4,5,6,8,10]),R2=P([1,2,3,4,5,6,8,10,12]);if(R1===R2)return null;const I=P([0.2,0.3,0.4,0.5,0.6,0.8,1,1.2,1.5,2]);
+ const U1=I*R1,U2=I*R2;if(!isNice(U1,2)||!isNice(U2,2))return null;const v=P([1,2]);const Uv=v===1?U1:U2,Ru=v===1?R1:R2,Ro=v===1?R2:R1,Uo=v===1?U2:U1;
+ const fig=svgSeries('R₁ = '+f(R1)+' Ом','R₂ = '+f(R2)+' Ом',v);
+ const ask=P(['U','I','Usum']);
+ const base=`Резисторы R₁ = ${f(R1)} Ом и R₂ = ${f(R2)} Ом соединены последовательно и подключены к источнику (см. рис.). Идеальный вольтметр, подключённый к резистору ${v===1?'R₁':'R₂'}, показывает ${f(Uv)} В.`;
+ if(ask==='U')return {q:base+` Что покажет вольтметр, если подключить его к резистору ${v===1?'R₂':'R₁'}?`,fig,kind:'num',ans:Uo,unit:'В',sol:`Ток одинаковый: <i>I</i> = ${f(Uv)}/${f(Ru)} = ${f(I)} А. <i>U</i> = <i>IR</i> = ${f(I)}·${f(Ro)} = ${f(Uo)} В. (Или: напряжения пропорциональны сопротивлениям.)`,trap:'При последовательном соединении одинаков ток, а не напряжение.'};
+ if(ask==='I')return {q:base+' Какова сила тока в резисторе '+(v===1?'R₂':'R₁')+'?',fig,kind:'num',ans:I,unit:'А',sol:`Ток в последовательной цепи один и тот же: <i>I</i> = <i>U</i>/<i>R</i> = ${f(Uv)}/${f(Ru)} = ${f(I)} А.`,trap:'Резистор не «ослабляет» ток — он одинаков во всей неразветвлённой цепи.'};
+ return {q:base+' Чему равно напряжение на обоих резисторах вместе?',fig,kind:'num',ans:U1+U2,unit:'В',sol:`<i>I</i> = ${f(I)} А; <i>U</i> = <i>I</i>(<i>R</i>₁ + <i>R</i>₂) = ${f(I)}·${f(R1+R2)} = ${f(U1+U2)} В.`,trap:''};}));
+
+add('par',11,3,'Параллельное соединение','',()=>retry(()=>{
+ const R1=P([2,3,4,5,6,8,10,12,15,20]),R2=P([2,3,4,5,6,8,10,12,15,20]);if(R1===R2)return null;const I1=P([0.3,0.5,0.6,0.8,1,1.2,1.5,2,3]);
+ const U=I1*R1,I2=U/R2;if(!isNice(I2,2)||!isNice(U,2))return null;const fig=svgParallel('R₁ = '+R1+' Ом','R₂ = '+R2+' Ом',1);const ask=P(['I2','I']);
+ const base=`Резисторы R₁ = ${R1} Ом и R₂ = ${R2} Ом соединены параллельно (см. рис.). Идеальный амперметр в ветви с R₁ показывает ${f(I1)} А.`;
+ if(ask==='I2')return {q:base+' Какова сила тока в резисторе R₂?',fig,kind:'num',ans:I2,unit:'А',sol:`Напряжение на ветвях одинаково: <i>U</i> = ${f(I1)}·${R1} = ${f(U)} В. <i>I</i>₂ = ${f(U)}/${R2} = ${f(I2)} А. Ток обратно пропорционален сопротивлению.`,trap:'При параллельном соединении одинаково напряжение, ток делится.'};
+ return {q:base+' Какова сила тока в неразветвлённой части цепи?',fig,kind:'num',ans:I1+I2,unit:'А',sol:`<i>U</i> = ${f(U)} В, <i>I</i>₂ = ${f(I2)} А, <i>I</i> = <i>I</i>₁ + <i>I</i>₂ = ${f(I1+I2)} А.`,trap:''};}));
+
+add('joule',11,3,'Работа, мощность, Джоуль–Ленц','',()=>{
+ const t=P(['QIR','QU','ratio']);
+ if(t==='QIR')return retry(()=>{const I=P([0.5,1,1.5,2,2.5,3,4]),Rr=P([2,4,5,10,20,40]),mn=P([1,2,5,10]);const Q=I*I*Rr*mn*60/1000;if(!isNice(Q,3))return null;
+  return {q:`По резистору сопротивлением ${Rr} Ом течёт ток ${f(I)} А. Какое количество теплоты выделится в резисторе за ${mn} мин?`,kind:'num',ans:Q,unit:'кДж',sol:`<i>Q</i> = <i>I</i><sup>2</sup><i>Rt</i> = ${f(I)}<sup>2</sup>·${Rr}·${mn*60} = ${f(Q*1000)} Дж = ${f(Q)} кДж.`,trap:'Минуты — в секунды; ответ в кДж.'};});
+ if(t==='QU')return retry(()=>{const U=P([6,12,24,36,110,220]),Rr=P([4,6,10,12,20,44,55,110]),t=P([10,20,30,60]);const Q=U*U/Rr*t;if(!isNice(Q,1)||Q>200000)return null;
+  return {q:`К резистору сопротивлением ${Rr} Ом приложено постоянное напряжение ${U} В. Какое количество теплоты выделится в нём за ${t} с?`,kind:'num',ans:Q,unit:'Дж',sol:`<i>Q</i> = <i>U</i><sup>2</sup><i>t</i>/<i>R</i> = ${U}<sup>2</sup>·${t}/${Rr} = ${f(Q)} Дж.`,trap:''};});
+ return retry(()=>{const R1=P([2,3,4,5,6,8,10,12]),R2=P([2,3,4,5,6,8,10,12]);if(R1===R2)return null;const s=Math.random()<0.5;const k=s?Math.max(R1,R2)/Math.min(R1,R2):Math.max(R1,R2)/Math.min(R1,R2);if(!isNice(k,2))return null;
+  const big=s?(R1>R2?'R₁':'R₂'):(R1<R2?'R₁':'R₂'),sm=big==='R₁'?'R₂':'R₁';
+  return {q:`Резисторы R₁ = ${R1} Ом и R₂ = ${R2} Ом соединены ${s?'последовательно':'параллельно'} и подключены к источнику. Во сколько раз количество теплоты, выделившееся за одно и то же время в резисторе ${big}, больше, чем в ${sm}?`,kind:'num',ans:k,unit:'',
+   sol:s?`Ток одинаков: <i>Q</i> = <i>I</i><sup>2</sup><i>Rt</i> ~ <i>R</i>. Отношение ${Math.max(R1,R2)}/${Math.min(R1,R2)} = ${f(k)}.`:`Напряжение одинаково: <i>Q</i> = <i>U</i><sup>2</sup><i>t</i>/<i>R</i> ~ 1/<i>R</i>. Больше тепла в меньшем: ${Math.max(R1,R2)}/${Math.min(R1,R2)} = ${f(k)}.`,trap:'Последовательно — больше тепла на большем R; параллельно — на меньшем.'};});});
+
+add('full',11,3,'Закон Ома для полной цепи','',()=>retry(()=>{
+ const E=P([3,4.5,6,9,12,24]),r=P([0.5,1,1.5,2]),Rr=P([1,2,2.5,3,4,5,5.5,10,11]);const I=E/(Rr+r);if(!isNice(I,2))return null;const ask=P(['I','U','kz']);
+ if(ask==='I')return {q:`Источник с ЭДС ${f(E)} В и внутренним сопротивлением ${f(r)} Ом замкнут на резистор ${f(Rr)} Ом. Найдите силу тока в цепи.`,kind:'num',ans:I,unit:'А',sol:`<i>I</i> = ℰ/(<i>R</i> + <i>r</i>) = ${f(E)}/${f(Rr+r)} = ${f(I)} А.`,trap:'Не забудь r.'};
+ if(ask==='U'){const U=I*Rr;if(!isNice(U,2))return null;return {q:`Источник с ЭДС ${f(E)} В и внутренним сопротивлением ${f(r)} Ом замкнут на резистор ${f(Rr)} Ом. Что покажет идеальный вольтметр, подключённый к клеммам источника?`,kind:'num',ans:U,unit:'В',sol:`<i>I</i> = ${f(E)}/${f(Rr+r)} = ${f(I)} А; <i>U</i> = ℰ − <i>Ir</i> = <i>IR</i> = ${f(U)} В.`,trap:'Вольтметр на клеммах показывает U = ℰ − Ir, а не ℰ.'};}
+ return {q:`При коротком замыкании клемм источника с ЭДС ${f(E)} В сила тока равна ${f(E/r)} А. Каково внутреннее сопротивление источника?`,kind:'num',ans:r,unit:'Ом',sol:`<i>I</i><sub>кз</sub> = ℰ/<i>r</i> ⇒ <i>r</i> = ${f(E)}/${f(E/r)} = ${f(r)} Ом.`,trap:''};}));
+
+// ======================= №12 =======================
+const fr=(k)=>k===1?'':(k>=1?f(k):'1/'+f(1/k));
+add('amp',12,4,'Сила Ампера','ampere',()=>{
+ if(Math.random()<0.5)return retry(()=>{const F1=P([2,3,4,5,6,8,10,12]),a=P([1,2,3]),b=P([0.5,2,3,1/3,4,0.25]),c=P([1,2,0.5,3]);const k=a*b*c,F2=F1*k;if(Math.abs(k-1)<1e-9||!isNice(F2,2))return null;
+  const L2=a===1?'<i>L</i>':a+'<i>L</i>',B2=b>=1?f(b)+'<i>B</i>':'<i>B</i>/'+f(1/b),I2=c===1?'По проводникам текут одинаковые по величине токи.':`Сила тока во втором проводнике ${raz(c>1?c:1/c)} ${c>1?'больше':'меньше'}, чем в первом.`;
+  return {q:`Два прямолинейных проводника помещены в однородные магнитные поля перпендикулярно линиям индукции. Первый длиной <i>L</i> — в поле с индукцией <i>B</i>, второй длиной ${L2} — в поле ${B2}. ${I2} На первый действует сила Ампера ${F1} мН. Чему равна сила Ампера, действующая на второй проводник?`,kind:'num',ans:F2,unit:'мН',
+   sol:`<i>F</i> = <i>BIL</i> ⇒ множитель ${f(a)}·${f(b)}·${f(c)} = ${f(k)}; <i>F</i>₂ = ${F1}·${f(k)} = ${f(F2)} мН.`,trap:'Все три множителя (B, I, L) перемножь.'};});
+ return retry(()=>{const B=P([0.1,0.2,0.4,0.5]),I=P([2,4,5,10]),L=P([0.2,0.4,0.5,0.8]),a=P([30,150,90,30,150]);const sn=a===90?1:0.5;const F=B*I*L*sn;if(!isNice(F,3))return null;
+  const ask=P(['F','B','I']);const sinT=a===90?'':`·${a===30?'sin 30°':'sin 150°'}`;const trap='sin 30° = sin 150° = 0,5; угол — между проводником и вектором B.';
+  if(ask==='F')return {q:`Прямолинейный проводник длиной ${f(L)} м с током ${I} А находится в однородном магнитном поле с индукцией ${f(B)} Тл. Угол между проводником и вектором индукции равен ${a}°. Определите модуль силы Ампера.`,kind:'num',ans:F,unit:'Н',sol:`<i>F</i> = <i>BIL</i> sin α = ${f(B)}·${I}·${f(L)}${sinT} = ${f(F)} Н.`,trap};
+  if(ask==='B')return {q:`На прямолинейный проводник длиной ${f(L)} м с током ${I} А в однородном магнитном поле действует сила Ампера ${f(F)} Н. Угол между проводником и вектором индукции ${a}°. Чему равен модуль индукции поля?`,kind:'num',ans:B,unit:'Тл',sol:`<i>B</i> = <i>F</i>/(<i>IL</i> sin α) = ${f(F)}/(${I}·${f(L)}${a===90?'':'·0,5'}) = ${f(B)} Тл.`,trap};
+  return {q:`Проводник длиной ${f(L)} м расположен под углом ${a}° к линиям однородного магнитного поля с индукцией ${f(B)} Тл. На него действует сила Ампера ${f(F)} Н. Какая сила тока течёт по проводнику?`,kind:'num',ans:I,unit:'А',sol:`<i>I</i> = <i>F</i>/(<i>BL</i> sin α) = ${f(F)}/(${f(B)}·${f(L)}${a===90?'':'·0,5'}) = ${I} А.`,trap};});});
+
+add('lor',12,4,'Сила Лоренца: отношения','',()=>{
+ if(Math.random()<0.5)return retry(()=>{const k=P([2,3,4]),m=P([1,2,3,0.5]);const r=k*m;if(!isNice(r,2))return null;
+  return {q:`Две частицы с зарядами <i>q</i> и ${k}<i>q</i> влетают в однородное магнитное поле перпендикулярно вектору индукции${m===1?' с одинаковыми скоростями':`, причём скорость второй частицы ${raz(m>1?m:1/m)} ${m>1?'больше':'меньше'}`}. Определите отношение модулей сил Лоренца <i>F</i>₂/<i>F</i>₁.`,kind:'num',ans:r,unit:'',sol:`<i>F</i> = |<i>q</i>|<i>vB</i>: <i>F</i>₂/<i>F</i>₁ = ${k}·${f(m)} = ${f(r)}. Масса не важна.`,trap:'Сила Лоренца от массы не зависит.'};});
+ const ask=P(['R','T','F']);const v={R:[2,'радиусов окружностей <i>R</i><sub>α</sub>/<i>R</i><sub>p</sub>','<i>R</i> = <i>mv</i>/(|<i>q</i>|<i>B</i>): (4/2)/(1/1) = 2.'],T:[2,'периодов обращения <i>T</i><sub>α</sub>/<i>T</i><sub>p</sub>','<i>T</i> = 2π<i>m</i>/(|<i>q</i>|<i>B</i>): (4/2)/(1/1) = 2.'],F:[2,'модулей сил Лоренца <i>F</i><sub>α</sub>/<i>F</i><sub>p</sub>','<i>F</i> = |<i>q</i>|<i>vB</i>: заряд α-частицы 2<i>e</i> ⇒ 2.']}[ask];
+ return {q:`Протон и α-частица влетают в одно и то же однородное магнитное поле перпендикулярно линиям индукции с одинаковыми скоростями. Найдите отношение ${v[1]}.`,kind:'num',ans:v[0],unit:'',sol:'α-частица: заряд 2<i>e</i>, масса ≈ 4 а.е.м.; протон: <i>e</i>, 1 а.е.м. '+v[2],trap:'α-частица = ядро гелия: q = 2e, m = 4 а.е.м.'};});
+
+add('far',12,5,'Закон Фарадея: ЭДС индукции','faraday',()=>retry(()=>{
+ const P1=P([5,10,15,20,25,30,40,50,60]),P2=P([0,5,10,15,20,25,30,40]);if(P1===P2)return null;const dt=P([2,4,5,10,20,25]);const N=Math.random()<0.25?P([10,20,50,100]):1;
+ const E=Math.abs(P1-P2)/dt*N;if(!isNice(E,3))return null;const withR=Math.random()<0.3,Rr=P([2,4,5,10]);
+ const base=`За Δ<i>t</i> = ${dt} мс магнитный поток, пронизывающий ${N>1?`катушку из ${N} витков (поток через один виток)`:'площадку, ограниченную проводящим витком'}, равномерно ${P1>P2?'убывает':'возрастает'} от ${P1>P2?P1:P2} до ${P1>P2?P2:P1} мВб.`.replace(`от ${P1>P2?P1:P2} до ${P1>P2?P2:P1}`,`от ${P1} до ${P2}`);
+ if(withR){const I=E/Rr;if(!isNice(I,3))return null;return {q:base+` Сопротивление ${N>1?'катушки':'витка'} ${Rr} Ом. Какова сила индукционного тока?`,kind:'num',ans:I,unit:'А',sol:`|ℰ| = ${N>1?N+'·':''}|ΔΦ|/Δ<i>t</i> = ${N>1?N+'·':''}${Math.abs(P1-P2)}·10<sup>−3</sup>/(${dt}·10<sup>−3</sup>) = ${f(E)} В; <i>I</i> = ℰ/<i>R</i> = ${f(I)} А.`,trap:'мВб/мс = В — приставки сокращаются.'};}
+ return {q:base+' Чему равен модуль ЭДС индукции?',kind:'num',ans:E,unit:'В',sol:`|ℰ| = ${N>1?'<i>N</i>·':''}|ΔΦ|/Δ<i>t</i> = ${N>1?N+'·':''}${Math.abs(P1-P2)} мВб / ${dt} мс = ${f(E)} В.`,trap:N>1?'Число витков умножается.':'ЭДС зависит от скорости изменения потока, а не от самого потока.'};}));
+
+function stepGraph(o){ // piecewise linear current graph
+ return plot({xmax:o.T+0.8,ymin:o.ymin||0,ymax:o.ymax,xt:o.xt,yt:o.yt,xn:'t, с',yn:o.yn,poly:o.pts});}
+add('sind',12,6,'ЭДС самоиндукции по графику I(t)','',()=>retry(()=>{
+ const L=P([0.6,1.2,1.5,2,2.4,2.8,3,4,5]),pts=[[0,0]];let I=0;const lv=[0,10,20,30];
+ for(let t=2;t<=8;t+=2){const n=P(lv);pts.push([t,n]);}
+ const seg=R(0,3);const a=pts[seg],b=pts[seg+1];const E=L*Math.abs(b[1]-a[1])/(b[0]-a[0]);if(!isNice(E,3))return null;if(E===0&&Math.random()<0.75)return null;
+ if(pts.every((p,i)=>i===0||p[1]===pts[i-1][1]))return null;
+ const fig=stepGraph({T:8,ymax:36,xt:[2,4,6,8],yt:[10,20,30],yn:'I, мА',pts});
+ return {q:`На рисунке — график зависимости силы тока от времени в электрической цепи, индуктивность которой ${f(L)} мГн. Определите модуль ЭДС самоиндукции в интервале от ${a[0]} до ${b[0]} с.`,fig,kind:'num',ans:E,unit:'мкВ',
+  sol:`|ℰ| = <i>L</i>|Δ<i>I</i>|/Δ<i>t</i> = ${f(L)} мГн · ${Math.abs(b[1]-a[1])} мА / ${b[0]-a[0]} с = ${f(E)} мкВ (мГн·мА = мкВ·с).${E===0?' Ток постоянен — ЭДС равна нулю.':''}`,trap:'На горизонтальном участке ЭДС = 0, а не «минимальна».'};}));
+
+add('dphi',12,6,'Поток катушки: Φ = LI','dphi',()=>retry(()=>{
+ const L=P([0.2,0.4,0.5,0.6,0.8,1.2,2]),I1=P([0,1,2]),I2=P([3,4,5,6]);const dP=L*(I2-I1);if(!isNice(dP,3))return null;const t2=P([2,3,4]);
+ const fig=stepGraph({T:t2+1,ymax:I2+1.4,xt:Array.from({length:t2+1},(_,i)=>i+1),yt:Array.from({length:I2+1},(_,i)=>i+1).filter(y=>y<=I2+1),yn:'I, А',pts:[[0,I1],[t2,I2],[t2+1,I2]]});
+ return {q:`На рисунке — график зависимости силы тока от времени в катушке индуктивностью ${f(L)} мГн. На сколько увеличился магнитный поток, пронизывающий катушку, за ${t2} с?`,fig,kind:'num',ans:dP,unit:'мВб',sol:`ΔΦ = <i>L</i>Δ<i>I</i> = ${f(L)} мГн · ${I2-I1} А = ${f(dP)} мВб.`,trap:'Φ = LI: поток растёт вместе с током; время здесь не нужно.'};}));
+
+add('stime',12,6,'Самоиндукция: L, ΔI, ℰ','',()=>retry(()=>{
+ const L=P([0.1,0.2,0.4,0.5,0.8,1]),I=P([1,2,3,4,5]),E=P([0.2,0.4,0.5,1,2,4]);const t=L*I/E;if(!isNice(t,3)||t>10)return null;const ask=P(['t','E','L']);
+ if(ask==='t')return {q:`Сила тока в катушке индуктивностью ${f(L)} Гн равномерно уменьшается от ${I} А до нуля. При этом возникает ЭДС самоиндукции ${f(E)} В. За какое время это происходит?`,kind:'num',ans:t,unit:'с',sol:`|ℰ| = <i>L</i>Δ<i>I</i>/Δ<i>t</i> ⇒ Δ<i>t</i> = ${f(L)}·${I}/${f(E)} = ${f(t)} с.`,trap:''};
+ if(ask==='E')return {q:`Сила тока в катушке индуктивностью ${f(L)} Гн равномерно изменилась от ${I} А до нуля за ${f(t)} с. Найдите модуль ЭДС самоиндукции.`,kind:'num',ans:E,unit:'В',sol:`|ℰ| = ${f(L)}·${I}/${f(t)} = ${f(E)} В.`,trap:''};
+ return {q:`При равномерном уменьшении силы тока от ${I} А до нуля за ${f(t)} с в катушке возникла ЭДС самоиндукции ${f(E)} В. Найдите индуктивность катушки.`,kind:'num',ans:L,unit:'Гн',sol:`<i>L</i> = |ℰ|Δ<i>t</i>/Δ<i>I</i> = ${f(E)}·${f(t)}/${I} = ${f(L)} Гн.`,trap:''};}));
+
+add('wl',12,6,'Энергия катушки LI²/2','',()=>retry(()=>{
+ const L=P([2,4,5,6,8,10,12,20,40]),I=P([0.5,1,1.5,2,3,4]);const W=L*I*I/2;if(!isNice(W,2))return null;const ask=P(['W','L','I']);
+ if(ask==='W')return {q:`Через катушку индуктивностью ${L} мГн течёт ток ${f(I)} А. Найдите энергию магнитного поля катушки.`,kind:'num',ans:W,unit:'мДж',sol:`<i>W</i> = <i>LI</i><sup>2</sup>/2 = ${L}·${f(I*I)}/2 = ${f(W)} мДж.`,trap:'Не потеряй /2.'};
+ if(ask==='L')return {q:`При силе тока ${f(I)} А энергия магнитного поля катушки равна ${f(W)} мДж. Какова индуктивность катушки?`,kind:'num',ans:L,unit:'мГн',sol:`<i>L</i> = 2<i>W</i>/<i>I</i><sup>2</sup> = 2·${f(W)}/${f(I*I)} = ${L} мГн.`,trap:'2W, а не W.'};
+ return {q:`Энергия магнитного поля катушки индуктивностью ${L} мГн равна ${f(W)} мДж. Какой ток течёт через катушку?`,kind:'num',ans:I,unit:'А',sol:`<i>I</i> = √(2<i>W</i>/<i>L</i>) = √(2·${f(W)}/${L}) = ${f(I)} А.`,trap:''};}));
+
+add('rot',12,5,'Вращающаяся рамка: Φ = BS cos ωt','rotating',()=>retry(()=>{
+ const S=P([0.02,0.04,0.05,0.1,0.2,0.4,1,2,4]),B=P([2,4,5,10,20,50]);const Pm=B*S;if(!isNice(Pm,3))return null;const om=P([50,100,314]);
+ const [mm,ee]=Pm>=10?[Pm/10,-2]:Pm>=1?[Pm,-3]:[Pm*10,-4];if(!isNice(mm,3))return null;
+ if(Math.random()<0.5)return {q:`Проволочная рамка вращается в однородном магнитном поле вокруг оси, лежащей в плоскости рамки и перпендикулярной вектору индукции. Поток через рамку меняется по закону Φ = ${sci(mm,ee)}·cos ${om}<i>t</i> (СИ). Индукция поля ${B} мТл. Определите площадь рамки.`,kind:'num',ans:S,unit:'м²',sol:`Амплитуда потока Φ<sub>max</sub> = <i>BS</i> ⇒ <i>S</i> = ${sci(mm,ee)} / (${B}·10<sup>−3</sup>) = ${f(S)} м².`,trap:'Число перед cos — амплитуда потока BS; ω здесь не нужна.'};
+ return {q:`Рамка площадью ${f(S)} м² вращается в однородном магнитном поле с индукцией ${B} мТл вокруг оси, перпендикулярной линиям поля и лежащей в плоскости рамки. Чему равно максимальное значение магнитного потока через рамку?`,kind:'num',ans:Pm,unit:'мВб',sol:`Φ<sub>max</sub> = <i>BS</i> = ${B} мТл · ${f(S)} м² = ${f(Pm)} мВб.`,trap:''};}));
+
+add('rod',12,5,'Проводник движется: ℰ = Blv','',()=>retry(()=>{
+ const B=P([0.1,0.2,0.4,0.5,0.8]),l=P([0.2,0.25,0.5,1]),v=P([2,4,5,10,20]);const E=B*l*v;if(!isNice(E,3))return null;
+ if(Math.random()<0.6)return {q:`Прямой проводник длиной ${f(l)} м движется со скоростью ${v} м/с в однородном магнитном поле с индукцией ${f(B)} Тл. Проводник, его скорость и вектор индукции взаимно перпендикулярны. Найдите ЭДС индукции в проводнике.`,kind:'num',ans:E,unit:'В',sol:`ℰ = <i>Blv</i> = ${f(B)}·${f(l)}·${v} = ${f(E)} В.`,trap:''};
+ return {q:`Проводник длиной ${f(l)} м движется перпендикулярно линиям однородного магнитного поля с индукцией ${f(B)} Тл (скорость перпендикулярна проводнику). На концах проводника возникает ЭДС ${f(E)} В. С какой скоростью он движется?`,kind:'num',ans:v,unit:'м/с',sol:`<i>v</i> = ℰ/(<i>Bl</i>) = ${f(E)}/(${f(B)}·${f(l)}) = ${v} м/с.`,trap:''};}));
+
+// ======================= №13 =======================
+add('tform',13,7,'Период по формуле q(t)','',()=>{
+ const T=P([1,2,4,5,10,20,40]);const X=2e6/T;const e=Math.floor(Math.log10(X)+1e-9),m=rnd(X/10**e);const qm=P([1,2,3,4,5]);const fn=P(['cos','sin']);
+ const ask=P(['T','nu']);const w=(m===1?'':f(m)+'·')+sup(e)+'π<i>t</i>';
+ if(ask==='T')return {q:`Заряд конденсатора в идеальном колебательном контуре меняется по закону <i>q</i> = ${qm}·${sup(-6)}·${fn}(${w}) (СИ). Найдите период колебаний.`,kind:'num',ans:T,unit:'мкс',sol:`ω = ${f(m)}·${sup(e)}π рад/с; <i>T</i> = 2π/ω = 2/(${f(X)}) с = ${T} мкс.`,trap:'В скобке стоит ωt; T = 2π/ω, а не 1/ω.'};
+ const nu=1000/T;return {q:`Заряд конденсатора в идеальном колебательном контуре меняется по закону <i>q</i> = ${qm}·${sup(-6)}·${fn}(${w}) (СИ). Найдите частоту колебаний.`,kind:'num',ans:nu,unit:'кГц',sol:`ν = ω/(2π) = ${f(X)}/2 Гц = ${f(nu)} кГц (<i>T</i> = ${T} мкс).`,trap:'ν = ω/(2π).'};});
+
+add('tchg',13,7,'Как изменится период контура','lc_change',()=>{
+ if(Math.random()<0.4){const x=P([1.2,1.3,1.5,2,2.5,3]);const up=Math.random()<0.5;const k=rnd(x*x);
+  return {q:`При переводе ключа из положения 1 в положение 2 к конденсатору подключается другая катушка, и период свободных колебаний в идеальном контуре ${up?'увеличивается':'уменьшается'} ${raz(x)}. Во сколько раз индуктивность второй катушки ${up?'больше':'меньше'}, чем первой?`,kind:'num',ans:k,unit:'',sol:`<i>T</i> = 2π√(<i>LC</i>) ⇒ <i>T</i> ~ √<i>L</i> ⇒ <i>L</i> меняется ${raz(x)}<sup>2</sup> = ${f(k)}.`,trap:'Период ~ корню из L: отношение периодов возводим в квадрат.'};}
+ return retry(()=>{const T0=P([2,3,4,5,6,8,10,12]);const c=P([[4,'ёмкость конденсатора увеличить в 4 раза'],[1/4,'ёмкость конденсатора уменьшить в 4 раза'],[9,'индуктивность катушки увеличить в 9 раз'],[1/9,'индуктивность катушки уменьшить в 9 раз'],[16,'ёмкость увеличить в 16 раз'],[2.25,'индуктивность увеличить в 2,25 раза'],[4,'расстояние между пластинами конденсатора уменьшить в 4 раза'],[1/4,'расстояние между пластинами конденсатора увеличить в 4 раза'],[1,'ёмкость увеличить в 2 раза, а индуктивность уменьшить в 2 раза']]);
+  const T=T0*Math.sqrt(c[0]);if(!isNice(T,2))return null;
+  return {q:`Период свободных электромагнитных колебаний в идеальном контуре равен ${T0} мкс. Каким станет период, если ${c[1]}?`,kind:'num',ans:T,unit:'мкс',sol:`<i>T</i> = 2π√(<i>LC</i>): произведение <i>LC</i> ${c[0]===1?'не меняется':(c[0]>1?'увеличивается ':'уменьшается ')+(c[0]===1?'':raz(c[0]>1?c[0]:1/c[0]))} ⇒ <i>T</i> = ${T0}·√${f(c[0])} = ${f(T)} мкс.${c[1].includes('пластин')?' (<i>C</i> = εε₀<i>S</i>/<i>d</i>.)':''}`,trap:'T ~ √C и √L: в 4 раза → период в 2 раза.'};});});
+
+add('tgr',13,7,'Период по графику i(t)','lc_change',()=>retry(()=>{
+ const T0=P([2,4,6,8]);const c=P([[4,'катушку заменить на другую, индуктивность которой в 4 раза больше'],[1/4,'ёмкость конденсатора уменьшить в 4 раза'],[9,'ёмкость конденсатора увеличить в 9 раз'],[1/4,'индуктивность катушки уменьшить в 4 раза']]);
+ const T=T0*Math.sqrt(c[0]);const ask=P(['T','nu']);
+ const fig=plot({xmax:T0*1.6,ymin:-1.4,ymax:1.4,xt:[T0/4,T0/2,3*T0/4,T0,5*T0/4,3*T0/2].filter(x=>isNice(x,2)),yt:[-1,1],ylab:y=>(y>0?'':'−')+'<tspan font-style="italic">I</tspan><tspan font-size="8">m</tspan>',xn:'t, мкс',yn:'i',fn:x=>Math.sin(2*Math.PI*x/T0),x0:0,x1:T0*1.5});
+ if(ask==='T')return {q:`На рисунке — зависимость силы тока от времени в идеальном колебательном контуре. Каким станет период колебаний, если ${c[1]}?`,fig,kind:'num',ans:T,unit:'мкс',sol:`По графику <i>T</i> = ${T0} мкс (полный «горб» вверх и вниз). <i>T</i> ~ √(<i>LC</i>) ⇒ <i>T</i> = ${T0}·√${f(c[0])} = ${f(T)} мкс.`,trap:'Период — от нуля до нуля через два полуволны, а не одна полуволна.'};
+ const nu=1000/T;if(!isNice(nu,2))return null;return {q:`На рисунке — зависимость силы тока от времени в идеальном колебательном контуре. Какой станет частота колебаний, если ${c[1]}?`,fig,kind:'num',ans:nu,unit:'кГц',sol:`<i>T</i> = ${T0}·√${f(c[0])} = ${f(T)} мкс ⇒ ν = 1/<i>T</i> = ${f(nu)} кГц.`,trap:''};}));
+
+add('radio',13,7,'Длина волны и настройка контура','radio',()=>{
+ const t=P(['lam','ratio','C']);
+ if(t==='lam'){const T=P([0.5,1,2,4,5,10]);const lam=3e8*T*1e-6;return {q:`Период собственных колебаний в колебательном контуре радиопередатчика ${f(T)} мкс. Какова длина излучаемой электромагнитной волны?`,kind:'num',ans:lam,unit:'м',sol:`λ = <i>cT</i> = 3·10<sup>8</sup>·${f(T)}·10<sup>−6</sup> = ${f(lam)} м.`,trap:'мкс = 10⁻⁶ с.'};}
+ if(t==='ratio'){const n=P([2,3,4]);const up=Math.random()<0.5;return {q:`Колебательный контур радиоприёмника настроен на волну λ. Во сколько раз нужно ${up?'увеличить':'уменьшить'} ёмкость конденсатора, чтобы приёмник был настроен на волну ${up?n+'λ':'λ/'+n}?`,kind:'num',ans:n*n,unit:'',sol:`λ = <i>cT</i> = 2π<i>c</i>√(<i>LC</i>) ⇒ λ ~ √<i>C</i> ⇒ <i>C</i> ~ λ<sup>2</sup>: ${n}<sup>2</sup> = ${n*n}.`,trap:'Длина волны ~ √C.'};}
+ const k=P([4,9,16]);return {q:`Ёмкость конденсатора в контуре радиоприёмника увеличили ${raz(k)}. Во сколько раз увеличилась длина волны, на которую настроен приёмник?`,kind:'num',ans:Math.sqrt(k),unit:'',sol:`λ ~ √(<i>LC</i>) ⇒ √${k} = ${Math.sqrt(k)}.`,trap:''};});
+
+function svgMirror(beta){const W=280,H=150,cx=140,cy=120;const a=beta*Math.PI/180,L=100;
+ let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="${cy}" x2="250" y2="${cy}" class="w2"/>`;
+ for(let x=34;x<250;x+=10)s+=`<line x1="${x}" y1="${cy}" x2="${x-6}" y2="${cy+7}" class="g"/>`;
+ s+=arrow(cx-L*Math.cos(a),cy-L*Math.sin(a),cx,cy,'cv')+arrow(cx,cy,cx+L*Math.cos(a),cy-L*Math.sin(a),'cv');
+ s+=`<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-110}" class="g" stroke-dasharray="4 3"/>`;
+ return s+'</svg>';}
+add('mang',13,8,'Плоское зеркало: углы','mirror',()=>{
+ const t=P(['b','rot','i']);
+ if(t==='b'){const b=P([20,25,30,35,40,50,55,60,65,70,75]);const ray=P(['падающим','отражённым']);return {q:`Луч света падает на плоское зеркало. Угол между ${ray} лучом и плоскостью зеркала равен ${b}°. Чему равен угол между падающим и отражённым лучами?`,fig:svgMirror(b),kind:'num',ans:180-2*b,unit:'°',sol:`Угол отражения (от нормали) = 90° − ${b}° = ${90-b}°. Угол падения такой же. Между лучами: 2·${90-b}° = ${180-2*b}°.`,trap:'Углы падения и отражения отсчитывают от перпендикуляра (нормали), а не от зеркала.'};}
+ if(t==='rot'){return retry(()=>{const g=P([40,50,60,70,80,90,100,110,120]),d=P([5,10,15,20]),up=Math.random()<0.5;const n=g+(up?2:-2)*d;if(n<=0||n>=180)return null;
+  return {q:`Угол между падающим на плоское зеркало и отражённым лучами равен ${g}°. Зеркало повернули на ${d}° так, что угол падения ${up?'увеличился':'уменьшился'} (падающий луч не меняли). Каким стал угол между падающим и отражённым лучами?`,kind:'num',ans:n,unit:'°',sol:`Угол падения был ${g/2}°, стал ${g/2+(up?d:-d)}°. Угол между лучами = 2·${g/2+(up?d:-d)}° = ${n}°. (Поворот зеркала на φ поворачивает отражённый луч на 2φ.)`,trap:'Поворот зеркала на φ меняет угол между лучами на 2φ.'};});}
+ const al=P([15,20,25,30,35,40,50,60]);return {q:`Угол падения луча на плоское зеркало равен ${al}°. Каков угол между отражённым лучом и плоскостью зеркала?`,kind:'num',ans:90-al,unit:'°',sol:`Угол отражения ${al}° (от нормали) ⇒ с зеркалом 90° − ${al}° = ${90-al}°.`,trap:''};});
+
+add('mdist',13,8,'Плоское зеркало: расстояния','mirror',()=>retry(()=>{
+ const a=P([2,3,4,5]),b=P([1,2,3]),away=Math.random()<0.5;if(!away&&b>=a)return null;const pc=P(['ладья','ферзь','конь','пешка']);const ask=P(['d','new','img']);
+ const base=`На шахматной доске перед вертикальным плоским зеркалом на расстоянии ${a} клеток от него стоит ${pc}. Фигуру ${away?'отодвинули от зеркала':'пододвинули к зеркалу'} на ${b} клетк${b===1?'у':'и'}.`;
+ if(ask==='d')return {q:base+` На сколько клеток ${away?'увеличилось':'уменьшилось'} расстояние между фигурой и её изображением?`,kind:'num',ans:2*b,unit:'клеток',sol:`Изображение симметрично: расстояние фигура–изображение = 2·(расстояние до зеркала). Изменение 2·${b} = ${2*b}.`,trap:'Изображение тоже сдвигается — изменение удваивается.'};
+ if(ask==='new')return {q:base+' Каким стало расстояние между фигурой и её изображением (в клетках)?',kind:'num',ans:2*(a+(away?b:-b)),unit:'клеток',sol:`До зеркала ${a+(away?b:-b)} кл. ⇒ до изображения 2·${a+(away?b:-b)} = ${2*(a+(away?b:-b))}.`,trap:''};
+ return {q:base+' На каком расстоянии от зеркала теперь находится изображение фигуры (в клетках)?',kind:'num',ans:a+(away?b:-b),unit:'клеток',sol:`Изображение за зеркалом на таком же расстоянии, что и предмет: ${a+(away?b:-b)}.`,trap:'Здесь спрашивают расстояние до зеркала, а не до фигуры.'};}));
+
+function lensSvg(F,S,cands,showRays){const c=18,W=19*c,H=11*c,ox=W/2,oy=H/2;const X=x=>ox+x*c,Y=y=>oy-y*c;
+ let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg">`;
+ for(let i=-9;i<=9;i++)s+=`<line x1="${X(i)}" y1="0" x2="${X(i)}" y2="${H}" class="g"/>`;for(let j=-5;j<=5;j++)s+=`<line x1="0" y1="${Y(j)}" x2="${W}" y2="${Y(j)}" class="g"/>`;
+ s+=`<line x1="0" y1="${oy}" x2="${W}" y2="${oy}" class="w"/>`+arrow(X(0),Y(-4.6),X(0),Y(4.8),'w2')+arrow(X(0),Y(4.6),X(0),Y(-4.8),'w2');
+ for(const k of [-1,1])s+=`<circle cx="${X(k*F)}" cy="${oy}" r="2.6" class="dot"/><text x="${X(k*F)}" y="${oy+14}" class="lb" text-anchor="middle">F</text>`;
+ s+=`<circle cx="${X(S[0])}" cy="${Y(S[1])}" r="3.5" class="dot"/><text x="${X(S[0])-4}" y="${Y(S[1])-6}" class="lb" text-anchor="end">S</text>`;
+ cands.forEach((p,i)=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" class="dot2"/><text x="${X(p[0])+5}" y="${Y(p[1])-5}" class="lb">${i+1}</text>`;});
+ return s+'</svg>';}
+add('lens',13,8,'Изображение в собирающей линзе','lens',()=>retry(()=>{
+ const c=P([[2,3,1],[2,4,1],[2,4,2],[2,6,2],[3,6,1],[3,6,2],[2,3,2],[1,2,1],[1,2,2],[2,1,1],[3,2,1],[4,2,1],[1,3,2],[3,4,1]]);const [F,d,h]=c;
+ const fx=d*F/(d-F),fy=-h*fx/d;if(!Number.isInteger(fx)||!Number.isInteger(fy)||Math.abs(fx)>8||Math.abs(fy)>4)return null;
+ const S=[-d,h];const img=[fx,fy];let cand=[img,[fx,-fy],[-fx,fy],[d,-h],[F*2,-h],[fx+1,fy],[fx,fy+(fy>0?-1:1)],[F,-h]];
+ cand=cand.filter((p,i,a)=>Math.abs(p[0])<=8&&Math.abs(p[1])<=4&&!(p[0]===S[0]&&p[1]===S[1])&&a.findIndex(q=>q[0]===p[0]&&q[1]===p[1])===i);
+ if(cand.length<4)return null;const pick=SH([img].concat(SH(cand.slice(1)).slice(0,R(3,4)))).sort((a,b)=>a[0]-b[0]||b[1]-a[1]);const ai=pick.findIndex(p=>p===img);
+ return {q:'Какая из отмеченных точек является изображением точечного источника S в тонкой собирающей линзе с фокусным расстоянием F (одна клетка — единица длины)?',fig:lensSvg(F,S,pick),kind:'choice',opts:pick.map((p,i)=>'точка '+(i+1)),ans:String(ai+1),
+  sol:`Луч из S параллельно оси после линзы идёт через фокус F за линзой; луч через центр линзы не преломляется. ${d>F?`<i>d</i> = ${d} > <i>F</i> = ${F}: изображение действительное, перевёрнутое, по другую сторону линзы.`:`<i>d</i> = ${d} < <i>F</i> = ${F}: изображение мнимое, прямое, с той же стороны, увеличенное.`} Формула: 1/<i>d</i> + 1/<i>f</i> = 1/<i>F</i> ⇒ <i>f</i> = ${fx} кл.; Г = |<i>f</i>|/<i>d</i> ⇒ высота ${Math.abs(fy)} кл. Это точка ${ai+1}.`,trap:'Луч, параллельный оси, после линзы проходит через ДАЛЬНИЙ фокус.'};}));
+
+// ======================= №14 =======================
+add('beads',14,1,'Две бусинки: верные утверждения','beads',()=>retry(()=>{
+ const a=P([1,2,3,4]),b=P([1,2,3,4])*P([1,1,-1]);if(Math.abs(a)===Math.abs(b))return null;
+ const qs=x=>(x>0?'+':'−')+(Math.abs(x)===1?'':Math.abs(x))+'<i>q</i>';const Ec=a-b;const Ec2=a+b;
+ const dir=Ec>0?'к бусинке B (вправо)':'к бусинке A (влево)',wrong=Ec>0?'к бусинке A (влево)':'к бусинке B (вправо)';
+ const pool=[{t:'Модуль силы Кулона, действующей на бусинку A, равен модулю силы, действующей на бусинку B.',ok:true},
+ {t:'Если бусинки соединить стеклянной незаряженной палочкой, их заряды станут одинаковыми.',ok:false},
+ {t:`Если бусинки соединить тонкой стальной проволокой, они будут ${(a+b)!==0?'отталкиваться':'притягиваться'}.`,ok:(a+b)!==0},
+ {t:`Напряжённость результирующего поля в точке C направлена ${dir}.`,ok:Ec!==0},{t:`Напряжённость результирующего поля в точке C направлена ${wrong}.`,ok:false},
+ {t:'Бусинки притягиваются друг к другу.',ok:a*b<0},{t:'Потенциал результирующего поля в точке C равен нулю.',ok:a+b===0}];
+ const r=Math.abs(Ec2)/Math.abs(Ec);if(isNice(r,2)&&r!==1)pool.push({t:`Если заряд бусинки B заменить на противоположный по знаку, модуль напряжённости в точке C ${r>1?'увеличится':'уменьшится'} ${raz(r>1?r:1/r)}.`,ok:true},{t:`Если заряд бусинки B заменить на противоположный по знаку, модуль напряжённости в точке C ${r>1?'уменьшится':'увеличится'} ${raz(r>1?r:1/r)}.`,ok:false});
+ const st=stmts(pool);const fig=`<svg viewBox="0 0 280 70" class="fig" xmlns="http://www.w3.org/2000/svg"><line x1="40" y1="40" x2="240" y2="40" class="g"/><circle cx="40" cy="40" r="6" class="dot"/><circle cx="240" cy="40" r="6" class="dot"/><circle cx="140" cy="40" r="2.5" class="dot2"/><text x="40" y="62" class="lb" text-anchor="middle">A</text><text x="140" y="62" class="lb" text-anchor="middle">C</text><text x="240" y="62" class="lb" text-anchor="middle">B</text><text x="40" y="24" class="lb" text-anchor="middle">${qs(a).replace(/<\/?i>/g,'')}</text><text x="240" y="24" class="lb" text-anchor="middle">${qs(b).replace(/<\/?i>/g,'')}</text></svg>`;
+ return {q:`Две маленькие закреплённые металлические бусинки в точках A и B несут заряды ${qs(a)} и ${qs(b)} (<i>q</i> > 0). Точка C — середина отрезка AB. Внешнего поля нет. Выберите все верные утверждения.`,fig,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`Силы взаимодействия равны по 3-му закону Ньютона. Стекло — диэлектрик. Проволока выравнивает заряды: по (${a}${b>=0?'+':''}${b})/2 = ${f((a+b)/2)}<i>q</i>${a+b!==0?' — одного знака ⇒ отталкиваются':' — нули ⇒ не взаимодействуют'}. В точке C поле от A направлено ${a>0?'от A (вправо)':'к A (влево)'}, от B — ${b>0?'от B (влево)':'к B (вправо)'}; модули ~ заряду: итог ~ ${a}${-b>=0?'+':'−'}${Math.abs(b)} = ${f(Ec)}.`,trap:'Напряжённость — вектор: «+» от себя, «−» к себе; модули ~ |q|.'};}));
+
+add('lctab',14,7,'Таблица q(t) в контуре','lc_table',()=>{
+ const qm=P([1,2,4]),start=P(['cos','sin']);const val=k=>{const ph=2*Math.PI*k/8;return start==='cos'?Math.cos(ph):Math.sin(ph);};
+ const tbl=[0,1,2,3,4,5,6,7,8,9].map(k=>{const v=qm*val(k);return Math.abs(v)<1e-9?'0':f(Math.round(v*100)/100);});
+ const ext=k=>Math.abs(Math.abs(val(k))-1)<1e-9,zero=k=>Math.abs(val(k))<1e-9;
+ const ks=[1,2,3,4,5,6,7,8].filter(k=>ext(k)||zero(k));const K=()=>P(ks);const pool=[];
+ pool.push({t:'Период колебаний равен 8 мкс.',ok:true},{t:'Период колебаний равен 4 мкс.',ok:false},{t:'Частота колебаний равна 125 кГц.',ok:true},{t:'Частота колебаний равна 250 кГц.',ok:false},
+ {t:'Период изменения энергии магнитного поля катушки равен 4 мкс.',ok:true},{t:'Период изменения энергии электрического поля конденсатора равен 8 мкс.',ok:false});
+ for(let i=0;i<3;i++){const k=K();const r=P([0,1,2,3]);
+  if(r===0)pool.push({t:`В момент <i>t</i> = ${k} мкс сила тока в контуре равна нулю.`,ok:ext(k)});
+  if(r===1)pool.push({t:`В момент <i>t</i> = ${k} мкс модуль силы тока в катушке максимален.`,ok:zero(k)});
+  if(r===2)pool.push({t:`В момент <i>t</i> = ${k} мкс энергия магнитного поля катушки максимальна.`,ok:zero(k)});
+  if(r===3)pool.push({t:`В момент <i>t</i> = ${k} мкс энергия электрического поля конденсатора максимальна.`,ok:ext(k)});}
+ const uniq=pool.filter((s,i,a)=>a.findIndex(z=>z.t===s.t)===i);const st=stmts(uniq);
+ const fig=`<table class="tbl"><tr><td><i>t</i>, мкс</td>${[0,1,2,3,4,5,6,7,8,9].map(k=>'<td>'+k+'</td>').join('')}</tr><tr><td><i>q</i>, нКл</td>${tbl.map(v=>'<td>'+v+'</td>').join('')}</tr></table>`;
+ return {q:'В идеальном колебательном контуре происходят свободные электромагнитные колебания. В таблице показано, как меняется заряд одной из пластин конденсатора. Выберите все верные утверждения.',fig,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`По таблице заряд повторяется через 8 мкс ⇒ <i>T</i> = 8 мкс, ν = 1/<i>T</i> = 125 кГц. Когда |<i>q</i>| максимален — ток 0, вся энергия в конденсаторе; когда <i>q</i> = 0 — ток максимален, вся энергия в катушке. Энергии колеблются с периодом <i>T</i>/2 = 4 мкс.`,trap:'Энергия меняется с периодом T/2; ток максимален при q = 0.'};});
+
+add('cores',14,5,'Две катушки на сердечнике','cores',()=>retry(()=>{
+ const I=[0];for(let i=0;i<5;i++)I.push(Math.max(-3,Math.min(4,I[i]+P([-2,-1,0,0,1,2,3]))));const s=[0,1,2,3,4].map(i=>I[i+1]-I[i]);
+ if(s.filter(x=>x!==0).length<2||s.every(x=>x===s[0]))return null;const iv=i=>`${i}–${i+1} с`;const pool=[];
+ pool.push({t:'В течение всего времени измерений сила тока через амперметр отлична от нуля.',ok:s.every(x=>x!==0)});
+ const z=s.findIndex(x=>x===0),nz=s.findIndex(x=>x!==0);
+ if(z>=0)pool.push({t:`В промежутке ${iv(z)} показания амперметра равны нулю.`,ok:true},{t:`В промежутке ${iv(z)} индукция магнитного поля в сердечнике постоянна.`,ok:true});
+ if(nz>=0)pool.push({t:`В промежутке ${iv(nz)} показания амперметра равны нулю.`,ok:false});
+ const pr=[];for(let i=0;i<5;i++)for(let j=0;j<5;j++)if(i<j&&s[i]!==0&&s[j]!==0)pr.push([i,j]);
+ if(pr.length){const [i,j]=P(pr);pool.push({t:`В промежутках ${iv(i)} и ${iv(j)} ток в левой катушке направлен одинаково.`,ok:sgn(s[i])===sgn(s[j])});
+  const k=Math.abs(s[i])/Math.abs(s[j]);if(k!==1){pool.push({t:`Модуль силы тока в левой катушке в промежутке ${iv(i)} ${raz(k>1?k:1/k)} ${k>1?'больше':'меньше'}, чем в промежутке ${iv(j)}.`,ok:true},{t:`Модуль силы тока в левой катушке в промежутке ${iv(i)} ${k>1?'меньше':'больше'}, чем в промежутке ${iv(j)}.`,ok:false});}
+  else pool.push({t:`Модули силы тока в левой катушке в промежутках ${iv(i)} и ${iv(j)} одинаковы.`,ok:true});}
+ const zz=s.findIndex((x,i)=>x===0&&I[i]===0);if(zz>=0)pool.push({t:`В промежутке ${iv(zz)} индукция магнитного поля в сердечнике равна нулю.`,ok:true});
+ const nn=s.findIndex((x,i)=>x===0&&I[i]!==0);if(nn>=0)pool.push({t:`В промежутке ${iv(nn)} индукция магнитного поля в сердечнике равна нулю.`,ok:false});
+ if(pool.length<5)return null;const st=stmts(pool);
+ const fig=plot({xmax:5.6,ymin:-3.5,ymax:4.5,xt:[1,2,3,4,5],yt:[-3,-2,-1,1,2,3,4],xn:'t, с',yn:'I, А',poly:I.map((v,i)=>[i,v])});
+ return {q:'На железный сердечник надеты две катушки. По правой пропускают ток, меняющийся по графику; левая катушка замкнута на амперметр. Выберите все верные утверждения (самоиндукцией пренебречь).',fig,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`Ток в левой катушке возникает, только когда меняется поток, т. е. когда меняется ток в правой: модуль ~ |наклону| графика (${s.map((x,i)=>iv(i)+': '+(x>0?'+':'')+x+' А/с').join('; ')}). Знак наклона задаёт направление (правило Ленца). На горизонтальных участках тока нет, а поле в сердечнике постоянно (и равно нулю только при <i>I</i> = 0).`,trap:'Индукционный ток зависит от скорости изменения тока, а не от самого тока.'};}));
+
+function capFactors(conn,act,k){const fc=act==='d+'?1/k:k; // act: d+ (раздвинули), d- (сблизили), e (диэлектрик)
+ const r={C:fc};if(conn){r.U=1;r.q=fc;r.E=act==='e'?1:(act==='d+'?1/k:k);r.W=fc;}else{r.q=1;r.U=1/fc;r.E=act==='e'?1/k:1;r.W=1/fc;}return r;}
+const CAPN={C:['Электроёмкость конденсатора','f'],U:['Напряжение между обкладками','n'],q:['Модуль заряда обкладок','m'],E:['Напряжённость поля между обкладками','f'],W:['Энергия электрического поля конденсатора','f']};
+add('capst',14,2,'Конденсатор: верные утверждения','',()=>{
+ const conn=Math.random()<0.5,act=P(['d+','d-','e']),k=P([2,3]);const fa=capFactors(conn,act,k);const pool=[];
+ for(const key of ['C','U','q','E','W']){const [nm,g]=CAPN[key];const t=fa[key];pool.push({t:`${nm} ${chg(t,g)}.`,ok:true});
+  const w=t===1?k:(Math.abs(t-k)<1e-9||Math.abs(t-1/k)<1e-9)?(Math.random()<0.5?t*t:1):t*t;pool.push({t:`${nm} ${chg(w,g)}.`,ok:Math.abs(w-t)<1e-9});}
+ const st=stmts(pool.filter((s,i,a)=>a.findIndex(z=>z.t===s.t)===i));
+ const how=act==='d+'?`расстояние между пластинами увеличили ${raz(k)}`:act==='d-'?`пластины сблизили, уменьшив расстояние ${raz(k)}`:`пространство между пластинами заполнили диэлектриком с ε = ${k}`;
+ return {q:`Плоский воздушный конденсатор ${conn?'подключён к источнику постоянного напряжения и не отключается':'зарядили и отключили от источника'}. Затем ${how}. Выберите все верные утверждения о том, что произошло после установления равновесия.`,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`${conn?'Подключён ⇒ <i>U</i> = const.':'Отключён ⇒ <i>q</i> = const.'} <i>C</i> = εε₀<i>S</i>/<i>d</i>: ${chg(fa.C,'f')}. ${conn?`<i>q</i> = <i>CU</i>: ${chg(fa.q,'m')}; <i>E</i> = <i>U</i>/<i>d</i>: ${chg(fa.E,'f')}; <i>W</i> = <i>CU</i>²/2: ${chg(fa.W,'f')}.`:`<i>U</i> = <i>q</i>/<i>C</i>: ${chg(fa.U,'n')}; <i>E</i>${act==='e'?' ослабляется диэлектриком':' = U/d — U и d меняются одинаково, E'}: ${chg(fa.E,'f')}; <i>W</i> = <i>q</i>²/(2<i>C</i>): ${chg(fa.W,'f')}.`}`,trap:'Сначала — подключён или отключён. Энергия меняется в k раз, а не в k².'};});
+
+add('plate',14,1,'Поле заряженной пластины','plate',()=>{
+ const sp=Math.random()<0.5;const x1=P([1,2]),x2=x1+P([2,3]);
+ const pool=[{t:'Напряжённость электростатического поля в точках A, B и C одинакова.',ok:true},{t:'Модуль напряжённости поля в точке A больше, чем в точке C.',ok:false},
+ {t:'Потенциал в точке A выше, чем в точке C.',ok:sp},{t:'Потенциал в точке C выше, чем в точке A.',ok:!sp},{t:'Потенциалы точек A и B одинаковы.',ok:true},{t:'Заряд пластины положительный.',ok:sp},{t:'Заряд пластины отрицательный.',ok:!sp},
+ {t:'Работа поля при перемещении положительного заряда из A в B равна нулю.',ok:true}];const st=stmts(pool);
+ let s=`<svg viewBox="0 0 300 170" class="fig" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="10" width="10" height="150" class="el"/>`;
+ for(let y=25;y<160;y+=27)s+=sp?arrow(44,y,280,y,'g2'):arrow(280,y,44,y,'g2');
+ const X=x=>44+x*40;s+=`<circle cx="${X(x1)}" cy="38" r="3.5" class="dot"/><text x="${X(x1)+6}" y="34" class="lb">A</text><circle cx="${X(x1)}" cy="118" r="3.5" class="dot"/><text x="${X(x1)+6}" y="114" class="lb">B</text><circle cx="${X(x2)}" cy="78" r="3.5" class="dot"/><text x="${X(x2)+6}" y="74" class="lb">C</text></svg>`;
+ return {q:'На рисунке — линии напряжённости электростатического поля большой равномерно заряженной пластины и точки A, B, C. Выберите все верные утверждения.',fig:s,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`Поле большой пластины однородное: <i>E</i> одинакова везде. Линии ${sp?'выходят из пластины ⇒ заряд «+»':'входят в пластину ⇒ заряд «−»'}. Потенциал убывает вдоль линий: ${sp?'ближе к пластине — выше (A выше C)':'дальше от пластины — выше (C выше A)'}. A и B на одинаковом расстоянии — потенциалы равны, работа между ними 0.`,trap:'Однородное поле не слабеет с расстоянием; потенциал убывает ВДОЛЬ линий.'};});
+
+add('reost',14,3,'Реостат в полной цепи','',()=>{
+ const up=Math.random()<0.5;const v=up?1:-1;const D=x=>x>0?'увеличивается':'уменьшается';
+ const pool=[{t:`Сила тока в цепи ${D(-v)}.`,ok:true},{t:`Сила тока в цепи ${D(v)}.`,ok:false},{t:`Напряжение на резисторе <i>R</i> ${D(-v)}.`,ok:true},{t:`Напряжение на клеммах источника ${D(v)}.`,ok:true},{t:`Напряжение на клеммах источника ${D(-v)}.`,ok:false},
+ {t:`Тепловая мощность, выделяющаяся внутри источника, ${D(-v)}.`,ok:true},{t:`Тепловая мощность внутри источника ${D(v)}.`,ok:false},{t:'ЭДС источника '+D(v)+'.',ok:false},{t:`Напряжение на реостате ${D(v)}.`,ok:true}];
+ const st=stmts(pool);
+ return {q:`Источник тока с ЭДС ℰ и внутренним сопротивлением <i>r</i>, резистор <i>R</i> и реостат соединены последовательно. Ползунок реостата передвинули так, что сопротивление реостата ${up?'увеличилось':'уменьшилось'}. Выберите все верные утверждения.`,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`Внешнее сопротивление ${up?'выросло':'уменьшилось'} ⇒ <i>I</i> = ℰ/(<i>R</i><sub>внеш</sub> + <i>r</i>) ${up?'уменьшается':'увеличивается'}. <i>U<sub>R</sub></i> = <i>IR</i> — так же, как ток. На клеммах <i>U</i> = ℰ − <i>Ir</i> — наоборот. <i>P</i> = <i>I</i>²<i>r</i> — как ток. На реостате ℰ − <i>I</i>(<i>R</i> + <i>r</i>) — наоборот. ℰ не меняется.`,trap:'Больше R — меньше ток, но больше напряжение на клеммах.'};});
+
+// ======================= №15 =======================
+const CH=k=>k>1?1:k<1?2:3;
+add('ion',15,4,'Частица по окружности в B: как изменятся','ion',()=>{
+ const pt=P(['Положительно заряженный ион','Протон','Электрон','Отрицательно заряженный ион фтора','α-частица']);const act=P(['v+','v-','B+','B-']);
+ const qty={F:['Модуль силы Лоренца'],a:['Модуль центростремительного ускорения'],R:['Радиус окружности'],T:['Период обращения'],nu:['Частота обращения'],v:['Модуль скорости']};
+ const eff={'v+':{F:2,a:2,R:2,T:1,nu:1,v:2},'B+':{F:2,a:2,R:.5,T:.5,nu:2,v:1}};const e=act[0]==='v'?eff['v+']:eff['B+'];const sign=act[1]==='+'?1:-1;
+ const keys=SH(Object.keys(qty).filter(k=>!(act[0]==='v'&&k==='v'))).slice(0,2);const ans=keys.map(k=>{let x=e[k];if(sign<0)x=1/x;return CH(x);}).join('');
+ const how={'v+':'увеличить скорость частицы','v-':'уменьшить скорость частицы','B+':'частица будет двигаться в поле с большей индукцией','B-':'частица будет двигаться в поле с меньшей индукцией'}[act];
+ return {q:`${pt} движется по окружности в однородном магнитном поле. Как изменятся величины, если ${how}?`,kind:'change',rows:keys.map(k=>qty[k][0]),ans,
+  sol:`<i>F</i> = |<i>q</i>|<i>vB</i>; <i>a</i> = |<i>q</i>|<i>vB</i>/<i>m</i>; <i>R</i> = <i>mv</i>/(|<i>q</i>|<i>B</i>); <i>T</i> = 2π<i>m</i>/(|<i>q</i>|<i>B</i>) — не зависит от <i>v</i>; ν = 1/<i>T</i>. ${act[0]==='B'?'Сила Лоренца работы не совершает — модуль скорости не меняется.':''} Знак заряда на ответ не влияет.`,trap:'Период и частота не зависят от скорости; a ищи через a = qvB/m, а не v²/R с «постоянным» R.'};});
+
+add('resist',15,3,'Резистор заменили: R, I, P','resist',()=>{
+ const ch=P([['из проволоки той же длины и сечения, но из материала с большим удельным сопротивлением',2],['из той же проволоки, но втрое меньшей длины',1/3],['из того же материала и той же длины, но с вдвое большей площадью сечения',1/2],['из того же материала и сечения, но вдвое длиннее',2],['из материала с меньшим удельным сопротивлением (та же длина и сечение)',1/2]]);
+ const ideal=Math.random()<0.5;const k=ch[1];const qs=SH(['R','I'].concat(ideal?['P']:[])).slice(0,2);const map={R:['Сопротивление резистора',CH(k)],I:['Сила тока в цепи',CH(1/k)],P:['Тепловая мощность, выделяющаяся в резисторе',CH(1/k)]};
+ return {q:`${ideal?'Резистор подключён к идеальному источнику постоянного напряжения':'Неразветвлённая цепь состоит из аккумулятора и резистора'}. Резистор заменили на другой — ${ch[0]}. Как изменились величины?`,kind:'change',rows:qs.map(x=>map[x][0]),ans:qs.map(x=>map[x][1]).join(''),
+  sol:`<i>R</i> = ρ<i>l</i>/<i>S</i>: сопротивление ${k>1?'выросло':'уменьшилось'}. <i>I</i> = ${ideal?'<i>U</i>/<i>R</i>':'ℰ/(<i>R</i> + <i>r</i>)'} — ${k>1?'уменьшилась':'увеличилась'}.${ideal?` <i>P</i> = <i>U</i>²/<i>R</i> (U постоянно) — ${k>1?'уменьшилась':'увеличилась'}.`:''}`,trap:'При постоянном U мощность P = U²/R: больше R — меньше мощность.'};});
+
+add('capch',15,2,'Конденсатор: как изменятся','',()=>{
+ const conn=Math.random()<0.5,act=P(['d+','d-','e','S+']);const fa=act==='S+'?capFactors(conn,'d-',2):capFactors(conn,act,2);if(act==='S+'){fa.E=conn?1:0.5;}
+ const keys=SH(['C','q','U','E','W'].filter(k=>conn?k!=='U':k!=='q')).slice(0,2);
+ const how={'d+':'увеличить расстояние между пластинами','d-':'уменьшить расстояние между пластинами','e':'заполнить пространство между пластинами диэлектриком','S+':'увеличить площадь перекрытия пластин (сдвинуть их)'}[act];
+ return {q:`Плоский воздушный конденсатор ${conn?'подключён к источнику постоянного напряжения':'зарядили и отключили от источника'}. Как изменятся величины, если ${how}?`,kind:'change',rows:keys.map(k=>CAPN[k][0]),ans:keys.map(k=>CH(fa[k])).join(''),
+  sol:`${conn?'Подключён ⇒ <i>U</i> = const.':'Отключён ⇒ <i>q</i> = const.'} <i>C</i> = εε₀<i>S</i>/<i>d</i> ${fa.C>1?'↑':'↓'}. ${conn?`<i>q</i> = <i>CU</i> ${fa.q>1?'↑':'↓'}; <i>E</i> = <i>U</i>/<i>d</i> ${fa.E>1?'↑':fa.E<1?'↓':'не меняется'}; <i>W</i> = <i>CU</i>²/2 ${fa.W>1?'↑':'↓'}.`:`<i>U</i> = <i>q</i>/<i>C</i> ${fa.U>1?'↑':'↓'}; <i>E</i> ${fa.E===1?'не меняется (U/d: оба меняются одинаково)':fa.E>1?'↑':'↓'}; <i>W</i> = <i>q</i>²/(2<i>C</i>) ${fa.W>1?'↑':'↓'}.`}`,trap:'Отключённый: раздвигаем пластины — E не меняется.'};});
+
+add('emeter',15,2,'Электрометр и конденсатор','',()=>{
+ const act=P(['d-','d+','e','S-']);const fc={'d-':2,'d+':.5,'e':2,'S-':.5}[act];
+ const rows=SH([['Показания электрометра',CH(1/fc)],['Электроёмкость конденсатора',CH(fc)],['Заряд пластин',3],['Энергия электрического поля конденсатора',CH(1/fc)]]).slice(0,2);
+ const how={'d-':'уменьшили расстояние между пластинами','d+':'увеличили расстояние между пластинами','e':'вставили между пластинами диэлектрик','S-':'сдвинули пластины параллельно, уменьшив площадь перекрытия'}[act];
+ return {q:`Пластины плоского конденсатора соединены со стержнем и корпусом электрометра, конденсатор заряжен и отключён от источника. Затем ${how}. Как изменились величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+  sol:`Отключён ⇒ <i>q</i> = const. Электрометр показывает напряжение <i>U</i> = <i>q</i>/<i>C</i>. <i>C</i> ${fc>1?'выросла':'уменьшилась'} ⇒ <i>U</i> ${fc>1?'уменьшилось':'выросло'}, <i>W</i> = <i>q</i>²/(2<i>C</i>) — так же, как <i>U</i>.`,trap:'Электрометр измеряет напряжение, а не заряд.'};});
+
+add('lcch',15,7,'Контур: T, ν, λ','radio',()=>{
+ const ch=P([['катушку заменили на катушку с большей индуктивностью',1],['в конденсатор вставили диэлектрик',1],['раздвинули пластины конденсатора',-1],['катушку заменили на катушку с меньшей индуктивностью',-1],['уменьшили площадь пластин конденсатора',-1]]);
+ const rows=SH([['Период колебаний',ch[1]>0?1:2],['Частота колебаний',ch[1]>0?2:1],['Длина волны, на которую настроен контур',ch[1]>0?1:2]]).slice(0,2);
+ return {q:`В колебательном контуре радиоприёмника ${ch[0]}. Как изменятся величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+  sol:`<i>T</i> = 2π√(<i>LC</i>), ν = 1/<i>T</i>, λ = <i>cT</i>. ${ch[0].includes('пласт')||ch[0].includes('диэлектрик')?'<i>C</i> = εε₀<i>S</i>/<i>d</i>. ':''}Произведение <i>LC</i> ${ch[1]>0?'выросло':'уменьшилось'} ⇒ <i>T</i> и λ ${ch[1]>0?'растут':'уменьшаются'}, ν — наоборот.`,trap:'Частота меняется противоположно периоду.'};});
+
+add('fullch',15,3,'Полная цепь: как изменятся','',()=>{
+ const ch=P([['последовательно с резистором включили ещё один резистор',1],['параллельно резистору подключили ещё один резистор',-1],['увеличили сопротивление реостата',1],['уменьшили сопротивление реостата',-1]]);const up=ch[1]>0;
+ const rows=SH([['Сила тока в цепи',up?2:1],['Напряжение на клеммах источника',up?1:2],['Мощность, выделяющаяся внутри источника',up?2:1],['ЭДС источника',3]]).slice(0,2);
+ return {q:`Цепь состоит из источника с ЭДС ℰ и внутренним сопротивлением <i>r</i> и резистора. Во внешней цепи ${ch[0]}. Как изменятся величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+  sol:`Внешнее <i>R</i> ${up?'выросло':'уменьшилось'}${ch[0].includes('параллельно')?' (при параллельном подключении общее сопротивление меньше меньшего)':''}. <i>I</i> = ℰ/(<i>R</i> + <i>r</i>) ${up?'↓':'↑'}; <i>U</i> = ℰ − <i>Ir</i> ${up?'↑':'↓'}; <i>P</i> = <i>I</i>²<i>r</i> ${up?'↓':'↑'}; ℰ не зависит от цепи.`,trap:'Параллельное подключение уменьшает общее сопротивление.'};});
+
+const LCQ={q:['Заряд левой обкладки конденсатора',x=>Math.cos(x),-1],qr:['Заряд правой обкладки конденсатора',x=>-Math.cos(x),-1],u:['Модуль напряжения на конденсаторе',x=>Math.abs(Math.cos(x)),0],wc:['Энергия электрического поля конденсатора',x=>Math.cos(x)**2,0],ia:['Модуль силы тока в катушке',x=>Math.abs(Math.sin(x)),0],wl:['Энергия магнитного поля катушки',x=>Math.sin(x)**2,0]};
+function lcGraph(fn,ymin,lab){return plot({w:250,h:140,xmax:1.25,ymin:ymin?-1.35:0,ymax:1.35,xt:[0.25,0.5,0.75,1],yt:ymin?[-1,1]:[1],xlab:x=>({0.25:'T/4',0.5:'T/2',0.75:'3T/4',1:'T'})[x],ylab:()=>'',xn:'t',yn:lab,fn:x=>fn(2*Math.PI*x),x0:0,x1:1.18});}
+add('lcmatch',15,7,'Графики в контуре: соответствие','',()=>retry(()=>{
+ const ks=Object.keys(LCQ);const [a,b]=SH(ks).slice(0,2);if((a==='q'&&b==='qr')||(a==='qr'&&b==='q'))return null;
+ const opts=SH([a,b].concat(SH(ks.filter(k=>k!==a&&k!==b)).slice(0,2)));
+ const fig=`<div class="two"><div><b>А</b>${lcGraph(LCQ[a][1],LCQ[a][2],'')}</div><div><b>Б</b>${lcGraph(LCQ[b][1],LCQ[b][2],'')}</div></div>`;
+ return {q:'Конденсатор идеального колебательного контура зарядили (левая обкладка — «+») и в момент <i>t</i> = 0 замкнули на катушку. Графики А и Б показывают изменение величин (<i>T</i> — период колебаний). Установите соответствие.',fig,kind:'match',rows:['А','Б'],opts:opts.map(k=>LCQ[k][0]),ans:String(opts.indexOf(a)+1)+String(opts.indexOf(b)+1),
+  sol:'При <i>t</i> = 0: заряд максимален (левая «+», правая «−»), ток 0, вся энергия в конденсаторе. Заряд и ток меняют знак с периодом <i>T</i>; модули и энергии ≥ 0 и повторяются через <i>T</i>/2. Модуль — «острые» нули (галочка), энергия — «гладкие», касается оси.',trap:'Модуль напряжения и энергия похожи: смотри на форму нулей.'};}));
+
+// ======================= Новые типы (ЕГЭ 2025–2026) =======================
+const SRC={};
+const addS=(src,...a)=>{add(...a);SRC[a[0]]=src;};
+
+// №11: шарики соприкоснули
+addS('№11 и №14: закон Кулона и электризация (навигатор ФИПИ 2025)','touch',11,1,'Шарики соприкоснули: сила Кулона','',()=>retry(()=>{
+ const a=R(1,6),b=P([-5,-4,-3,-2,-1,1,2,3,4,5]);if(a+b===0||a===b)return null;
+ const s=(a+b)/2,kr=P([1,1,2,0.5]);const ratio=s*s/Math.abs(a*b)/(kr*kr);const F0=P([10,12,16,18,20,24,30,36,40,45,48,60,72,80,90]);const F1=F0*ratio;
+ if(!isNice(F1,2)||F1>500||Math.abs(ratio-1)<1e-9)return null;
+ const qq=n=>(n===1?'':n===-1?'−':(n<0?'−'+(-n):n))+'<i>q</i>';const sq=n=>n>0?'+'+qq(n):qq(n);
+ const dist=kr===1?'на прежнее расстояние':kr===2?'на вдвое большее расстояние':'на вдвое меньшее расстояние';
+ return {q:`Два одинаковых маленьких металлических шарика с зарядами ${sq(a)} и ${sq(b)} находятся на некотором расстоянии друг от друга и ${b<0?'притягиваются':'отталкиваются'} с силой ${F0} мкН. Шарики привели в соприкосновение и развели ${dist}. Определите модуль силы их взаимодействия после этого.`,kind:'num',ans:F1,unit:'мкН',
+  sol:`При касании одинаковых шариков общий заряд делится поровну: (${a} ${b<0?'−':'+'} ${Math.abs(b)})<i>q</i>/2 = ${f(s)}<i>q</i> у каждого. <i>F</i> ~ |<i>q</i><sub>1</sub><i>q</i><sub>2</sub>|/<i>r</i><sup>2</sup>: <i>F</i>′ = ${F0}·${f(s*s)}/${Math.abs(a*b)}${kr===1?'':kr===2?'/4':'·4'} = ${f(F1)} мкН.`,
+  trap:'Заряды складывают с учётом знака и только потом делят пополам.'};}));
+
+// №14: конденсатор, расстояние меняется по графику
+addS('ЕГЭ-2025 (разбор ФИПИ): конденсатор, расстояние между пластинами меняется','capgr',14,2,'Конденсатор: d(t) по графику','',()=>retry(()=>{
+ const D=[0,1,2,3].map(()=>R(1,4));const tr=[0,1,2].map(i=>sgn(D[i+1]-D[i]));if(!tr.includes(1)||!tr.includes(-1)&&!tr.includes(0))return null;if(!tr.some(x=>x!==0))return null;
+ const conn=Math.random()<0.5;const T=[0,2,4,6];const iv=i=>`в интервале от ${T[i]} до ${T[i+1]} с`;
+ const W3=x=>x>0?'увеличивается':x<0?'уменьшается':'не изменяется';const pool=[];
+ for(const i of SH([0,1,2]).slice(0,2)){const c=-tr[i],w=conn?-tr[i]:tr[i];const wc=P([1,-1,0]),ww=P([1,-1,0]);
+  pool.push({t:`${iv(i)[0].toUpperCase()+iv(i).slice(1)} электроёмкость конденсатора ${W3(wc)}.`,ok:wc===c});
+  pool.push({t:`${iv(i)[0].toUpperCase()+iv(i).slice(1)} энергия электрического поля конденсатора ${W3(ww)}.`,ok:ww===w});}
+ pool.push({t:'Заряд конденсатора всё время остаётся неизменным.',ok:!conn});
+ pool.push({t:'Напряжение между пластинами всё время остаётся неизменным.',ok:conn});
+ pool.push({t:'Напряжённость поля между пластинами всё время остаётся неизменной.',ok:!conn});
+ const pairs=[];for(let x=0;x<4;x++)for(let y=0;y<4;y++)if(D[x]>D[y])pairs.push([x,y]);
+ if(pairs.length){const [x,y]=P(pairs);const k=D[x]/D[y];if(isNice(k,2)){const nm=conn?P([['напряжённость поля между пластинами',-1],['заряд конденсатора',-1]]):P([['напряжение между пластинами',1]]);
+  const truth=nm[1]>0?'больше':'меньше';const say=Math.random()<0.5?truth:(truth==='больше'?'меньше':'больше');
+  pool.push({t:`В момент <i>t</i> = ${T[x]} с ${nm[0]} ${raz(k)} ${say}, чем в момент <i>t</i> = ${T[y]} с.`,ok:say===truth});}}
+ if(pool.filter(s=>s.ok).length<2||pool.filter(s=>!s.ok).length<2)return null;
+ const st=stmts(pool);const fig=plot({xmax:7,ymax:5,xt:[1,2,3,4,5,6],yt:[1,2,3,4],xn:'t, с',yn:'d, мм',poly:T.map((t,i)=>[t,D[i]])});
+ return {q:`Плоский воздушный конденсатор ${conn?'подключён к источнику постоянного напряжения и не отключается':'зарядили и отключили от источника'}. Расстояние <i>d</i> между его пластинами меняется со временем так, как показано на графике. Выберите все верные утверждения.`,fig,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:conn?'Подключён ⇒ <i>U</i> = const. <i>C</i> = ε₀<i>S</i>/<i>d</i> ~ 1/<i>d</i>; <i>q</i> = <i>CU</i> ~ 1/<i>d</i>; <i>E</i> = <i>U</i>/<i>d</i> ~ 1/<i>d</i>; <i>W</i> = <i>CU</i><sup>2</sup>/2 ~ 1/<i>d</i>. Где <i>d</i> растёт — всё, кроме <i>U</i>, убывает.'
+   :'Отключён ⇒ <i>q</i> = const. <i>C</i> ~ 1/<i>d</i>; <i>U</i> = <i>q</i>/<i>C</i> ~ <i>d</i>; <i>E</i> = <i>q</i>/(ε₀<i>S</i>) — не зависит от <i>d</i>; <i>W</i> = <i>q</i><sup>2</sup>/(2<i>C</i>) ~ <i>d</i>.',
+  trap:'Сначала реши, что постоянно: отключён от источника — заряд, подключён — напряжение.'};}));
+
+// №14: правило Ленца, кольца на коромысле
+addS('навигатор ФИПИ 2025: №14 — электромагнитная индукция','lenz',14,5,'Магнит и кольца: правило Ленца','',()=>{
+ const inn=Math.random()<0.5,pole=P(['северным','южным']);const other=pole==='северным'?'южным':'северным';
+ const pool=[{t:'Сплошное кольцо отталкивается от магнита.',ok:inn},{t:'Сплошное кольцо притягивается к магниту.',ok:!inn},
+ {t:'Магнитный поток через сплошное кольцо увеличивается.',ok:inn},
+ {t:'Индукционный ток в сплошном кольце создаёт внутри кольца магнитное поле, направленное так же, как поле магнита.',ok:!inn},
+ {t:`Если повернуть магнит к кольцу ${other} полюсом и двигать так же, кольцо будет ${inn?'притягиваться к магниту':'отталкиваться от магнита'}.`,ok:false},
+ {t:'Если так же двигать магнит у разрезанного кольца, в этом кольце возникнет индукционный ток.',ok:false},
+ {t:'Если так же двигать магнит у разрезанного кольца, коромысло не повернётся.',ok:true},
+ {t:'Если магнит остановить, ток в сплошном кольце исчезнет.',ok:true},
+ {t:'Чем быстрее движется магнит, тем больше ЭДС индукции в сплошном кольце.',ok:true},
+ {t:'Если магнит остановить, сплошное кольцо будет по-прежнему отталкиваться от магнита.',ok:false}];
+ const st=stmts(pool);
+ return {q:`На лёгком коромысле, которое может свободно поворачиваться, закреплены два алюминиевых кольца: сплошное и с разрезом. Постоянный магнит ${inn?'вдвигают':'выдвигают'} ${pole} полюсом ${inn?'в сплошное кольцо':'из сплошного кольца'}. Выберите все верные утверждения.`,kind:'multi',stmts:st.stmts,ans:st.ans,
+  sol:`Правило Ленца: индукционный ток мешает изменению потока. Магнит ${inn?'приближается — поток растёт — поле тока направлено против поля магнита, кольцо отталкивается':'удаляется — поток убывает — поле тока направлено так же, как поле магнита, кольцо притягивается'}. От полюса это не зависит. В разрезанном кольце ЭДС есть, но цепь разомкнута: тока нет, силы нет. Магнит неподвижен — поток не меняется, тока нет. ЭДС = |ΔΦ/Δ<i>t</i>|: быстрее — больше.`,
+  trap:'Важно, растёт поток или убывает, а не каким полюсом подносят магнит.'};});
+
+// №15: замкнули ключ (закоротили резистор)
+function svgShort(closed,rheo){const W=300,H=150;let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg">`;
+ s+=`<polyline points="40,74 40,50 260,50 260,130 40,130 40,74" class="w"/>`+battery(40,74);
+ s+=resistor(100,50,'',0)+resistor(190,50,'',0)+`<text x="100" y="72" class="lb" text-anchor="middle">R₁</text><text x="190" y="72" class="lb" text-anchor="middle">R₂</text><text x="22" y="78" class="lb" text-anchor="middle">ℰ</text>`;
+ if(rheo){s+=arrow(172,64,210,34);}
+ else{s+=`<polyline points="150,50 150,18 178,18" class="w"/><polyline points="204,18 230,18 230,50" class="w"/><circle cx="150" cy="50" r="2.5" class="dot"/><circle cx="230" cy="50" r="2.5" class="dot"/><circle cx="178" cy="18" r="2.2" class="dot"/><circle cx="204" cy="18" r="2.2" class="dot"/>`;
+  s+=closed?`<line x1="178" y1="18" x2="204" y2="18" class="w"/>`:`<line x1="178" y1="18" x2="201" y2="5" class="w"/>`;s+=`<text x="191" y="34" class="lb" text-anchor="middle">К</text>`;}
+ return s+'</svg>';}
+addS('методические рекомендации ФИПИ 2026: «замыкание» резистора в №15','short',15,3,'Ключ закорачивает резистор','',()=>{
+ const rheo=Math.random()<0.3,close=rheo?true:Math.random()<0.6,ideal=Math.random()<0.5;const s=close?1:-1;const U=x=>x>0?1:2;
+ const pool=[['Напряжение на резисторе R₂',U(-s)],['Сила тока через резистор R₁',U(s)],['Напряжение на резисторе R₁',U(s)],['Мощность, развиваемая источником (ℰ<i>I</i>)',U(s)]];
+ if(!ideal)pool.push(['Напряжение на клеммах источника',U(-s)]);
+ const rows=SH(pool).slice(0,2);
+ const src=ideal?'Источник постоянного напряжения ℰ (внутренним сопротивлением можно пренебречь)':'Источник тока с ЭДС ℰ и внутренним сопротивлением <i>r</i>';
+ const act=rheo?'Ползунок реостата R₂ передвинули так, что его сопротивление стало равно нулю.':close?'Ключ К был разомкнут. Его замкнули.':'Ключ К был замкнут. Его разомкнули.';
+ return {q:`${src}, резистор R₁ и ${rheo?'реостат':'резистор'} R₂ соединены, как показано на рисунке. ${act} Как изменятся величины?`,fig:svgShort(!close,rheo),kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+  sol:close?`${rheo?'Сопротивление R₂ стало 0':'Замкнутый ключ закорачивает R₂: ток идёт через ключ'}, напряжение на R₂ = 0. Общее сопротивление уменьшилось: R₁ + R₂ → R₁. <i>I</i> = ℰ/(<i>R</i> + <i>r</i>) растёт ⇒ <i>U</i>₁ = <i>IR</i>₁ растёт, мощность ℰ<i>I</i> растёт${ideal?'':', напряжение на клеммах ℰ − <i>Ir</i> падает'}.`
+   :`Пока ключ был замкнут, R₂ был закорочен (<i>U</i>₂ = 0). После размыкания ток идёт через R₂: сопротивление R₁ → R₁ + R₂ растёт, <i>I</i> падает ⇒ <i>U</i>₁ = <i>IR</i>₁ падает, ℰ<i>I</i> падает, а <i>U</i>₂ из нуля стало больше нуля${ideal?'':'; напряжение на клеммах ℰ − <i>Ir</i> растёт'}.`,
+  trap:'Закороченный резистор — как будто его нет: тока и напряжения на нём нет.'};});
+
+// №15: преломление
+addS('методические рекомендации ФИПИ 2026: преломление в №15','refr',15,8,'Преломление света: как изменятся','',()=>{
+ const t=P(['media','media','angle','plate','glass']);
+ if(t==='media'){const M=[['воздуха','воздух',1],['воды','воду',1.33],['стекла','стекло',1.5],['алмаза','алмаз',2.4]];const [a,b]=SH(M).slice(0,2);const dn=sgn(b[2]-a[2]);
+  const pool=[['Частота световой волны',3],['Длина световой волны',dn>0?2:1],['Скорость распространения света',dn>0?2:1]];const rows=SH(pool).slice(0,2);
+  return {q:`Монохроматический свет переходит из ${a[0]} в ${b[1]}. Как изменяются при этом величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+   sol:`Частоту задаёт источник — она не меняется. <i>v</i> = <i>c</i>/<i>n</i>, λ = <i>v</i>/ν. Показатель преломления ${b[1]==='воздух'?'воздуха':b[0]} ${dn>0?'больше':'меньше'}, чем ${a[0]} ⇒ скорость и длина волны ${dn>0?'уменьшаются':'увеличиваются'}.`,trap:'При переходе в другую среду частота не меняется, меняется длина волны.'};}
+ if(t==='angle'){const up=Math.random()<0.5;const v=up?1:2;
+  const rows=SH([['Угол преломления',v],['Угол отражения',v],['Показатель преломления стекла',3],['Скорость света в стекле',3]]).slice(0,2);
+  return {q:`Луч света падает из воздуха на плоскую поверхность стекла. Угол падения ${up?'увеличили':'уменьшили'}. Как изменятся величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+   sol:`sin α = <i>n</i> sin β: ${up?'больше':'меньше'} α — ${up?'больше':'меньше'} β. Угол отражения равен углу падения. <i>n</i> и скорость света <i>c</i>/<i>n</i> — свойства стекла, от угла не зависят.`,trap:'Показатель преломления — характеристика вещества, а не угла.'};}
+ if(t==='plate'){const rows=SH([['Угол преломления на входе в пластинку',2],['Угол между лучом, вышедшим из пластинки, и нормалью к её поверхности',3],['Скорость света в пластинке',2]]).slice(0,2);
+  return {q:'Луч света падает из воздуха на плоскопараллельную стеклянную пластинку и выходит из неё обратно в воздух. Пластинку заменили на такую же по толщине, но из стекла с бо́льшим показателем преломления. Угол падения прежний. Как изменятся величины?',kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+   sol:'На входе sin α = <i>n</i> sin β: <i>n</i> больше ⇒ β меньше. На выходе <i>n</i> sin β = sin γ ⇒ sin γ = sin α: вышедший луч параллелен падающему при любом <i>n</i>. Скорость <i>c</i>/<i>n</i> уменьшается.',trap:'Из плоскопараллельной пластинки луч выходит под тем же углом, под каким вошёл.'};}
+ const rows=SH([['Угол преломления (в воздухе)',1],['Предельный угол полного внутреннего отражения',2],['Скорость света в стекле',2]]).slice(0,2);
+ return {q:'Луч света выходит из стекла в воздух (полного отражения нет). Стекло заменили на стекло с бо́льшим показателем преломления, угол падения луча на границу прежний, и полного отражения по-прежнему нет. Как изменятся величины?',kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),
+  sol:'<i>n</i> sin α = sin β: <i>n</i> больше ⇒ β больше. Предельный угол: sin α<sub>пр</sub> = 1/<i>n</i> — уменьшается. Скорость <i>c</i>/<i>n</i> уменьшается.',trap:'Чем больше n, тем легче наступает полное внутреннее отражение (предельный угол меньше).'};});
+
+// №15: линза, предмет перемещают
+addS('дополнительно: оптика в №15 (линия 15 — любая тема электродинамики)','lensch',15,8,'Собирающая линза: как изменятся','',()=>{
+ const t=P(['away','close','virt','power']);const dir={away:2,close:1,virt:2,power:2}[t];
+ const base=[['Расстояние от линзы до изображения',dir],['Размер изображения',dir]];
+ if(t!=='power')base.push(['Оптическая сила линзы',3]);else base.push(['Фокусное расстояние линзы',2]);
+ const rows=SH(base).slice(0,2);
+ const q={away:'Предмет находится перед тонкой собирающей линзой дальше её фокуса. Предмет отодвинули дальше от линзы.',close:'Предмет находится перед тонкой собирающей линзой дальше двойного фокусного расстояния. Его придвинули к линзе, но он остался дальше фокуса.',
+  virt:'Предмет находится между тонкой собирающей линзой и её фокусом. Предмет придвинули ближе к линзе.',power:'Предмет находится перед тонкой собирающей линзой дальше её фокуса. Линзу заменили на собирающую с бо́льшей оптической силой; предмет по-прежнему дальше фокуса, расстояние до линзы прежнее.'}[t];
+ const sol={away:'1/<i>F</i> = 1/<i>d</i> + 1/<i>f</i>: <i>d</i> растёт ⇒ 1/<i>f</i> растёт ⇒ <i>f</i> уменьшается (изображение приближается к фокусу). Γ = <i>f</i>/<i>d</i> уменьшается. Оптическая сила — свойство линзы.',
+  close:'<i>d</i> уменьшается ⇒ <i>f</i> растёт; Γ = <i>f</i>/<i>d</i> растёт — изображение отходит от линзы и увеличивается. Оптическая сила — свойство линзы.',
+  virt:'Изображение мнимое: |<i>f</i>| = <i>dF</i>/(<i>F</i> − <i>d</i>), Γ = <i>F</i>/(<i>F</i> − <i>d</i>). <i>d</i> уменьшается ⇒ оба уменьшаются: изображение ближе к линзе и меньше (у самой линзы — почти как предмет).',
+  power:'<i>D</i> = 1/<i>F</i> больше ⇒ <i>F</i> меньше. <i>f</i> = <i>dF</i>/(<i>d</i> − <i>F</i>) и Γ = <i>F</i>/(<i>d</i> − <i>F</i>) при меньшем <i>F</i> уменьшаются.'}[t];
+ return {q:q+' Как изменятся величины?',kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>r[1]).join(''),sol,trap:t==='virt'?'Для мнимого изображения картина обратная: предмет ближе к линзе — изображение ближе и меньше.':'Для действительного изображения: предмет дальше от линзы — изображение ближе к ней и меньше.'};});
+
+if(typeof module!=='undefined')module.exports={G,f,SRC};
+
+// ====== Интерфейс тренажёра ======
+const TOPIC={1:'§1 Электростатика',2:'§2 Конденсатор',3:'§3 Постоянный ток',4:'§4 Магнитное поле',5:'§5 ЭМИ',6:'§6 Самоиндукция',7:'§7 Колебания и волны',8:'Оптика'};
+const TARGET={11:60,12:60,13:60,14:120,15:90};
+const INTERVAL=[10*60e3,864e5,3*864e5,7*864e5,16*864e5,35*864e5];
+const LS='electro_11_15_v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+let ST={v:1,t:{},days:{},exams:[]};
+function blank(){return {n:0,ok:0,streak:0,box:0,due:0,err:false,last:0,slow:0};}
+const T=id=>ST.t[id]||(ST.t[id]=blank());
+
+// ---------- хранение ----------
+let dbRef=null,writing=false,dirty=false,timer=null;
+function merge(a,b){const r={v:1,t:{},days:{},exams:[]};const ids=new Set(Object.keys(a.t||{}).concat(Object.keys(b.t||{})));
+ for(const id of ids){const x=(a.t||{})[id],y=(b.t||{})[id];r.t[id]=!x?y:!y?x:((y.last||0)>(x.last||0)?y:x);}
+ const ds=new Set(Object.keys(a.days||{}).concat(Object.keys(b.days||{})));for(const d of ds){const x=(a.days||{})[d]||{n:0,ok:0},y=(b.days||{})[d]||{n:0,ok:0};r.days[d]=x.n>=y.n?x:y;}
+ const ex=(a.exams||[]).concat(b.exams||[]);r.exams=ex.filter((e,i)=>ex.findIndex(z=>z.d===e.d)===i).sort((p,q)=>p.d-q.d).slice(-40);return r;}
+function setSync(t){const el=$('#sync');if(el)el.textContent=t;}
+function save(){try{localStorage.setItem(LS,JSON.stringify(ST));}catch(e){}if(!dbRef)return;dirty=true;clearTimeout(timer);timer=setTimeout(flush,1500);}
+async function flush(){if(!dbRef||writing||!dirty)return;writing=true;dirty=false;
+ try{await dbRef.set({st:JSON.stringify(ST),at:Date.now()});setSync('Прогресс сохранён в аккаунте');}catch(e){setSync('Не удалось сохранить в аккаунт — прогресс есть в этом браузере');}
+ writing=false;if(dirty)flush();}
+async function initDb(){try{if(!window.claude||!window.claude.use){setSync('Офлайн-версия: прогресс хранится в этом браузере');return;}
+ const db=await window.claude.use('db');if(!db){setSync('Прогресс хранится в этом браузере');return;}
+ const ref=db.doc('progress/electro');const to=setTimeout(()=>setSync('Аккаунт пока недоступен — прогресс хранится в браузере'),10000);
+ const snap=await ref.get();clearTimeout(to);if(snap.exists){const d=snap.data();if(d&&d.st){try{ST=merge(ST,JSON.parse(d.st));}catch(e){}}}
+ dbRef=ref;setSync('Прогресс сохраняется в аккаунте');render();}catch(e){setSync('Прогресс хранится в этом браузере');}}
+try{const s=localStorage.getItem(LS);if(s)ST=merge(ST,JSON.parse(s));}catch(e){}
+
+// ---------- данные ----------
+const BYID={};G.forEach(g=>BYID[g.id]=g);
+function bookLine(g){const v=(window.BOOK||{})[g.book];const src=(typeof SRC!=='undefined'&&SRC[g.id])?`<div class="book">Откуда тип: ${SRC[g.id]}</div>`:'';return (v&&v.length?`<div class="book">В сборнике Демидовой-2027 похожие задания: вар. ${v.join(', ')}</div>`:'')+src;}
+function acc(st){return st.n?Math.round(100*st.ok/st.n):null;}
+function record(id,ok,sec){const st=T(id),g=BYID[id];st.n++;st.last=Date.now();const fast=sec<=TARGET[g.line]*1.5;
+ if(ok){st.ok++;st.streak++;if(!fast)st.slow++;
+  if(fast){st.box=Math.min(st.box+1,INTERVAL.length);st.due=Date.now()+INTERVAL[st.box-1];}else{st.due=Date.now()+INTERVAL[0];}
+  if(st.err&&st.streak>=2)st.err=false;}
+ else{st.streak=0;st.box=0;st.err=true;st.due=Date.now()+INTERVAL[0];}
+ const d=today();ST.days[d]=ST.days[d]||{n:0,ok:0};ST.days[d].n++;if(ok)ST.days[d].ok++;save();}
+
+// ---------- серия ----------
+let S=null; // {list:[ids], i, card, t0, results:[], filter}
+function pickSeries(filter,onlyErr,len=12){
+ let pool=G.filter(g=>filter==='all'||g.line===+filter||(filter.startsWith('t')&&g.topic===+filter.slice(1)));
+ if(onlyErr)pool=pool.filter(g=>T(g.id).err);if(!pool.length)return [];
+ const now=Date.now();const errs=SH(pool.filter(g=>T(g.id).err)),due=SH(pool.filter(g=>!T(g.id).err&&T(g.id).n&&T(g.id).due<=now)),
+  fresh=SH(pool.filter(g=>!T(g.id).n)),rest=pool.filter(g=>T(g.id).n&&!T(g.id).err&&T(g.id).due>now).sort((a,b)=>(T(a.id).box-T(b.id).box)||((acc(T(a.id))||0)-(acc(T(b.id))||0)));
+ let out=[];for(const g of errs.concat(due,fresh,rest))if(!out.includes(g.id))out.push(g.id);
+ out=out.slice(0,len);while(out.length<len)out.push(P(pool).id);
+ return out;}
+function startSeries(filter,onlyErr){const list=pickSeries(filter,onlyErr);if(!list.length){$('#train').innerHTML='<div class="panel">Здесь пока пусто. '+(onlyErr?'Ошибок нет — отлично.':'')+'</div>';return;}
+ S={list,i:0,results:[],filter,onlyErr};nextCard();}
+function nextCard(){window.scrollTo(0,0);if(S.i>=S.list.length){finishSeries();return;}const g=BYID[S.list[S.i]];S.card=g.gen();S.g=g;S.t0=Date.now();S.done=false;drawCard();}
+function answerUI(c,pref){
+ if(c.kind==='num')return `<div class="ansrow"><span>Ответ:</span><input id="${pref}in" inputmode="decimal" autocomplete="off" placeholder="число"><span class="unit">${c.unit||''}</span></div>`;
+ if(c.kind==='multi')return `<div class="stm">${c.stmts.map((s,i)=>`<label class="st"><input type="checkbox" value="${i+1}" name="${pref}m"><span><b>${i+1})</b> ${s.t}</span></label>`).join('')}</div>`;
+ if(c.kind==='change')return `<div class="chg"><div class="leg">1 — увеличится · 2 — уменьшится · 3 — не изменится</div>${c.rows.map((r,i)=>`<div class="chrow"><span>${r}</span><span class="seg">${[1,2,3].map(v=>`<label><input type="radio" name="${pref}c${i}" value="${v}"><b>${v}</b></label>`).join('')}</span></div>`).join('')}</div>`;
+ if(c.kind==='choice')return `<div class="opts">${c.opts.map((o,i)=>`<label class="opt"><input type="radio" name="${pref}o" value="${i+1}"><span>${o}</span></label>`).join('')}</div>`;
+ if(c.kind==='match')return `<div class="mt"><ol class="mopts">${c.opts.map(o=>`<li>${o}</li>`).join('')}</ol>${c.rows.map((r,i)=>`<div class="chrow"><span><b>${r}</b></span><span class="seg">${[1,2,3,4].map(v=>`<label><input type="radio" name="${pref}x${i}" value="${v}"><b>${v}</b></label>`).join('')}</span></div>`).join('')}</div>`;}
+function readAns(c,pref){
+ if(c.kind==='num'){const v=($('#'+pref+'in')||{}).value||'';return v.trim();}
+ if(c.kind==='multi')return [...document.querySelectorAll(`input[name="${pref}m"]:checked`)].map(x=>x.value).sort().join('');
+ if(c.kind==='change')return c.rows.map((r,i)=>{const x=document.querySelector(`input[name="${pref}c${i}"]:checked`);return x?x.value:'_';}).join('');
+ if(c.kind==='choice'){const x=document.querySelector(`input[name="${pref}o"]:checked`);return x?x.value:'';}
+ if(c.kind==='match')return c.rows.map((r,i)=>{const x=document.querySelector(`input[name="${pref}x${i}"]:checked`);return x?x.value:'_';}).join('');}
+function isOk(c,a){if(c.kind==='num'){const x=parseFloat(a.replace(/\s/g,'').replace(',','.').replace('−','-'));return isFinite(x)&&Math.abs(x-c.ans)<=Math.max(1e-9,Math.abs(c.ans)*2e-3);}return a===String(c.ans);}
+function points(c,a,line){if(line<=13)return isOk(c,a)?1:0;if(isOk(c,a))return 2;
+ if(c.kind==='multi'){const A=new Set(a.split('').filter(Boolean)),B=new Set(String(c.ans).split(''));let d=0;for(const x of A)if(!B.has(x))d++;for(const x of B)if(!A.has(x))d++;return d===1?1:0;}
+ let d=0;for(let i=0;i<String(c.ans).length;i++)if(a[i]!==String(c.ans)[i])d++;return d===1?1:0;}
+function fmtAns(c){return c.kind==='num'?f(c.ans)+(c.unit?' '+c.unit:''):String(c.ans);}
+function feedback(c,g,ok,given){return `<div class="fb ${ok?'ok':'bad'}"><div class="verdict">${ok?'Верно':'Неверно'}${ok?'':` — правильный ответ: <b>${fmtAns(c)}</b>`}${given&&!ok?` <span class="muted">(твой: ${esc(given)})</span>`:''}</div>
+ <div class="sol">${c.sol}</div>${c.trap?`<div class="trap"><b>Ловушка:</b> ${c.trap}</div>`:''}<div class="ref">Конспект: ${TOPIC[g.topic]}${g.topic===8?' — см. вкладку «Оптика»':''}</div>${bookLine(g)}</div>`;}
+function drawCard(){const c=S.card,g=S.g;
+ $('#train').innerHTML=`<div class="topbar"><button class="back" id="home">← Меню</button><span class="sw">Другой номер:${[11,12,13,14,15].map(l=>`<button class="mini${S.filter===String(l)?' on':''}" data-l="${l}">${l}</button>`).join('')}</span></div><div class="panel card"><div class="cardhead"><span class="tag">№${g.line}</span><span class="ttl">${g.title}</span><span class="prog">${S.i+1}/${S.list.length}</span></div>
+ <div class="q">${c.q}</div>${c.fig?`<div class="figwrap">${c.fig}</div>`:''}<div id="ansbox">${answerUI(c,'a')}</div>
+ <div class="btns"><button id="chk" class="pri">Проверить</button><button id="idk">Не знаю</button><button id="quit" class="ghost">Закончить серию</button></div><div id="fbox"></div></div>`;
+ $('#chk').onclick=()=>check(false);$('#idk').onclick=()=>check(true);$('#quit').onclick=()=>finishSeries();$('#home').onclick=goHome;
+ document.querySelectorAll('#train .mini').forEach(b=>b.onclick=()=>startSeries(b.dataset.l,false));
+ const inp=$('#ain');if(inp)inp.focus();}
+function check(idk){if(S.done){S.i++;nextCard();return;}const c=S.card,g=S.g;const a=idk?'':readAns(c,'a');
+ if(!idk&&(a===''||a.includes('_'))){$('#fbox').innerHTML='<div class="hint">Сначала дай ответ (или нажми «Не знаю»).</div>';return;}
+ const ok=!idk&&isOk(c,a);const sec=(Date.now()-S.t0)/1000;record(g.id,ok,sec);S.results.push({id:g.id,ok,sec});S.done=true;
+ if(!ok&&S.list.length<24&&S.list.slice(S.i+1).indexOf(g.id)<0){const pos=Math.min(S.i+P([3,4]),S.list.length);S.list.splice(pos,0,g.id);}
+ $('#fbox').innerHTML=feedback(c,g,ok,a)+(ok&&sec>TARGET[g.line]*1.5?`<div class="muted small">Верно, но ${Math.round(sec)} с — цель до ${TARGET[g.line]} с. Карточка вернётся раньше.</div>`:'');
+ $('#chk').textContent='Дальше';$('#idk').style.display='none';document.querySelectorAll('#ansbox input').forEach(x=>x.disabled=true);$('#chk').focus();}
+function finishSeries(){if(!S)return;const n=S.results.length,ok=S.results.filter(r=>r.ok).length;const bad=[...new Set(S.results.filter(r=>!r.ok).map(r=>r.id))];
+ $('#train').innerHTML=`<div class="panel"><h3>Серия окончена</h3><p>Верно: <b>${ok}</b> из ${n}${n?` (${Math.round(100*ok/n)}%)`:''}.</p>
+ ${bad.length?`<p>Ошибки (вернутся с другими числами):</p><ul>${bad.map(id=>`<li>№${BYID[id].line} · ${BYID[id].title}</li>`).join('')}</ul>`:'<p>Без ошибок.</p>'}
+ <div class="btns"><button class="pri" id="again">Ещё серия</button>${bad.length?'<button id="errs">Прорешать ошибки</button>':''}<button id="tomenu">В меню</button></div></div>`;
+ $('#tomenu').onclick=goHome;
+ $('#again').onclick=()=>startSeries(S.filter,false);if($('#errs'))$('#errs').onclick=()=>startSeries('all',true);S=null;renderBadges();}
+function goHome(){S=null;show('train');}
+function trainHome(){const d=ST.days[today()]||{n:0,ok:0};const chips=['all','11','12','13','14','15'].map(x=>`<button class="chip" data-f="${x}">${x==='all'?'Все 11–15':'№'+x}</button>`).join('');
+ const tchips=[1,2,3,4,5,6,7,8].map(k=>`<button class="chip sm" data-f="t${k}">${TOPIC[k]}</button>`).join('');
+ $('#train').innerHTML=`<div class="panel"><p class="muted">Серия — 12 карточек. Сначала идут ошибки и то, что пора повторить; числа каждый раз новые.</p>
+ <div class="lab">По номеру задания</div><div class="chips">${chips}</div><div class="lab">По теме конспекта</div><div class="chips">${tchips}</div>
+ <p class="muted small">Сегодня: ${d.n} карточек${d.n?`, верно ${Math.round(100*d.ok/d.n)}%`:''}.</p></div>`;
+ document.querySelectorAll('#train .chip').forEach(b=>b.onclick=()=>startSeries(b.dataset.f,false));}
+
+// ---------- как на ЕГЭ ----------
+let EX=null;
+function examStart(){const cards=[11,12,13,14,15].map(l=>{const g=P(G.filter(x=>x.line===l));return {g,c:g.gen()};});EX={cards,t0:Date.now(),done:false};
+ $('#exam').innerHTML=`<div class="topbar"><button class="back" id="exhome">← Меню</button></div><div class="panel"><p class="muted">Пять заданий подряд, как в бланке: 11–13 по 1 баллу, 14 и 15 по 2 балла (1 балл за одну ошибку). Ориентир — 8 минут.</p></div>`+
+ cards.map((x,i)=>`<div class="panel card"><div class="cardhead"><span class="tag">№${x.g.line}</span><span class="ttl">${x.g.title}</span></div><div class="q">${x.c.q}</div>${x.c.fig?`<div class="figwrap">${x.c.fig}</div>`:''}<div>${answerUI(x.c,'e'+i)}</div><div id="efb${i}"></div></div>`).join('')+
+ `<div class="panel"><button class="pri" id="exchk">Проверить вариант</button> <button id="exback">В меню</button> <span id="exres"></span></div>`;
+ $('#exchk').onclick=examCheck;$('#exhome').onclick=$('#exback').onclick=()=>{EX=null;examHome();window.scrollTo(0,0);};}
+function examCheck(){if(EX.done){examStart();return;}let sum=0;const sec=(Date.now()-EX.t0)/1000;
+ EX.cards.forEach((x,i)=>{const a=readAns(x.c,'e'+i);const p=points(x.c,a,x.g.line);sum+=p;const max=x.g.line<=13?1:2;record(x.g.id,p===max,sec/5);
+  $('#efb'+i).innerHTML=`<div class="pts">${p} из ${max}</div>`+feedback(x.c,x.g,p===max,a.replace(/_/g,'?'));});
+ document.querySelectorAll('#exam input').forEach(x=>x.disabled=true);EX.done=true;ST.exams.push({d:Date.now(),s:sum,sec:Math.round(sec)});save();
+ $('#exres').innerHTML=`<b>${sum} из 7</b> · ${Math.floor(sec/60)} мин ${Math.round(sec%60)} с`;$('#exchk').textContent='Новый вариант';renderBadges();}
+function examHome(){const h=ST.exams.slice(-5).reverse();$('#exam').innerHTML=`<div class="panel"><p>Вариант из пяти заданий 11–15 — по одному каждого номера, случайные типы и числа. Балл — по правилам ЕГЭ.</p>
+ <button class="pri" id="exgo">Начать вариант</button>${h.length?`<div class="lab">Последние варианты</div><ul>${h.map(e=>`<li>${new Date(e.d).toLocaleDateString('ru-RU')} — ${e.s} из 7, ${Math.round(e.sec/60)} мин</li>`).join('')}</ul>`:''}</div>`;$('#exgo').onclick=examStart;}
+
+// ---------- ошибки, итоги ----------
+function errorsView(){const e=G.filter(g=>T(g.id).err);
+ $('#errors').innerHTML=`<div class="panel">${e.length?`<p>Тип уходит из списка после двух верных ответов подряд (с новыми числами).</p><ul class="elist">${e.map(g=>`<li><span class="tag">№${g.line}</span> ${g.title} <span class="muted small">· верно ${acc(T(g.id))}% из ${T(g.id).n}</span></li>`).join('')}</ul><button class="pri" id="errgo">Прорешать ошибки</button>`:'<p>Ошибок нет. Новые появятся здесь сами.</p>'}</div>`;
+ if($('#errgo'))$('#errgo').onclick=()=>{show('train');startSeries('all',true);};}
+function statsView(){const now=Date.now();
+ const row=(name,gs)=>{let n=0,ok=0,m=0,seen=0;gs.forEach(g=>{const s=T(g.id);n+=s.n;ok+=s.ok;if(s.box>=3)m++;if(s.n)seen++;});
+  return `<tr><td>${name}</td><td>${seen}/${gs.length}</td><td>${n?Math.round(100*ok/n)+'%':'—'}</td><td>${m}/${gs.length}</td></tr>`;};
+ const lines=[11,12,13,14,15].map(l=>row('№'+l,G.filter(g=>g.line===l))).join('');const tops=[1,2,3,4,5,6,7,8].map(k=>row(TOPIC[k],G.filter(g=>g.topic===k))).join('');
+ const weak=G.filter(g=>{const s=T(g.id);return s.n>=3&&s.ok/s.n<0.7;}).sort((a,b)=>acc(T(a.id))-acc(T(b.id)));
+ const days=[];for(let i=34;i>=0;i--){const d=new Date(now-i*864e5);const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');days.push(ST.days[k]?ST.days[k].n:0);}
+ let streak=0;for(let i=days.length-1;i>=0;i--){if(days[i]>0)streak++;else if(i<days.length-1)break;}
+ const tot=Object.values(ST.t).reduce((a,s)=>a+s.n,0);
+ $('#stats').innerHTML=`<div class="panel"><p>Всего ответов: <b>${tot}</b> · дней подряд: <b>${streak}</b></p>
+ <div class="heat">${days.map(n=>`<span class="hc l${n===0?0:n<6?1:n<16?2:3}" title="${n}"></span>`).join('')}</div><div class="muted small">Активность за 5 недель</div>
+ <table class="st"><tr><th>Номер</th><th>Типы начаты</th><th>Точность</th><th>Освоено</th></tr>${lines}</table>
+ <table class="st"><tr><th>Тема</th><th>Типы начаты</th><th>Точность</th><th>Освоено</th></tr>${tops}</table>
+ <div class="muted small">«Освоено» — три верных быстрых ответа подряд с перерывами.</div>
+ ${weak.length?`<div class="lab">Слабые места (точность ниже 70%)</div><ul>${weak.map(g=>`<li>№${g.line} · ${g.title} — ${acc(T(g.id))}%</li>`).join('')}</ul>`:''}
+ <div class="btns"><button id="reset" class="ghost">Сбросить прогресс</button></div><div id="rconf"></div></div>`;
+ $('#reset').onclick=()=>{$('#rconf').innerHTML='<p>Точно стереть весь прогресс? <button id="ry" class="bad">Да, стереть</button> <button id="rn">Нет</button></p>';$('#ry').onclick=()=>{ST={v:1,t:{},days:{},exams:[]};save();statsView();renderBadges();};$('#rn').onclick=()=>$('#rconf').innerHTML='';};}
+
+// ---------- навигация ----------
+function renderBadges(){const n=G.filter(g=>T(g.id).err).length;$('#errn').textContent=n?n:'';}
+function show(tab){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==tab);
+ if(tab==='train'){S=null;trainHome();}if(tab==='exam'){EX=null;examHome();}window.scrollTo(0,0);if(tab==='errors')errorsView();if(tab==='stats')statsView();}
+function render(){renderBadges();const cur=document.querySelector('nav button.on');if(!cur)return;const t=cur.dataset.tab;if(t==='errors')errorsView();else if(t==='stats')statsView();else if(t==='train'&&!S)trainHome();}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&S&&!$('#train').hidden&&$('#chk')){e.preventDefault();check(false);}});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.tab));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#train').hidden&&S)goHome();else if(!$('#exam').hidden&&EX){EX=null;examHome();}}});
+show('train');renderBadges();initDb();
+
+</script>
+</body>
+</html>

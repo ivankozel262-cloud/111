@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ЕГЭ · тренажёры</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ЕГЭ">
+<meta name="theme-color" content="#ffffff">
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: 17px/1.4 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; }
+  button { font: inherit; color: inherit; background: none; -webkit-tap-highlight-color: transparent; }
+  #home { max-width: 640px; margin: 0 auto; padding: 16px 16px 48px; padding-top: max(16px, env(safe-area-inset-top)); }
+  #home[hidden], #player[hidden], #plan[hidden] { display: none; }
+  h1 { font-size: 22px; margin: 0 0 12px; }
+  .big { display: block; width: 100%; padding: 16px; font-weight: 700; text-align: left; border: 2px solid currentColor; border-radius: 10px; }
+  .big[disabled] { opacity: .5; font-weight: 400; }
+  .subject { display: flex; justify-content: space-between; width: 100%; margin-top: 10px; padding: 14px 12px; font-weight: 700; text-align: left; border: 1px solid currentColor; border-radius: 10px; }
+  .list { margin: 0 0 6px; padding: 0; list-style: none; }
+  .list li { border-bottom: 1px solid rgba(128, 128, 128, .4); }
+  .tr { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; width: 100%; padding: 14px 12px; border: 0; text-align: left; }
+  .tr[disabled] { opacity: .45; }
+  .muted { opacity: .65; font-size: 14px; white-space: nowrap; }
+  .empty { padding: 12px; opacity: .65; }
+  details { margin: 12px 0 4px; }
+  summary { padding: 8px 0; }
+  .row { display: flex; gap: 10px; align-items: center; padding: 8px 0; }
+  .row input { width: 22px; height: 22px; flex: none; }
+  .row .dot { width: 22px; flex: none; text-align: center; opacity: .5; }
+  #status { margin-top: 28px; font-size: 13px; opacity: .6; }
+  #player { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; background: #fff; color: #000; padding-bottom: env(safe-area-inset-bottom); }
+  #bar { display: flex; align-items: center; gap: 12px; padding: 8px 12px; padding-top: max(8px, env(safe-area-inset-top)); border-bottom: 1px solid rgba(128, 128, 128, .5); }
+  #back { padding: 8px 12px; border: 1px solid currentColor; border-radius: 8px; white-space: nowrap; }
+  #ptitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+  #holder { flex: 1; display: flex; min-height: 0; }
+  #frame { flex: 1; width: 100%; border: 0; background: #fff; }
+</style>
+</head>
+<body>
+
+<!-- Главная: кнопка «Сегодня», план на день, предметы -->
+<div id="home">
+  <h1>ЕГЭ · тренажёры</h1>
+  <button id="today" class="big" type="button">Сегодня</button>
+  <details id="plan" hidden>
+    <summary id="plan-sum"></summary>
+    <div id="plan-list"></div>
+  </details>
+  <div id="subjects"></div>
+  <div id="status"></div>
+</div>
+
+<!-- Открытый тренажёр: его файл грузится в рамку, сверху всегда есть «← Список» -->
+<div id="player" hidden>
+  <div id="bar">
+    <button id="back" type="button">← Список</button>
+    <span id="ptitle"></span>
+  </div>
+  <div id="holder"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var DATA = self.EGE_DATA || { subjects: [], trainers: [], week: {} };
+  var KEY = 'ege_hub_v1';
+  var DAY_NAMES = ['', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  // ---------- память приложения (только в браузере этого устройства) ----------
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* без записи тоже работает */ }
+  }
+  var state = load();
+  state.opens = state.opens || {};    // { id: ['2026-11-10', ...] } — дни, когда тренажёр открывали
+  state.checks = state.checks || {};  // { '2026-11-10': { mem: true } } — галочки плана
+  // state.subject — какой предмет раскрыт
+
+  // ---------- даты ----------
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function iso(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function weekday(d) { var n = d.getDay(); return n === 0 ? 7 : n; }
+  function daysBetween(a, b) {
+    var A = new Date(a + 'T12:00:00'), B = new Date(b + 'T12:00:00');
+    return Math.round((B - A) / 864e5);
+  }
+
+  // ---------- тренажёры ----------
+  function isReady(t) { return t.ready !== false && !!t.file; }
+  function byId(id) {
+    for (var i = 0; i < DATA.trainers.length; i++) if (DATA.trainers[i].id === id) return DATA.trainers[i];
+    return null;
+  }
+  function lastOpen(id) {
+    var a = state.opens[id];
+    return a && a.length ? a[a.length - 1] : '';
+  }
+  function openLabel(t) {
+    if (!isReady(t)) return 'файл не подключён';
+    var last = lastOpen(t.id);
+    if (!last) return 'не открывался';
+    var n = daysBetween(last, iso(new Date()));
+    if (n <= 0) return 'сегодня';
+    if (n === 1) return 'вчера';
+    return n + ' дн. назад';
+  }
+
+  // Что открывает кнопка «Сегодня»: тренажёр этого дня недели, который дольше всех не открывали.
+  // Если на сегодня ничего не назначено — любой подключённый, который дольше всех не открывали.
+  function pickToday() {
+    var wd = weekday(new Date());
+    var ready = DATA.trainers.filter(isReady);
+    var todays = ready.filter(function (t) { return (t.days || []).indexOf(wd) !== -1; });
+    var pool = (todays.length ? todays : ready).slice();
+    pool.sort(function (a, b) {
+      var x = lastOpen(a.id), y = lastOpen(b.id);
+      return x < y ? -1 : (x > y ? 1 : 0);
+    });
+    return pool[0] || null;
+  }
+
+  var currentId = null;  // id открытого сейчас тренажёра
+
+  function openTrainer(t, fromHash) {
+    var today = iso(new Date());
+    currentId = t.id;
+    if (t.preset) {
+      try {
+        Object.keys(t.preset).forEach(function (k) { localStorage.setItem(k, t.preset[k]); });
+      } catch (e) {}
+    }
+    var list = state.opens[t.id] || (state.opens[t.id] = []);
+    if (list[list.length - 1] !== today) list.push(today);
+    save();
+    $('ptitle').textContent = t.title;
+    // Рамка каждый раз создаётся заново: так открытие тренажёра не засоряет историю «назад».
+    var frame = document.createElement('iframe');
+    frame.id = 'frame';
+    frame.title = 'Тренажёр';
+    frame.src = t.file;
+    $('holder').textContent = '';
+    $('holder').appendChild(frame);
+    $('home').hidden = true;
+    $('player').hidden = false;
+    if (!fromHash) { try { location.hash = 't=' + encodeURIComponent(t.id); } catch (e) {} }
+  }
+  function closeTrainer() {
+    currentId = null;
+    $('holder').textContent = '';
+    $('player').hidden = true;
+    $('home').hidden = false;
+    render();
+  }
+  function readHash() {
+    var m = /^#t=(.+)$/.exec(location.hash);
+    if (!m) { if (!$('player').hidden) closeTrainer(); return; }
+    var t = byId(decodeURIComponent(m[1]));
+    // Другой id при открытом тренажёре — это переход по ссылке из одного тренажёра в другой.
+    if (t && isReady(t) && currentId !== t.id) openTrainer(t, true);
+  }
+  window.addEventListener('hashchange', readHash);  // системный «назад» возвращает в меню
+  $('back').onclick = function () {
+    closeTrainer();
+    try { history.replaceState(null, '', location.pathname + location.search); }
+    catch (e) { try { location.hash = ''; } catch (e2) {} }
+  };
+
+  // ---------- план на сегодня ----------
+  function renderPlan() {
+    var wd = weekday(new Date());
+    var items = (DATA.week && DATA.week[wd]) || [];
+    var box = $('plan'), listBox = $('plan-list');
+    if (!items.length) { box.hidden = true; return; }
+    box.hidden = false;
+    var today = iso(new Date());
+    var checks = state.checks[today] || (state.checks[today] = {});
+    listBox.textContent = '';
+    var total = 0;
+    items.forEach(function (it) {
+      var row = el('label', 'row');
+      if (it.id) {
+        total++;
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !!checks[it.id];
+        cb.onchange = function () { checks[it.id] = cb.checked; save(); summary(); };
+        row.appendChild(cb);
+      } else {
+        row.appendChild(el('span', 'dot', '·'));
+      }
+      row.appendChild(el('span', null, it.title));
+      if (it.time) row.appendChild(el('span', 'muted', it.time));
+      listBox.appendChild(row);
+    });
+    function summary() {
+      var done = 0;
+      items.forEach(function (it) { if (it.id && checks[it.id]) done++; });
+      $('plan-sum').textContent = 'План на сегодня (' + DAY_NAMES[wd] + '): ' + done + ' из ' + total;
+    }
+    summary();
+  }
+
+  // ---------- меню по предметам ----------
+  function renderSubjects() {
+    var root = $('subjects');
+    root.textContent = '';
+    DATA.subjects.forEach(function (s) {
+      var list = DATA.trainers.filter(function (t) { return t.subject === s.id; });
+      var head = el('button', 'subject');
+      head.type = 'button';
+      head.appendChild(el('span', null, s.title));
+      head.appendChild(el('span', 'muted', String(list.length)));
+      head.onclick = function () {
+        state.subject = state.subject === s.id ? null : s.id;
+        save();
+        renderSubjects();
+      };
+      root.appendChild(head);
+      if (state.subject !== s.id) return;
+      if (!list.length) { root.appendChild(el('div', 'empty', 'Тренажёров пока нет')); return; }
+      var ul = el('ul', 'list');
+      list.forEach(function (t) {
+        var li = el('li');
+        var b = el('button', 'tr');
+        b.type = 'button';
+        b.appendChild(el('span', null, t.title));
+        b.appendChild(el('span', 'muted', openLabel(t)));
+        if (isReady(t)) b.onclick = function () { openTrainer(t); };
+        else b.disabled = true;
+        li.appendChild(b);
+        ul.appendChild(li);
+      });
+      root.appendChild(ul);
+    });
+  }
+
+  function render() {
+    var t = pickToday();
+    var btn = $('today');
+    if (t) {
+      btn.disabled = false;
+      btn.textContent = 'Сегодня: ' + t.title + '  ▶';
+      btn.onclick = function () { openTrainer(t); };
+    } else {
+      btn.disabled = true;
+      btn.textContent = 'Сегодня: тренажёры ещё не подключены';
+      btn.onclick = null;
+    }
+    renderPlan();
+    renderSubjects();
+  }
+
+  // ---------- офлайн ----------
+  function setStatus(text) { $('status').textContent = 'Версия ' + (DATA.version || '—') + ' · ' + text; }
+  function countCache() {
+    if (!self.caches) { setStatus('офлайн включён'); return; }
+    caches.open('ege-app-' + DATA.version).then(function (c) { return c.keys(); }).then(function (keys) {
+      setStatus('офлайн готов, файлов в кэше: ' + keys.length);
+    }).catch(function () { setStatus('офлайн включён'); });
+  }
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    setStatus('готовлю офлайн…');
+    navigator.serviceWorker.register('sw.js')
+      .then(function () { return navigator.serviceWorker.ready; })
+      .then(countCache)
+      .catch(function () { setStatus('офлайн не включился'); });
+  } else {
+    setStatus('открыто как файл: офлайн-кэш здесь не работает, для проверки на компьютере это нормально');
+  }
+
+  render();
+  readHash();
+  // вернулся в приложение на следующий день — обновить «Сегодня» и план
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && $('player').hidden) render();
+  });
+})();
+</script>
+</body>
+</html>
