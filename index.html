@@ -35,6 +35,12 @@
   .row input { width: 22px; height: 22px; flex: none; }
   .row .dot { width: 22px; flex: none; text-align: center; opacity: .5; }
   #status { margin-top: 28px; font-size: 13px; opacity: .6; }
+  #backup { margin-top: 28px; padding-top: 12px; border-top: 1px solid rgba(128, 128, 128, .4); }
+  #backup h2 { font-size: 17px; margin: 0 0 4px; }
+  #backup-info { margin: 0 0 10px; font-size: 15px; }
+  .btn2 { display: flex; gap: 10px; }
+  .btn2 button { flex: 1; padding: 12px 8px; border: 1px solid currentColor; border-radius: 10px; }
+  #backup-msg { margin: 8px 0 0; font-size: 15px; }
   #player { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; background: #fff; color: #000; padding-bottom: env(safe-area-inset-bottom); }
   #bar { display: flex; align-items: center; gap: 12px; padding: 8px 12px; padding-top: max(8px, env(safe-area-inset-top)); border-bottom: 1px solid rgba(128, 128, 128, .5); }
   #back { padding: 8px 12px; border: 1px solid currentColor; border-radius: 8px; white-space: nowrap; }
@@ -54,6 +60,17 @@
     <div id="plan-list"></div>
   </details>
   <div id="subjects"></div>
+  <!-- Резервная копия: весь прогресс этого устройства в один файл и обратно -->
+  <div id="backup">
+    <h2>Прогресс</h2>
+    <p id="backup-info"></p>
+    <div class="btn2">
+      <button id="export" type="button">Сохранить в файл</button>
+      <button id="import" type="button">Загрузить из файла</button>
+    </div>
+    <input id="import-file" type="file" accept=".json,application/json,text/plain" hidden>
+    <p id="backup-msg"></p>
+  </div>
   <div id="status"></div>
 </div>
 
@@ -253,6 +270,142 @@
     });
   }
 
+  // ---------- резервная копия прогресса ----------
+  // В файл попадают все записи памяти браузера на этом адресе: прогресс всех тренажёров и оболочки.
+  // Новые тренажёры попадут в копию сами, ничего добавлять не нужно.
+  var BACKUP_APP = 'ege-trainers';
+
+  function collectAll() {
+    var data = {};
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      data[k] = localStorage.getItem(k);
+    }
+    return data;
+  }
+  function stamp(d) {
+    return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function msg(text) { $('backup-msg').textContent = text; }
+
+  function renderBackup() {
+    var info = $('backup-info');
+    info.textContent = '';
+    if (!state.lastBackup) {
+      info.appendChild(el('b', null, 'Копии ещё нет.'));
+      info.appendChild(document.createTextNode(' Прогресс хранится только в этом телефоне: удалишь иконку — пропадёт.'));
+      return;
+    }
+    var n = daysBetween(state.lastBackup, iso(new Date()));
+    var when = n <= 0 ? 'сегодня' : (n === 1 ? 'вчера' : n + ' дн. назад');
+    info.appendChild(document.createTextNode('Последняя копия: ' + when + '.'));
+    if (n >= 7) info.appendChild(el('b', null, ' Пора сохранить новую.'));
+  }
+
+  function markSaved() {
+    state.lastBackup = iso(new Date());
+    save();
+    renderBackup();
+  }
+
+  $('export').onclick = function () {
+    var now = new Date();
+    // дату копии записываем заранее, чтобы после восстановления было видно, от какого она дня
+    var prev = state.lastBackup;
+    state.lastBackup = iso(now);
+    save();
+    var text;
+    try {
+      text = JSON.stringify({ app: BACKUP_APP, format: 1, created: now.toISOString(), data: collectAll() });
+    } catch (e) {
+      state.lastBackup = prev; save();
+      msg('Не получилось прочитать память браузера.');
+      return;
+    }
+    state.lastBackup = prev; save();
+    var name = 'ege-progress-' + iso(now) + '.json';
+
+    // iPhone: системное меню «Поделиться» → «Сохранить в Файлы»
+    var file = null;
+    try {
+      if (navigator.canShare && typeof File === 'function') {
+        var f1 = new File([text], name, { type: 'application/json' });
+        var f2 = new File([text], name, { type: 'text/plain' });
+        if (navigator.canShare({ files: [f1] })) file = f1;
+        else if (navigator.canShare({ files: [f2] })) file = f2;
+      }
+    } catch (e) { file = null; }
+
+    if (file && navigator.share) {
+      navigator.share({ files: [file], title: 'Прогресс ЕГЭ' }).then(function () {
+        markSaved();
+        msg('Сохранено: ' + name);
+      }).catch(function (e) {
+        if (e && e.name === 'AbortError') msg('Отменено, копия не сохранена.');
+        else download(text, name);
+      });
+      return;
+    }
+    download(text, name);
+  };
+
+  // Обычное скачивание: компьютер и браузеры без «Поделиться»
+  function download(text, name) {
+    try {
+      var url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      markSaved();
+      msg('Файл скачан: ' + name);
+    } catch (e) {
+      msg('Не получилось сохранить файл.');
+    }
+  }
+
+  $('import').onclick = function () { $('import-file').click(); };
+  $('import-file').onchange = function () {
+    var input = this;
+    var f = input.files && input.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      input.value = '';  // чтобы тот же файл можно было выбрать ещё раз
+      var obj;
+      try { obj = JSON.parse(reader.result); } catch (e) { obj = null; }
+      if (!obj || obj.app !== BACKUP_APP || !obj.data || typeof obj.data !== 'object') {
+        msg('Это не файл прогресса из этого приложения.');
+        return;
+      }
+      var keys = Object.keys(obj.data).filter(function (k) { return typeof obj.data[k] === 'string'; });
+      var when = obj.created ? stamp(new Date(obj.created)) : 'неизвестной даты';
+      if (!confirm('Загрузить копию от ' + when + '?\n\nПрогресс на этом телефоне заменится данными из файла.')) {
+        msg('Отменено, ничего не изменилось.');
+        return;
+      }
+      try {
+        keys.forEach(function (k) { localStorage.setItem(k, obj.data[k]); });
+      } catch (e) {
+        msg('Не получилось записать прогресс: память браузера переполнена или недоступна.');
+        return;
+      }
+      state = load();
+      state.opens = state.opens || {};
+      state.checks = state.checks || {};
+      render();
+      msg('Готово: прогресс загружен из копии от ' + when + '.');
+    };
+    reader.onerror = function () { input.value = ''; msg('Не получилось прочитать файл.'); };
+    reader.readAsText(f);
+  };
+
+  // Просим систему не стирать память приложения при нехватке места (iOS 17+, Chrome).
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) {}
+
   function render() {
     var t = pickToday();
     var btn = $('today');
@@ -267,6 +420,7 @@
     }
     renderPlan();
     renderSubjects();
+    renderBackup();
   }
 
   // ---------- офлайн ----------
