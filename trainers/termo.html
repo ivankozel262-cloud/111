@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>МКТ и термодинамика 7–10 — тренажёр</title>
+<style>
+:root{--bg:#fbfaf7;--card:#ffffff;--fg:#1d1d1b;--muted:#6b6b66;--grid:#e3e1da;--line:#d6d3ca;--acc:#2f5d8a;--accbg:#e8eff6;--ok:#2e7d4f;--okbg:#e9f4ed;--bad:#b3412f;--badbg:#f8ebe8;--warnbg:#f6f1e3;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#17181a;--card:#1f2023;--fg:#e9e8e4;--muted:#9a9993;--grid:#34353a;--line:#3d3e43;--acc:#8db4dc;--accbg:#22303d;--ok:#7cc79a;--okbg:#1d2e24;--bad:#ec907f;--badbg:#36221f;--warnbg:#2e2a20;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+header{max-width:820px;margin:0 auto;padding:18px 16px 6px}
+h1{font-size:21px;margin:0 0 2px;font-weight:650;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+nav{max-width:820px;margin:0 auto;padding:8px 16px;display:flex;gap:4px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav button{border:0;background:none;color:var(--muted);font:inherit;font-size:15px;padding:7px 11px;border-radius:7px;cursor:pointer}
+nav button.on{background:var(--accbg);color:var(--acc);font-weight:600}
+#errn:not(:empty){display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--bad);color:#fff;font-size:12px;line-height:18px;text-align:center}
+main{max-width:820px;margin:0 auto;padding:12px 16px 60px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.panel h3{margin:0 0 8px;font-size:18px}
+.panel>p:first-child{margin-top:0}.panel>p:last-child{margin-bottom:0}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+.lab{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;padding:8px 14px;border-radius:20px;cursor:pointer}
+.chip:hover{border-color:var(--acc);color:var(--acc)}.chip.sm{font-size:14px;padding:6px 11px}
+button{font:inherit;cursor:pointer}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btns button,#exchk,#exgo,#errgo{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:8px 16px;border-radius:8px}
+button.pri{background:var(--acc)!important;border-color:var(--acc)!important;color:var(--card)!important;font-weight:600}
+button.ghost{background:none!important;color:var(--muted)!important}
+button.bad{border:1px solid var(--bad);background:var(--badbg);color:var(--bad);padding:5px 12px;border-radius:7px}
+#rn{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:5px 12px;border-radius:7px}
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px}
+.back{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:6px 12px;border-radius:8px;font-weight:600}
+.back:hover{border-color:var(--acc);color:var(--acc)}
+.sw{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:14px;margin-left:auto}
+.mini{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:4px 9px;border-radius:7px;font-size:14px}
+.mini:hover{border-color:var(--acc);color:var(--acc)}.mini.on{background:var(--accbg);border-color:var(--acc);color:var(--acc);font-weight:600}
+#exback{border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:8px 16px;border-radius:8px}
+.cardhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.tag{display:inline-block;background:var(--accbg);color:var(--acc);font-weight:700;font-size:13.5px;padding:1px 8px;border-radius:6px}
+.ttl{font-weight:600;font-size:15px}.prog{margin-left:auto;color:var(--muted);font-size:14px}
+.q{font-size:16.5px;line-height:1.55}
+.q i,.sol i,.stm i,.opts i,.chrow i{font-family:"Times New Roman",Times,serif;font-size:1.08em}
+.figwrap{margin:12px 0 4px;overflow-x:auto}
+svg.fig{display:block;max-width:100%;height:auto;width:var(--fw,340px)}
+svg .g{stroke:var(--grid);stroke-width:.8}
+svg .ax{stroke:var(--fg);stroke-width:1.1;fill:none}svg .ah{fill:var(--fg)}
+svg .tk{fill:var(--muted);font-size:10px;font-family:inherit}
+svg .lb{fill:var(--fg);font-size:11.5px;font-family:inherit}
+svg .cv{stroke:var(--acc);stroke-width:2;fill:none}
+svg .dot{fill:var(--fg)}svg .dot2{fill:var(--acc)}
+svg .w{stroke:var(--fg);stroke-width:1.4;fill:none}
+svg .w2{stroke:var(--fg);stroke-width:1.6}svg .w3{stroke:var(--fg);stroke-width:3.2}
+svg .el{stroke:var(--fg);stroke-width:1.4;fill:var(--card)}
+svg .g2{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3;fill:none}
+.two{display:flex;gap:14px;flex-wrap:wrap}
+table.tbl{border-collapse:collapse;margin:10px 0;font-size:15px}
+table.tbl td,table.tbl th{border:1px solid var(--line);padding:4px 10px;text-align:center}
+table.st{border-collapse:collapse;width:100%;margin:14px 0 4px;font-size:15px}
+table.st th{font-weight:600;color:var(--muted);font-size:13.5px;text-align:left;border-bottom:1px solid var(--line);padding:5px 6px}
+table.st td{border-bottom:1px solid var(--grid);padding:5px 6px}
+#ansbox{margin-top:14px}
+.ansrow{display:flex;align-items:center;gap:10px}
+.ansrow input{font:inherit;font-size:17px;width:150px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.ansrow input:focus{outline:2px solid var(--acc);outline-offset:1px}
+.unit{color:var(--muted)}
+.stm{display:flex;flex-direction:column;gap:6px}
+label.st{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border:1px solid var(--grid);border-radius:8px;cursor:pointer}
+label.st:hover{border-color:var(--line)}label.st input{margin-top:5px;transform:scale(1.15)}
+.leg{font-size:14px;color:var(--muted);margin-bottom:6px}
+.chrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--grid)}
+.seg{display:flex;gap:4px;flex-shrink:0}
+.seg label{position:relative}.seg input{position:absolute;opacity:0}
+.seg b{display:inline-block;width:36px;text-align:center;padding:5px 0;border:1px solid var(--line);border-radius:7px;cursor:pointer;font-weight:600}
+.seg input:checked+b{background:var(--acc);border-color:var(--acc);color:var(--card)}
+.seg input:focus-visible+b{outline:2px solid var(--acc)}
+.seg input:disabled+b{cursor:default}
+.opts{display:flex;flex-direction:column;gap:6px}
+label.opt{display:flex;gap:10px;align-items:center;padding:7px 10px;border:1px solid var(--grid);border-radius:8px;cursor:pointer}
+.mopts{margin:0 0 8px;padding-left:22px;font-size:15px}
+.fb{margin-top:14px;padding:12px 14px;border-radius:10px;border:1px solid}
+.fb.ok{background:var(--okbg);border-color:var(--ok)}.fb.bad{background:var(--badbg);border-color:var(--bad)}
+.verdict{font-weight:600;margin-bottom:6px}.fb.ok .verdict{color:var(--ok)}.fb.bad .verdict{color:var(--bad)}
+.sol{line-height:1.55}
+.trap{margin-top:8px;padding:6px 10px;background:var(--warnbg);border-radius:7px;font-size:15px}
+.ref,.book{margin-top:6px;font-size:13.5px;color:var(--muted)}
+.hint{margin-top:10px;color:var(--bad);font-size:14.5px}
+.pts{font-weight:700;margin-top:10px}
+.heat{display:flex;gap:3px;flex-wrap:wrap;margin:10px 0 2px}
+.hc{width:14px;height:14px;border-radius:3px;background:var(--grid)}
+.hc.l1{background:color-mix(in srgb,var(--acc) 35%,var(--grid))}.hc.l2{background:color-mix(in srgb,var(--acc) 65%,var(--grid))}.hc.l3{background:var(--acc)}
+.elist{padding-left:0;list-style:none}.elist li{padding:5px 0;border-bottom:1px solid var(--grid)}
+#sync{max-width:820px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:13px}
+.theory h3{margin-top:18px}.theory h3:first-child{margin-top:0}
+.theory .f{font-family:"Times New Roman",Times,serif;font-size:18px;background:var(--bg);border:1px solid var(--grid);border-radius:7px;padding:6px 12px;display:inline-block;margin:4px 0}
+.theory ul{padding-left:20px}.theory li{margin:3px 0}
+.theory table{border-collapse:collapse;font-size:14.5px;margin:8px 0;width:100%}
+.theory td,.theory th{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+.theory th{font-weight:600;background:var(--bg)}
+@media (max-width:560px){.sw{margin-left:0}.chrow{flex-direction:column;align-items:flex-start}.panel{padding:14px 13px}.q{font-size:16px}}
+svg .ah2{fill:var(--acc)}
+svg .cv2{stroke:var(--fg);stroke-width:2;fill:none}
+details.refd{margin:10px 0 0;font-size:14px}
+details.refd summary{cursor:pointer;color:var(--acc)}
+details.refd table.tbl{font-size:13.5px;margin:6px 0 0}
+details.refd table.tbl td{text-align:left}
+.theory .mg{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.theory .mg>div{font-size:13px;color:var(--muted);text-align:center}
+.two svg.fig{width:var(--fw,150px)}
+.theory table{display:block;overflow-x:auto;max-width:100%}
+.theory .f{overflow-x:auto}
+</style>
+</head>
+<body>
+<header><h1>МКТ и термодинамика: задания 7–10</h1><div class="sub">Первая часть ЕГЭ по физике · типы из сборника Демидовой 2027 · новые числа в каждой карточке</div></header>
+<nav><button data-tab="train" class="on">Тренировка</button><button data-tab="exam">Как на ЕГЭ</button><button data-tab="errors">Ошибки<span id="errn"></span></button><button data-tab="stats">Итоги</button><button data-tab="theory">Конспект</button><button data-tab="help">Как пользоваться</button></nav>
+<main>
+<section id="train"></section>
+<section id="exam" hidden></section>
+<section id="errors" hidden></section>
+<section id="stats" hidden></section>
+<section id="theory" hidden><div class="panel theory">
+<h3>1. Газ: давление, концентрация, температура, энергия и скорость молекул</h3>
+<div class="f"><i>p</i> = <i>nkT</i> &nbsp;&nbsp; <i>p</i> = (2/3)<i>nE</i> &nbsp;&nbsp; <i>E</i> = (3/2)<i>kT</i> &nbsp;&nbsp; <i>v</i><sub>кв</sub> ~ √<i>T</i></div>
+<ul>
+<li><i>n</i> = <i>N</i>/<i>V</i> — концентрация молекул, <i>E</i> — средняя кинетическая энергия теплового движения одной молекулы.</li>
+<li>Температура в формулах — <b>в кельвинах</b>: <i>T</i> = <i>t</i> + 273.</li>
+<li>Скорость молекул пропорциональна <b>корню</b> из температуры; температура — квадрату скорости.</li>
+<li>При постоянном количестве газа концентрация и плотность (ρ = <i>m</i>/<i>V</i>) меняются <b>обратно объёму</b>.</li>
+</ul>
+<h3>2. Уравнение состояния и изопроцессы</h3>
+<div class="f"><i>pV</i> = ν<i>RT</i> &nbsp;&nbsp; масса постоянна: <i>pV</i>/<i>T</i> = const</div>
+<ul>
+<li>Изотерма (<i>T</i> = const): <i>pV</i> = const. Изобара (<i>p</i> = const): <i>V</i>/<i>T</i> = const. Изохора (<i>V</i> = const): <i>p</i>/<i>T</i> = const.</li>
+<li>На графике <i>p</i>–<i>V</i> температура больше там, где больше произведение <i>pV</i>.</li>
+<li>кПа · л = Дж. В уравнение состояния всё подставляют в СИ: Па, м³, К.</li>
+</ul>
+<div class="mg" id="mg"></div>
+<table><tr><th>Оси</th><th>Прямая через начало координат</th><th>Горизонталь</th><th>Вертикаль</th></tr>
+<tr><td><i>p</i>–<i>T</i></td><td><b>изохора</b>; чем круче, тем меньше <i>V</i></td><td>изобара: <i>T</i> растёт — <i>V</i> растёт</td><td>изотерма: <i>p</i> растёт — <i>V</i> уменьшается</td></tr>
+<tr><td><i>V</i>–<i>T</i></td><td><b>изобара</b>; чем круче, тем меньше <i>p</i></td><td>изохора: <i>T</i> растёт — <i>p</i> растёт</td><td>изотерма: <i>V</i> растёт — <i>p</i> уменьшается</td></tr>
+<tr><td><i>p</i>–<i>V</i></td><td>не изопроцесс: <i>T</i> ~ <i>pV</i></td><td>изобара</td><td>изохора</td></tr>
+<tr><td><i>U</i>–<i>V</i>, одноатомный газ</td><td>изобара (<i>U</i> = 1,5<i>pV</i>)</td><td>изотерма (<i>U</i> = const)</td><td>изохора</td></tr></table>
+<ul><li>Участок не проходит через начало координат — сравни отношение <i>p</i>/<i>T</i> (или <i>V</i>/<i>T</i>) в его концах. Если <i>p</i>/<i>T</i> выросло, объём уменьшился.</li></ul>
+<h3>3. Работа газа и первый закон термодинамики</h3>
+<div class="f"><i>Q</i> = Δ<i>U</i> + <i>A</i> &nbsp;&nbsp; <i>U</i> = (3/2)ν<i>RT</i> = (3/2)<i>pV</i> (одноатомный газ)</div>
+<ul>
+<li><i>A</i> — работа <b>газа</b>: при расширении <i>A</i> &gt; 0, при сжатии <i>A</i> &lt; 0. Работа внешних сил равна −<i>A</i>.</li>
+<li>Δ<i>U</i> &gt; 0, если температура растёт. При постоянной массе внутренняя энергия идеального газа зависит только от температуры.</li>
+<li>«Газ отдал количество теплоты» — значит, <i>Q</i> &lt; 0.</li>
+<li>Работа газа на графике <i>p</i>–<i>V</i> — площадь под графиком. За цикл — площадь внутри цикла; обход по часовой стрелке — <i>A</i> &gt; 0.</li>
+</ul>
+<table><tr><th>Процесс</th><th>Что равно нулю</th><th>Первый закон</th></tr>
+<tr><td>Изохорный</td><td><i>A</i> = 0</td><td><i>Q</i> = Δ<i>U</i></td></tr>
+<tr><td>Изотермический</td><td>Δ<i>U</i> = 0</td><td><i>Q</i> = <i>A</i></td></tr>
+<tr><td>Адиабатный</td><td><i>Q</i> = 0</td><td><i>A</i> = −Δ<i>U</i></td></tr>
+<tr><td>Изобарный, одноатомный газ</td><td>—</td><td><i>A</i> = <i>p</i>Δ<i>V</i> = ν<i>R</i>Δ<i>T</i>; Δ<i>U</i> = 1,5<i>A</i>; <i>Q</i> = 2,5<i>A</i>, то есть <i>A</i> : Δ<i>U</i> : <i>Q</i> = 2 : 3 : 5</td></tr></table>
+<h3>4. Тепловые машины</h3>
+<div class="f">η = <i>A</i>/<i>Q</i><sub>н</sub> = 1 − <i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub> &nbsp;&nbsp; <i>A</i> = <i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub> &nbsp;&nbsp; цикл Карно: η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub></div>
+<ul>
+<li>Все величины — за цикл и по модулю. В формуле Карно температуры <b>в кельвинах</b>.</li>
+<li>Для идеальной машины <i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub> = <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>.</li>
+</ul>
+<h3>5. Теплота и фазовые переходы</h3>
+<div class="f"><i>Q</i> = <i>cm</i>Δ<i>t</i> &nbsp;&nbsp; <i>Q</i> = λ<i>m</i> &nbsp;&nbsp; <i>Q</i> = <i>Lm</i> &nbsp;&nbsp; баланс: <i>Q</i><sub>отд</sub> = <i>Q</i><sub>получ</sub></div>
+<ul>
+<li>График <i>t</i>(<i>Q</i>): наклон равен 1/(<i>cm</i>) — чем круче, тем <b>меньше</b> <i>c</i>. Длина горизонтальной площадки равна λ<i>m</i> или <i>Lm</i>.</li>
+<li>График <i>t</i>(время) при постоянной мощности — то же самое: <i>Q</i> = <i>P</i>τ.</li>
+<li>На площадке температура постоянна, но внутренняя энергия меняется: растёт при плавлении и кипении, убывает при кристаллизации и конденсации. В сосуде в это время смесь двух фаз.</li>
+<li>Справочные данные: <i>c</i> воды 4200, льда 2100, алюминия 900, железа 460, меди 380, свинца 130, чугуна 500 Дж/(кг·К); <i>L</i> воды 2,3·10<sup>6</sup>, λ льда 3,3·10<sup>5</sup>, λ свинца 2,5·10<sup>4</sup> Дж/кг; <i>R</i> = 8,31 Дж/(моль·К).</li>
+</ul>
+<h3>6. Пар и влажность</h3>
+<div class="f">φ = <i>p</i>/<i>p</i><sub>н</sub> = ρ/ρ<sub>н</sub></div>
+<ul>
+<li>Давление насыщенного пара <i>p</i><sub>н</sub> зависит <b>только от температуры</b>.</li>
+<li>Насыщенный пар над жидкостью, <i>T</i> = const, объём меняют: давление, плотность и концентрация пара не меняются; меняются массы пара и жидкости.</li>
+<li>Ненасыщенный пар, <i>T</i> = const, объём уменьшают в <i>k</i> раз: φ растёт в <i>k</i> раз, но не выше 100 %; дальше пар конденсируется.</li>
+<li>Ненасыщенный пар в закрытом сосуде нагревают: концентрация и плотность не меняются, давление пара растёт, φ уменьшается.</li>
+<li>Точка росы тем выше, чем больше парциальное давление пара.</li>
+</ul>
+<h3>7. Смеси, поршни, перегородки</h3>
+<ul>
+<li>Закон Дальтона: давление смеси равно сумме парциальных давлений; при одинаковых <i>V</i> и <i>T</i> парциальное давление газа пропорционально его количеству вещества.</li>
+<li>«Выпустили половину содержимого» — количество <b>каждого</b> газа уменьшилось вдвое.</li>
+<li>Подвижный поршень в равновесии: давления по обе стороны равны.</li>
+<li>Перегородка пропускает один газ: его концентрация выравнивается по обе стороны, второй газ остаётся на месте. Давления при этом не выравниваются.</li>
+<li>Свободный поршень с неизменным грузом — давление газа постоянно.</li>
+</ul>
+</div></section>
+<section id="help" hidden><div class="panel theory">
+<h3>Как заниматься</h3>
+<ul>
+<li><b>Тренировка</b> — серия из 12 карточек. Можно взять все номера сразу, один номер или один раздел конспекта. Сначала идут ошибки, потом то, что пора повторить, потом новые типы.</li>
+<li>Ошибся — этот тип вернётся через 3–4 карточки <b>с другими числами</b>. Из списка ошибок он уходит после двух верных ответов подряд.</li>
+<li>Повторения растягиваются: 10 минут → 1 день → 3 → 7 → 16 → 35 дней. Если ответ верный, но долгий, интервал не растёт.</li>
+<li>Ориентир по времени: №7 — до 75 секунд, №8 и №10 — до полутора минут, №9 — до двух минут.</li>
+<li><b>Как на ЕГЭ</b> — четыре задания подряд (7–10) с баллами по правилам: №7 и №8 — по 1 баллу; №9 и №10 — по 2 балла, 1 балл за одну ошибку.</li>
+<li>Десятичную дробь можно писать с запятой. Ответ — в тех единицах, что указаны справа от поля.</li>
+<li>Под задачей, где нужны табличные значения, есть свёрнутый блок «Справочные данные» — как страница в начале варианта.</li>
+<li>Клавиша Enter — «Проверить», затем «Дальше». Кнопка «← Меню» (или Esc) — выйти из серии; «Другой номер» сразу запускает серию по другому номеру.</li>
+</ul>
+<h3>Что внутри</h3>
+<p id="cnt"></p>
+<p>Каждый тип — отдельный прототип по типовым вариантам сборника Демидовой 2027: тот же сюжет, такой же график или рисунок и тот же вопрос, но числа, формулировки и набор утверждений каждый раз новые. В №9 утверждения собираются из запаса: в одной и той же ситуации верными оказываются разные.</p>
+<p><b>Актуальность.</b> По документам ФИПИ в 2026 году задания первой части не менялись, а на 2027 год изменений в физике не планируется, так что формат заданий 7–10 один и тот же в 2025, 2026 и 2027 годах. С 2025 года в №8 может встретиться уравнение теплового баланса — такой тип здесь есть.</p>
+<p class="muted small">Что проверяет каждый номер (по ФИПИ): №7 — связь температуры с энергией молекул, основное уравнение МКТ, уравнение Менделеева — Клапейрона, изопроцессы; №8 — количество теплоты и фазовые переходы, работа газа по графику, первый закон термодинамики, КПД тепловых машин; №9 — анализ процесса по графику или описанию, выбор всех верных утверждений; №10 — как изменятся величины, соответствие.</p>
+</div></section>
+</main>
+<div id="sync"></div>
+<script>
+// ====== Генераторы задач 7–10 (МКТ и термодинамика) ======
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const P=a=>a[Math.floor(Math.random()*a.length)];
+const SH=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rnd=(x,d=6)=>Math.round(x*10**d)/10**d;
+const isNice=(x,d=3)=>Math.abs(x*10**d-Math.round(x*10**d))<1e-6;
+const f=(x,d=3)=>{x=rnd(x,d);let s=String(x);if(s.includes('e'))s=x.toFixed(d);return s.replace('.',',').replace('-','−');};
+function retry(fn,n=3000){for(let i=0;i<n;i++){const r=fn();if(r)return r;}throw new Error('retry failed');}
+function raz(k){const s=f(k);if(s.includes(','))return 'в '+s+' раза';const n=Math.round(k)%100,l=n%10;return 'в '+s+((l>=2&&l<=4&&!(n>=12&&n<=14))?' раза':' раз');}
+const END={f:'ась',m:'ся',n:'ось',p:'ись'};
+function chg(k,g){const e=END[g];if(Math.abs(k-1)<1e-9)return 'не изменил'+e;return (k>1?'увеличил':'уменьшил')+e+' '+raz(k>1?k:rnd(1/k,6));}
+const sgn=x=>x>0?1:x<0?-1:0;
+// «увеличили в 3 раза» / «уменьшили в 2 раза»
+const up=(k,a='увеличили',b='уменьшили')=>k>1?a+' '+raz(k):b+' '+raz(rnd(1/k,6));
+// множитель в решении: 3; 1,5; 1/4
+const fr=k=>k>=1?f(k):isNice(1/k,2)?'1/'+f(rnd(1/k,6)):f(k);
+// код ответа «как изменится»: 1 — увеличится, 2 — уменьшится, 3 — не изменится
+const CH=k=>k>1+1e-9?1:k<1-1e-9?2:3;
+const CHD=d=>d>0?1:d<0?2:3;
+const W3=(x,a='увеличивается',b='уменьшается',c='не изменяется')=>x>0?a:x<0?b:c;
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const tC=T=>f(T-273)+' °C';
+const U0=(k,s)=>(k===1?'':f(k))+s;
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+// целочисленное отношение для набора дробей [числитель, знаменатель]
+function ratioStr(fracs){const L=fracs.reduce((a,x)=>a*x[1]/gcd(a,x[1]),1);let v=fracs.map(x=>Math.round(x[0]*L/x[1]));const g=v.reduce((a,x)=>gcd(a,x),0)||1;return v.map(x=>x/g).join(' : ');}
+const EKIN='средняя кинетическая энергия теплового движения молекул';
+
+// ---------- рисунки ----------
+function arrow(x1,y1,x2,y2,cls='ax'){const a=Math.atan2(y2-y1,x2-x1),L=7,w=3.5;
+ const p1=[x2-L*Math.cos(a)+w*Math.sin(a),y2-L*Math.sin(a)-w*Math.cos(a)],p2=[x2-L*Math.cos(a)-w*Math.sin(a),y2-L*Math.sin(a)+w*Math.cos(a)];
+ return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${cls}"/><polygon points="${x2},${y2} ${rnd(p1[0],1)},${rnd(p1[1],1)} ${rnd(p2[0],1)},${rnd(p2[1],1)}" class="ah"/>`;}
+// график: o = {xmax,ymax,ymin,xt,yt,xn,yn,xl,yl, paths:[{pts,close,arr,cls}], dash:[[a,b]], fns:[{f,x0,x1,cls}], pts:[{x,y,t,d}], txt:[{x,y,t,dx,dy,a}]}
+function gr(o){
+ const W=o.w||320,H=o.h||215,ml=o.ml||48,mr=26,mt=18,mb=30,y0=o.ymin||0;
+ const X=x=>rnd(ml+x/o.xmax*(W-ml-mr),2),Y=y=>rnd(mt+(o.ymax-y)/(o.ymax-y0)*(H-mt-mb),2);
+ let s=`<svg viewBox="0 0 ${W} ${H}" class="fig" xmlns="http://www.w3.org/2000/svg"${o.fw?` style="--fw:${o.fw}px"`:''}>`;
+ for(const x of o.xt)s+=`<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(o.ymax)}" class="g"/>`;
+ for(const y of o.yt)s+=`<line x1="${X(0)}" y1="${Y(y)}" x2="${X(o.xmax)}" y2="${Y(y)}" class="g"/>`;
+ s+=arrow(X(0),Y(y0),W-6,Y(y0))+arrow(X(0),Y(y0),X(0),6);
+ const xl=o.xl===undefined?(x=>f(x)):o.xl,yl=o.yl===undefined?(y=>f(y)):o.yl;
+ if(xl)for(const x of o.xt)s+=`<text x="${X(x)}" y="${Y(y0)+13}" class="tk" text-anchor="middle">${xl(x)}</text>`;
+ if(yl)for(const y of o.yt)if(y0<0||Math.abs(y)>1e-12)s+=`<text x="${X(0)-4}" y="${Y(y)+4}" class="tk" text-anchor="end">${yl(y)}</text>`;
+ if(y0===0)s+=`<text x="${X(0)-4}" y="${Y(0)+13}" class="tk" text-anchor="end">0</text>`;
+ s+=`<text x="${W-4}" y="${Y(y0)-6}" class="lb" text-anchor="end">${o.xn}</text><text x="${X(0)+6}" y="12" class="lb">${o.yn}</text>`;
+ for(const d of o.dash||[])s+=`<line x1="${X(d[0][0])}" y1="${Y(d[0][1])}" x2="${X(d[1][0])}" y2="${Y(d[1][1])}" class="g2"/>`;
+ for(const fn of o.fns||[]){const pts=[];for(let i=0;i<=60;i++){const x=fn.x0+(fn.x1-fn.x0)*i/60;pts.push(X(x)+','+Y(fn.f(x)));}s+=`<polyline points="${pts.join(' ')}" class="${fn.cls||'cv'}"/>`;}
+ for(const p of o.paths||[]){const q=p.close?p.pts.concat([p.pts[0]]):p.pts;s+=`<polyline points="${q.map(a=>X(a[0])+','+Y(a[1])).join(' ')}" class="${p.cls||'cv'}"/>`;
+  if(p.arr)for(let i=0;i<q.length-1;i++){const x1=X(q[i][0]),y1=Y(q[i][1]),x2=X(q[i+1][0]),y2=Y(q[i+1][1]),a=Math.atan2(y2-y1,x2-x1),mx=(x1+x2)/2+4.5*Math.cos(a),my=(y1+y2)/2+4.5*Math.sin(a),L=9,w=4;
+   s+=`<polygon points="${rnd(mx,1)},${rnd(my,1)} ${rnd(mx-L*Math.cos(a)+w*Math.sin(a),1)},${rnd(my-L*Math.sin(a)-w*Math.cos(a),1)} ${rnd(mx-L*Math.cos(a)-w*Math.sin(a),1)},${rnd(my-L*Math.sin(a)+w*Math.cos(a),1)}" class="${p.cls==='cv2'?'ah':'ah2'}"/>`;}}
+ const pp=o.pts||[];if(pp.length){const cx=pp.reduce((a,p)=>a+X(p.x),0)/pp.length,cy=pp.reduce((a,p)=>a+Y(p.y),0)/pp.length;
+  for(const p of pp){const px=X(p.x),py=Y(p.y);let dx=px-cx,dy=py-cy;const L=Math.hypot(dx,dy);if(p.d){dx=p.d[0];dy=p.d[1];}else if(L<2){dx=9;dy=-9;}else{dx=dx/L*13;dy=dy/L*13;}
+   s+=`<circle cx="${px}" cy="${py}" r="2.8" class="dot"/>`;if(p.t!==undefined&&p.t!=='')s+=`<text x="${rnd(px+dx,1)}" y="${rnd(py+dy+4,1)}" class="lb" text-anchor="middle" style="font-weight:600">${p.t}</text>`;}}
+ for(const t of o.txt||[])s+=`<text x="${rnd(X(t.x)+(t.dx||0),1)}" y="${rnd(Y(t.y)+(t.dy||0),1)}" class="lb" text-anchor="${t.a||'middle'}" style="font-weight:600">${t.t}</text>`;
+ return s+'</svg>';}
+// p–V в единицах p₀ и V₀
+function pvUnits(o){return gr(Object.assign({xt:[1,2,3,4,5],yt:[1,2,3,4],xmax:5.8,ymax:4.8,xn:'V',yn:'p',xl:k=>U0(k,'V₀'),yl:k=>U0(k,'p₀')},o));}
+// горизонтальный цилиндр с подвижным поршнем; share — доля объёма слева
+function svgPist(share,l1,l2){const x0=20,x1=280,px=rnd(x0+(x1-x0)*Math.min(0.78,Math.max(0.22,share)),1);
+ return `<svg viewBox="0 0 300 96" class="fig" style="--fw:300px" xmlns="http://www.w3.org/2000/svg"><rect x="${x0}" y="24" width="${x1-x0}" height="52" class="el"/><rect x="${px-4}" y="24" width="8" height="52" style="fill:var(--muted);stroke:var(--fg);stroke-width:1.2"/><text x="${rnd((x0+px)/2,1)}" y="54" class="lb" text-anchor="middle">${l1}</text><text x="${rnd((px+x1)/2,1)}" y="54" class="lb" text-anchor="middle">${l2}</text></svg>`;}
+// вертикальный цилиндр с поршнем
+function svgCyl(sand){let s=`<svg viewBox="0 0 220 170" class="fig" style="--fw:220px" xmlns="http://www.w3.org/2000/svg"><polyline points="60,18 60,150 150,150 150,18" class="w"/><rect x="61" y="66" width="88" height="11" style="fill:var(--muted);stroke:var(--fg);stroke-width:1.2"/><text x="105" y="118" class="lb" text-anchor="middle">газ</text><text x="160" y="76" class="lb">поршень</text>`;
+ if(sand)s+=`<path d="M 78 66 Q 105 42 132 66 Z" style="fill:var(--line);stroke:var(--fg);stroke-width:1"/><text x="160" y="52" class="lb">песок</text>`;
+ return s+'</svg>';}
+// сосуд с перегородкой
+function svgPor(l,r){return `<svg viewBox="0 0 300 110" class="fig" style="--fw:300px" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="260" height="70" class="el"/><line x1="150" y1="20" x2="150" y2="90" style="stroke:var(--fg);stroke-width:1.8;stroke-dasharray:5 4"/><text x="85" y="59" class="lb" text-anchor="middle">${l}</text><text x="215" y="59" class="lb" text-anchor="middle">${r}</text></svg>`;}
+
+// ---------- банк типов ----------
+// карточка: {q, fig, ref, kind:'num'|'multi'|'change'|'choice'|'match', ans, unit, rows, stmts, opts, sol, trap, m}
+// m — «паспорт» карточки для независимой проверки (tests/termo-check.mjs): вариант и исходные числа
+const G=[];
+const SRC={};
+const add=(id,line,topic,title,gen)=>G.push({id,line,topic,title,gen});
+// вариант вопроса выбирается заранее, чтобы редкие (с жёсткими условиями на числа) не вытеснялись частыми
+const vary=(list,fn)=>()=>{const v=P(list);return retry(()=>fn(v));};
+// пять утверждений из пула: верных 2 или 3, тексты разные, не больше одного утверждения на тему (ключ k)
+function pick5(pool){const seen=new Set(),list=SH(pool).filter(s=>s&&!seen.has(s.t)&&seen.add(s.t));
+ for(const nT of SH([2,2,3]).filter((x,i,a)=>a.indexOf(x)===i)){const out=[],keys=new Set();let t=0,fl=0;
+  for(const want of [true,false])for(const s of list){if(s.ok!==want||(s.k&&keys.has(s.k)))continue;if(want?t>=nT:fl>=5-nT)continue;out.push(s);if(s.k)keys.add(s.k);want?t++:fl++;}
+  if(t===nT&&fl===5-nT){const ch=SH(out);return {stmts:ch,ans:ch.map((s,i)=>s.ok?i+1:0).filter(x=>x).join('')};}}
+ return null;}
+// справочные данные из КИМ ЕГЭ (как в начале варианта)
+const REFD=`<details class="refd"><summary>Справочные данные (как в КИМ)</summary><table class="tbl"><tr><td>Удельная теплоёмкость, Дж/(кг·К)</td><td>вода 4,2·10<sup>3</sup>; лёд 2,1·10<sup>3</sup>; алюминий 900; железо 460; медь 380; свинец 130; чугун 500</td></tr><tr><td>Удельная теплота, Дж/кг</td><td>парообразования воды 2,3·10<sup>6</sup>; плавления льда 3,3·10<sup>5</sup>; плавления свинца 2,5·10<sup>4</sup></td></tr><tr><td>Молярная масса, г/моль</td><td>гелий 4; неон 20; аргон 40; азот 28; кислород 32</td></tr><tr><td>Постоянные</td><td><i>R</i> = 8,31 Дж/(моль·К); 0 °C = 273 К</td></tr></table></details>`;
+
+// ======================= №7 · молекулярная физика (число, 1 балл) =======================
+const KF=[2,3,4,5,1.5,2.5,1/2,1/3,1/4,1/5];
+const P0=[40,50,60,80,90,100,120,150,180,200,240,300];
+
+add('pnT',7,1,'p = nkT: давление, концентрация, температура',()=>retry(()=>{
+ const v=P(['p','p','ratio','n','T']),a=P(KF),b=P(KF),k=rnd(a*b,9);if(Math.abs(k-1)<1e-9)return null;const K=k>1?k:rnd(1/k,6);
+ const base='<i>p</i> = <i>nkT</i>, значит <i>p</i> ~ <i>nT</i>. ';
+ if(v==='p'){const p0=P(P0),p=rnd(p0*k);if(!isNice(p,1)||p<5||p>3000)return null;
+  return {q:`В сосуде находится разреженный газ под давлением ${p0} кПа. Концентрацию молекул газа ${up(a)}, а его абсолютную температуру ${up(b)}. Каким стало давление газа? Ответ дайте в кПа.`,kind:'num',ans:p,unit:'кПа',
+   sol:base+`<i>p</i><sub>2</sub> = ${p0} · ${fr(a)} · ${fr(b)} = ${f(p)} кПа.`,trap:'«Уменьшили в k раз» — это деление на k. Множители перемножаются, а не складываются.',m:{v,p0,a,b}};}
+ if(!isNice(K,2))return null;
+ if(v==='ratio')return {q:`Концентрацию молекул разреженного газа ${up(a)}, а его абсолютную температуру ${up(b)}. Во сколько раз ${k>1?'увеличилось':'уменьшилось'} давление газа?`,kind:'num',ans:K,unit:'',
+  sol:base+`<i>p</i><sub>2</sub>/<i>p</i><sub>1</sub> = ${fr(a)} · ${fr(b)} = ${fr(k)}: давление ${chg(k,'n')}.`,trap:'Сначала запиши отношение <i>p</i><sub>2</sub>/<i>p</i><sub>1</sub>, потом решай, выросло давление или упало.',m:{v,a,b}};
+ if(v==='n'){const A=a>1?a:rnd(1/a,6);return {q:`Давление разреженного газа ${chg(k,'n')}, а его абсолютная температура ${chg(b,'f')}. Во сколько раз ${a>1?'увеличилась':'уменьшилась'} концентрация молекул газа?`,kind:'num',ans:A,unit:'',
+  sol:base+`Отсюда <i>n</i> ~ <i>p</i>/<i>T</i>: <i>n</i><sub>2</sub>/<i>n</i><sub>1</sub> = ${fr(k)} : ${fr(b)} = ${fr(a)}. Концентрация ${chg(a,'f')}.`,trap:'Температура стоит в знаменателе: выросла температура — при том же давлении концентрация меньше.',m:{v,k,b}};}
+ const p1=P(P0),p2=rnd(p1*k);if(!isNice(p2,1)||p2<5||p2>3000)return null;const B=b>1?b:rnd(1/b,6);
+ return {q:`Давление разреженного газа изменилось от ${p1} кПа до ${f(p2)} кПа, а концентрация его молекул ${chg(a,'f')}. Во сколько раз ${b>1?'увеличилась':'уменьшилась'} абсолютная температура газа?`,kind:'num',ans:B,unit:'',
+  sol:base+`Отсюда <i>T</i> ~ <i>p</i>/<i>n</i>: <i>T</i><sub>2</sub>/<i>T</i><sub>1</sub> = (${f(p2)}/${p1}) : ${fr(a)} = ${fr(b)}. Температура ${chg(b,'f')}.`,trap:'Давление изменилось и из-за концентрации, и из-за температуры: раздели одно изменение на другое.',m:{v,p1,p2,a}};}));
+
+add('pnE',7,1,'p = ⅔nE: давление и энергия молекул',()=>retry(()=>{
+ const v=P(['p','dp','E','n']),a=P(KF),b=P(KF),k=rnd(a*b,9);if(Math.abs(k-1)<1e-9)return null;const K=k>1?k:rnd(1/k,6);
+ const base='<i>p</i> = (2/3)<i>nE</i>, значит <i>p</i> ~ <i>nE</i>. ',EK='среднюю кинетическую энергию теплового движения его молекул';
+ if(v==='p'||v==='dp'){const p0=P(P0),p=rnd(p0*k);if(!isNice(p,1)||p<5||p>3000)return null;const head=`Давление идеального газа в сосуде равно ${p0} кПа. Концентрацию молекул газа ${up(a)}, а ${EK} ${up(b)}. `;
+  if(v==='p')return {q:head+'Чему стало равно давление газа? Ответ дайте в кПа.',kind:'num',ans:p,unit:'кПа',
+   sol:base+`<i>p</i><sub>2</sub> = ${p0} · ${fr(a)} · ${fr(b)} = ${f(p)} кПа.`,trap:'В формуле стоит произведение <i>n</i> и <i>E</i>: изменения перемножаются.',m:{v,p0,a,b}};
+  const d=rnd(Math.abs(p-p0));
+  return {q:head+`На сколько килопаскалей ${k>1?'увеличилось':'уменьшилось'} давление газа?`,kind:'num',ans:d,unit:'кПа',
+   sol:base+`<i>p</i><sub>2</sub> = ${p0} · ${fr(a)} · ${fr(b)} = ${f(p)} кПа. Разность: ${k>1?f(p)+' − '+p0:p0+' − '+f(p)} = ${f(d)} кПа.`,trap:'Спрашивают, <b>на сколько</b> изменилось давление, а не каким оно стало.',m:{v,p0,a,b}};}
+ if(!isNice(K,2))return null;
+ if(v==='E'){const B=b>1?b:rnd(1/b,6);return {q:`Давление идеального газа ${chg(k,'n')}, а концентрация его молекул ${chg(a,'f')}. Во сколько раз ${b>1?'увеличилась':'уменьшилась'} ${EKIN} газа?`,kind:'num',ans:B,unit:'',
+  sol:base+`Отсюда <i>E</i> ~ <i>p</i>/<i>n</i>: <i>E</i><sub>2</sub>/<i>E</i><sub>1</sub> = ${fr(k)} : ${fr(a)} = ${fr(b)}. Энергия ${chg(b,'f')}.`,trap:'Концентрация стоит в знаменателе: если она выросла, на долю энергии приходится меньший множитель.',m:{v,k,a}};}
+ const A=a>1?a:rnd(1/a,6);
+ return {q:`${cap(EKIN)} идеального газа ${chg(b,'f')}, а давление газа ${chg(k,'n')}. Во сколько раз ${a>1?'увеличилась':'уменьшилась'} концентрация молекул газа?`,kind:'num',ans:A,unit:'',
+  sol:base+`Отсюда <i>n</i> ~ <i>p</i>/<i>E</i>: <i>n</i><sub>2</sub>/<i>n</i><sub>1</sub> = ${fr(k)} : ${fr(b)} = ${fr(a)}. Концентрация ${chg(a,'f')}.`,trap:'Не складывай «разы»: дели изменение давления на изменение энергии.',m:{v,k,b}};}));
+
+const TC=[200,250,300,400,450,500,600,750,900,1200]; // «круглые» и в кельвинах, и в градусах Цельсия
+add('ET',7,1,'Температура, энергия и скорость молекул',()=>retry(()=>{
+ const v=P(['EC','EC','vK','vC','T2C']);
+ if(v==='EC'){const [T1,T2]=SH(TC).slice(0,2),k=T2/T1,K=k>1?k:T1/T2;if(!isNice(K,2))return null;
+  return {q:`Температура газа ${k>1?'повысилась':'понизилась'} от ${tC(T1)} до ${tC(T2)}. Во сколько раз ${k>1?'увеличилась':'уменьшилась'} ${EKIN} газа?`,kind:'num',ans:K,unit:'',
+   sol:`<i>E</i> = (3/2)<i>kT</i>, где <i>T</i> — абсолютная температура: <i>T</i><sub>1</sub> = ${f(T1-273)} + 273 = ${T1} К, <i>T</i><sub>2</sub> = ${T2} К. Отношение: ${Math.max(T1,T2)}/${Math.min(T1,T2)} = ${f(K)}.`,trap:'Делить градусы Цельсия нельзя: сначала переведи обе температуры в кельвины.',m:{v,t1:T1-273,t2:T2-273}};}
+ if(v==='vK'||v==='vC'){let [T1,T2]=P(v==='vK'?[[300,1200],[200,450],[400,900],[200,800],[100,400],[100,900],[250,1000],[150,600],[320,500],[400,625],[160,360]]:[[300,1200],[200,450],[400,900],[200,800]]);
+  if(Math.random()<0.4)[T1,T2]=[T2,T1];const k=T2/T1,KK=k>1?k:1/k,S=rnd(Math.sqrt(KK),9),sh=T=>v==='vK'?T+' К':tC(T);
+  return {q:`${v==='vK'?'Абсолютная температура':'Температура'} газа ${k>1?'повысилась':'понизилась'} от ${sh(T1)} до ${sh(T2)}. Во сколько раз ${k>1?'увеличилась':'уменьшилась'} среднеквадратичная скорость теплового движения его молекул?`,kind:'num',ans:S,unit:'',
+   sol:`${v==='vC'?`В кельвинах: <i>T</i><sub>1</sub> = ${T1} К, <i>T</i><sub>2</sub> = ${T2} К. `:''}Скорость молекул ~ √<i>T</i>. Отношение температур: ${Math.max(T1,T2)}/${Math.min(T1,T2)} = ${f(KK)}; корень из него равен ${f(S)}.`,trap:'Скорость молекул пропорциональна корню из температуры, а не самой температуре.',m:{v,T1,T2}};}
+ const [T1,k,dir]=P([[300,2,1],[300,1.5,1],[200,3,1],[250,2,1],[400,3,1],[300,3,1],[300,4,1],[200,1.5,1],[600,2,-1],[900,3,-1],[1200,4,-1],[900,1.5,-1],[1200,2,-1]]),T2=dir>0?T1*k:T1/k;
+ return {q:`При температуре ${tC(T1)} ${EKIN} газа равна <i>E</i>. При какой температуре она будет ${raz(k)} ${dir>0?'больше':'меньше'}? Ответ дайте в градусах Цельсия.`,kind:'num',ans:T2-273,unit:'°C',
+  sol:`<i>E</i> ~ <i>T</i> (в кельвинах). <i>T</i><sub>1</sub> = ${f(T1-273)} + 273 = ${T1} К, <i>T</i><sub>2</sub> = ${T1} ${dir>0?'·':':'} ${f(k)} = ${T2} К = ${f(T2-273)} °C.`,trap:'Три шага: в кельвины → умножить или разделить → обратно в градусы Цельсия.',m:{v,t1:T1-273,k,dir}};}));
+
+add('vT',7,1,'Скорость молекул и температура: v ~ √T',()=>retry(()=>{
+ const v=P(['T2','tC','p','V','k']),VK='среднеквадратичная скорость теплового движения молекул';
+ if(v==='T2'){const s=P([2,3,1.5,0.5,1/3]),T1=P(s>1?[100,200,300,400]:[400,800,900,1200,1800]),T2=rnd(T1*s*s);if(!isNice(T2,0)||T2<50)return null;
+  return {q:`При температуре ${T1} К ${VK} газа равна <i>v</i>. При какой температуре она будет равна ${s>1?f(s)+'<i>v</i>':'<i>v</i>/'+f(1/s)}? Ответ дайте в кельвинах.`,kind:'num',ans:T2,unit:'К',
+   sol:`<i>v</i> ~ √<i>T</i> ⇒ <i>T</i> ~ <i>v</i><sup>2</sup>. Скорость ${chg(s,'f')} ⇒ температура ${chg(s*s,'f')}: <i>T</i><sub>2</sub> = ${T1} ${s>1?'· '+f(s*s):': '+f(1/(s*s))} = ${T2} К.`,trap:'Температура меняется как квадрат скорости, а не как сама скорость.',m:{v,T1,s}};}
+ if(v==='tC'){const [t1,s,t2]=P([[27,2,927],[-73,1.5,177],[127,1.5,627],[-73,2,527],[-173,2,127],[-173,3,627],[927,0.5,27],[177,2,1527]]),S=s>1?s:1/s;
+  return {q:`Газ находится при температуре ${f(t1)} °C. До какой температуры нужно его ${s>1?'нагреть':'охладить'}, чтобы ${VK} ${s>1?'увеличилась':'уменьшилась'} ${raz(S)}? Ответ дайте в градусах Цельсия.`,kind:'num',ans:t2,unit:'°C',
+   sol:`<i>T</i><sub>1</sub> = ${f(t1)} + 273 = ${t1+273} К. <i>T</i> ~ <i>v</i><sup>2</sup> ⇒ <i>T</i><sub>2</sub> = ${t1+273} ${s>1?'·':':'} ${f(S*S)} = ${t2+273} К = ${t2} °C.`,trap:'Сначала кельвины, потом квадрат: (<i>t</i> + 273)·<i>k</i><sup>2</sup>, а не <i>t</i>·<i>k</i><sup>2</sup>.',m:{v,t1,s}};}
+ const s=P([2,3,1.5,4,1.2]),dir=P([1,-1]),S2=rnd(s*s),heat=dir>0?'нагрели':'охладили';
+ if(v==='p')return {q:`Газ в закрытом сосуде постоянного объёма ${heat} так, что ${VK} ${dir>0?'увеличилась':'уменьшилась'} ${raz(s)}. Во сколько раз ${dir>0?'увеличилось':'уменьшилось'} давление газа?`,kind:'num',ans:S2,unit:'',
+  sol:`<i>v</i> ~ √<i>T</i> ⇒ температура изменилась ${raz(S2)} (${f(s)}<sup>2</sup>). Объём и число молекул постоянны ⇒ <i>p</i> ~ <i>T</i>: давление ${dir>0?'увеличилось':'уменьшилось'} ${raz(S2)}.`,trap:'Два шага: скорость → температура (квадрат) → давление.',m:{v,s}};
+ if(v==='V')return {q:`Газ под подвижным поршнем при постоянном давлении ${heat} так, что ${VK} ${dir>0?'увеличилась':'уменьшилась'} ${raz(s)}. Во сколько раз ${dir>0?'увеличился':'уменьшился'} объём газа?`,kind:'num',ans:S2,unit:'',
+  sol:`<i>v</i> ~ √<i>T</i> ⇒ температура изменилась ${raz(S2)} (${f(s)}<sup>2</sup>). Давление постоянно ⇒ <i>V</i> ~ <i>T</i>: объём ${dir>0?'увеличился':'уменьшился'} ${raz(S2)}.`,trap:'Два шага: скорость → температура (квадрат) → объём.',m:{v,s}};
+ const iso=P(['p','V']);
+ return {q:(iso==='p'?`Газ в закрытом сосуде постоянного объёма ${heat}, и его давление ${dir>0?'увеличилось':'уменьшилось'} ${raz(S2)}.`:`Газ под подвижным поршнем при постоянном давлении ${heat}, и его объём ${dir>0?'увеличился':'уменьшился'} ${raz(S2)}.`)+` Во сколько раз ${dir>0?'увеличилась':'уменьшилась'} ${VK} газа?`,kind:'num',ans:s,unit:'',
+  sol:`${iso==='p'?'Объём постоянен ⇒ <i>T</i> ~ <i>p</i>':'Давление постоянно ⇒ <i>T</i> ~ <i>V</i>'}: температура изменилась ${raz(S2)}. <i>v</i> ~ √<i>T</i> ⇒ скорость изменилась в √${f(S2)} = ${f(s)} раза.`,trap:'Из изменения температуры нужно извлечь корень.',m:{v,s,iso}};}));
+
+add('dT',7,1,'Температуру изменили на ΔT: найти T',()=>retry(()=>{
+ const v=P(['E','E','p','V']),dir=P([1,-1]),k=P([2,3,4,1.5,1.25,2.5]),fin=Math.random()<0.3;
+ const T0=P([100,120,150,200,240,250,300,320,360,400,450,480,500,600,750,800,900]),T1=dir>0?T0*k:T0/k;if(!isNice(T1,0)||T1<50||T1>1500)return null;const dT=Math.abs(T1-T0);
+ const head=v==='E'?`Температуру газа ${dir>0?'повысили':'понизили'} на ${dT} К. При этом ${EKIN} газа ${dir>0?'увеличилась':'уменьшилась'} ${raz(k)}.`
+  :v==='p'?`Газ в закрытом сосуде постоянного объёма ${dir>0?'нагрели':'охладили'} на ${dT} К, и его давление ${dir>0?'увеличилось':'уменьшилось'} ${raz(k)}.`
+  :`Газ под подвижным поршнем при постоянном давлении ${dir>0?'нагрели':'охладили'} на ${dT} К, и его объём ${dir>0?'увеличился':'уменьшился'} ${raz(k)}.`;
+ const why=v==='E'?'<i>E</i> ~ <i>T</i>':v==='p'?'<i>V</i> = const ⇒ <i>p</i> ~ <i>T</i>':'<i>p</i> = const ⇒ <i>V</i> ~ <i>T</i>';
+ return {q:head+` Какой ${fin?'стала температура газа':'была начальная температура газа'}? Ответ дайте в кельвинах.`,kind:'num',ans:fin?T1:T0,unit:'К',
+  sol:why+`, значит температура изменилась ${raz(k)}. `+(dir>0?`<i>T</i><sub>2</sub> = ${f(k)}<i>T</i><sub>1</sub> и <i>T</i><sub>2</sub> − <i>T</i><sub>1</sub> = ${dT} К ⇒ (${f(k)} − 1)<i>T</i><sub>1</sub> = ${dT}, <i>T</i><sub>1</sub> = ${T0} К${fin?`, <i>T</i><sub>2</sub> = ${T1} К`:''}.`
+   :`<i>T</i><sub>1</sub> = ${f(k)}<i>T</i><sub>2</sub> и <i>T</i><sub>1</sub> − <i>T</i><sub>2</sub> = ${dT} К ⇒ (${f(k)} − 1)<i>T</i><sub>2</sub> = ${dT}, <i>T</i><sub>2</sub> = ${T1} К, <i>T</i><sub>1</sub> = ${T0} К.`),
+  trap:`Δ<i>T</i> — это разность температур, а «${raz(k)}» — их отношение. Нужны оба уравнения сразу.`,m:{v,dir,k,dT,fin}};}));
+
+add('iso',7,2,'Изопроцесс: p/T, V/T или pV постоянно',()=>retry(()=>{
+ const v=P(['pT','VT','pV','CpT','CVT']),k=P([1.5,2,3,4,1.25,2.5]),dir=P([1,-1]),ex=Math.random()<0.5,extra=ex?` Количество вещества газа равно ${P([2,3,4,5])} моль.`:'';
+ const tr=ex?'Число молей здесь лишнее: в изопроцессе хватает пропорции.':'Реши сначала, больше или меньше начальное значение, чем конечное, — и только потом дели или умножай.';
+ if(v==='pT'||v==='VT'){const T2=P([200,240,300,360,400,450,480,600,750,900]),T1=dir>0?T2/k:T2*k;if(!isNice(T1,0)||T1<60||T1>1500)return null;
+  return {q:(v==='pT'?`В изохорном процессе давление идеального газа ${dir>0?'увеличилось':'уменьшилось'} ${raz(k)}.`:`В изобарном процессе объём идеального газа ${dir>0?'увеличился':'уменьшился'} ${raz(k)}.`)+` Конечная температура газа равна ${T2} К.${extra} Какой была начальная температура газа? Ответ дайте в кельвинах.`,kind:'num',ans:T1,unit:'К',
+   sol:`${v==='pT'?'<i>V</i> = const ⇒ <i>p</i>/<i>T</i> = const':'<i>p</i> = const ⇒ <i>V</i>/<i>T</i> = const'}: температура изменилась во столько же раз. <i>T</i><sub>1</sub> = ${T2} ${dir>0?':':'·'} ${f(k)} = ${T1} К.`,trap:tr,m:{v,dir,k,T2}};}
+ if(v==='pV'){const V2=P([1,1.5,2,3,4,5,6,8]),V1=dir>0?V2*k:V2/k;if(!isNice(V1,2)||V1>40)return null;
+  return {q:`В изотермическом процессе давление идеального газа ${dir>0?'увеличилось':'уменьшилось'} ${raz(k)}. Конечный объём газа равен ${f(V2)} л.${extra} Каким был начальный объём газа? Ответ дайте в литрах.`,kind:'num',ans:V1,unit:'л',
+   sol:`<i>T</i> = const ⇒ <i>pV</i> = const: объём изменился во столько же раз, но в обратную сторону. <i>V</i><sub>1</sub> = ${f(V2)} ${dir>0?'·':':'} ${f(k)} = ${f(V1)} л.`,trap:ex?tr:'На изотерме давление и объём меняются в противоположные стороны.',m:{v,dir,k,V2}};}
+ const [T1,T2]=SH([300,400,450,500,600,750,900,1200]).slice(0,2);
+ if(v==='CpT'){const p1=P([60,80,90,100,120,150,180,200,240,300,360,450]),p2=p1*T2/T1;if(!isNice(p2,1))return null;
+  return {q:`Газ в закрытом баллоне при температуре ${tC(T1)} имеет давление ${p1} кПа. Каким станет давление газа, если его ${T2>T1?'нагреть':'охладить'} до ${tC(T2)}? Ответ дайте в кПа.`,kind:'num',ans:p2,unit:'кПа',
+   sol:`Баллон закрыт ⇒ <i>V</i> = const, <i>p</i>/<i>T</i> = const. В кельвинах: <i>T</i><sub>1</sub> = ${T1} К, <i>T</i><sub>2</sub> = ${T2} К. <i>p</i><sub>2</sub> = ${p1} · ${T2}/${T1} = ${f(p2)} кПа.`,trap:'В пропорцию подставляют кельвины, а не градусы Цельсия.',m:{v,t1:T1-273,t2:T2-273,p1}};}
+ const V1=P([1,1.5,2,3,4,5,6,8]),V2=V1*T2/T1;if(!isNice(V2,2))return null;
+ return {q:`Газ в цилиндре под подвижным поршнем при постоянном давлении ${T2>T1?'нагрели':'охладили'} от ${tC(T1)} до ${tC(T2)}. Начальный объём газа был равен ${f(V1)} л. Каким стал объём газа? Ответ дайте в литрах.`,kind:'num',ans:V2,unit:'л',
+  sol:`<i>p</i> = const ⇒ <i>V</i>/<i>T</i> = const. В кельвинах: <i>T</i><sub>1</sub> = ${T1} К, <i>T</i><sub>2</sub> = ${T2} К. <i>V</i><sub>2</sub> = ${f(V1)} · ${T2}/${T1} = ${f(V2)} л.`,trap:'В пропорцию подставляют кельвины, а не градусы Цельсия.',m:{v,t1:T1-273,t2:T2-273,V1}};}));
+
+add('pv2',7,2,'Две точки на p–V: T ~ pV',vary(['T','T2','U','v'],v=>{
+ const V1=R(1,5),p1=R(1,4),V2=R(1,5),p2=R(1,4);if(V1===V2&&p1===p2)return null;
+ const k=rnd(p2*V2/(p1*V1),9);if(Math.abs(k-1)<1e-9)return null;const K=k>1?k:rnd(1/k,6);
+ if(v==='v'?!isNice(Math.sqrt(K),2):!isNice(K,2))return null;
+ const fig=pvUnits({paths:[{pts:[[V1,p1],[V2,p2]],arr:1}],pts:[{x:V1,y:p1,t:'1'},{x:V2,y:p2,t:'2'}]});
+ const intro='На рисунке показан переход идеального газа постоянной массы из состояния 1 в состояние 2. ',base=`<i>pV</i> = ν<i>RT</i> ⇒ <i>T</i> ~ <i>pV</i>. <i>T</i><sub>2</sub>/<i>T</i><sub>1</sub> = (${p2}·${V2})/(${p1}·${V1}) = ${fr(k)}. `,m={v,V1,p1,V2,p2};
+ if(v==='T')return {q:intro+`Во сколько раз абсолютная температура газа в состоянии 2 ${k>1?'больше':'меньше'}, чем в состоянии 1?`,fig,kind:'num',ans:K,unit:'',sol:base+`Температура ${chg(k,'f')}.`,trap:'Температура определяется произведением <i>pV</i>, а не одним давлением или одним объёмом.',m};
+ if(v==='U')return {q:intro.replace('идеального','одноатомного идеального')+`Во сколько раз ${k>1?'увеличилась':'уменьшилась'} внутренняя энергия газа?`,fig,kind:'num',ans:K,unit:'',sol:base+`<i>U</i> = (3/2)ν<i>RT</i> = (3/2)<i>pV</i> ~ <i>T</i>: внутренняя энергия ${chg(k,'f')}.`,trap:'Внутренняя энергия идеального газа зависит только от температуры, то есть от произведения <i>pV</i>.',m};
+ if(v==='v'){const S=rnd(Math.sqrt(K),9);return {q:intro+`Во сколько раз ${k>1?'увеличилась':'уменьшилась'} среднеквадратичная скорость теплового движения молекул газа?`,fig,kind:'num',ans:S,unit:'',sol:base+`Скорость ~ √<i>T</i>: √${f(K)} = ${f(S)}.`,trap:'Для скорости молекул из отношения температур нужно извлечь корень.',m};}
+ const T1=P([100,150,200,240,300,400,450,600]),T2=rnd(T1*k);if(!isNice(T2,0)||T2>2400||T2<40)return null;m.T1=T1;
+ return {q:intro+`Температура газа в состоянии 1 равна ${T1} К. Чему равна температура газа в состоянии 2? Ответ дайте в кельвинах.`,fig,kind:'num',ans:T2,unit:'К',sol:base+`<i>T</i><sub>2</sub> = ${T1} · ${fr(k)} = ${T2} К.`,trap:'Температура определяется произведением <i>pV</i>, а не одним давлением или одним объёмом.',m};}));
+
+add('tab',7,2,'Таблица состояний газа: pV/T = const',()=>retry(()=>{
+ const TA=P([200,250,300,400,500]),a=P([0.5,1,1.5,2,3,4]),b=P([0.5,1,1.5,2,3]);if(a===1&&b===1)return null;
+ const pA=P([1,1.5,2,3,4]),VA=P([2,3,4,5,6,8,10]),pB=rnd(pA*a),VB=rnd(VA*b),TB=rnd(TA*a*b);
+ if(!isNice(pB,1)||!isNice(VB,1)||!isNice(TB,0)||TB>1500||TB<100)return null;
+ const three=Math.random()<0.4;let C=null;if(three){const a2=P([0.5,1.5,2,3]),b2=P([0.5,1,2]);C=[rnd(pA*a2),rnd(VA*b2),rnd(TA*a2*b2)];if(!isNice(C[0],1)||!isNice(C[1],1)||!isNice(C[2],0)||C[2]>1500||C[2]<100)return null;}
+ const A=[pA,VA,TA],B=[pB,VB,TB],hs=three?'B':P(['A','B']),hi=R(0,2),U=hs==='A'?A:B,K=hs==='A'?B:A,ans=U[hi];
+ const nm=three?['1','2','3']:['A','B'],nU=hs==='A'?nm[0]:nm[nm.length-1],nK=hs==='A'?nm[nm.length-1]:nm[0];
+ const row=(n,arr,hide)=>`<tr><td><b>${n}</b></td>${arr.map((x,i)=>`<td>${hide===i?'<b>?</b>':f(x)}</td>`).join('')}</tr>`;
+ const fig=`<table class="tbl"><tr><th>Состояние</th><th><i>p</i>, 10<sup>5</sup> Па</th><th><i>V</i>, л</th><th><i>T</i>, К</th></tr>${row(nm[0],A,hs==='A'?hi:-1)}${three?row(nm[1],C,-1):''}${row(nm[nm.length-1],B,hs==='B'?hi:-1)}</table>`;
+ const calc=hi===0?`<i>p</i> = ${f(K[0])}·${f(K[1])}·${U[2]}/(${K[2]}·${f(U[1])})`:hi===1?`<i>V</i> = ${f(K[0])}·${f(K[1])}·${U[2]}/(${K[2]}·${f(U[0])})`:`<i>T</i> = ${K[2]}·${f(U[0])}·${f(U[1])}/(${f(K[0])}·${f(K[1])})`;
+ return {q:`Идеальный газ постоянной массы переходит из одного состояния в другое. В таблице приведены давление, объём и температура газа в ${three?'трёх':'двух'} состояниях. Какое число должно стоять в пустой клетке таблицы?`,fig,kind:'num',ans,unit:['·10<sup>5</sup> Па','л','К'][hi],
+  sol:`Масса газа постоянна ⇒ <i>pV</i>/<i>T</i> одинаково во всех состояниях. Сравниваем состояния ${nK} и ${nU}: ${calc} = ${f(ans)}.`,trap:'Единицы из шапки переводить не нужно — они сокращаются. Главное — не перепутать строки и не забыть температуру.',m:{A,B,hs,hi}};}));
+
+add('pist',7,7,'Поршень в равновесии: давления равны',vary(['E','n','T','V'],v=>{
+ const intro='Горизонтальный цилиндр разделён подвижным теплоизолирующим поршнем на две части, в которых находятся идеальные газы 1 и 2. Поршень находится в равновесии. ',base='Поршень в равновесии ⇒ давления газов равны: <i>p</i><sub>1</sub> = <i>p</i><sub>2</sub>. ';
+ if(v==='E'){const k=P([1.5,2,2.5,3,4,5]),who=P([1,2]),o=3-who;
+  return {q:intro+`Концентрация молекул газа ${who} ${raz(k)} больше, чем газа ${o}. Во сколько раз ${EKIN} газа ${o} больше, чем газа ${who}?`,fig:svgPist(0.5,'1','2'),kind:'num',ans:k,unit:'',
+   sol:base+`<i>p</i> = (2/3)<i>nE</i> ⇒ <i>n</i><sub>1</sub><i>E</i><sub>1</sub> = <i>n</i><sub>2</sub><i>E</i><sub>2</sub>. Где концентрация ${raz(k)} больше, там энергия молекул ${raz(k)} меньше. Ответ: ${f(k)}.`,trap:'Отношение обратное: больше концентрация — меньше энергия молекул (и температура).',m:{v,k}};}
+ if(v==='n'){const [T1,T2]=SH([200,250,300,400,450,500,600,750,900]).slice(0,2),r=T2/T1;if(!isNice(r,2))return null;
+  return {q:intro+`Температура газа 1 равна ${T1} К, температура газа 2 равна ${T2} К. Чему равно отношение концентрации молекул газа 1 к концентрации молекул газа 2?`,fig:svgPist(0.5,'1','2'),kind:'num',ans:r,unit:'',
+   sol:base+`<i>p</i> = <i>nkT</i> ⇒ <i>n</i><sub>1</sub><i>T</i><sub>1</sub> = <i>n</i><sub>2</sub><i>T</i><sub>2</sub>, <i>n</i><sub>1</sub>/<i>n</i><sub>2</sub> = <i>T</i><sub>2</sub>/<i>T</i><sub>1</sub> = ${T2}/${T1} = ${f(r)}.`,trap:'Отношение концентраций обратно отношению температур.',m:{v,T1,T2}};}
+ const nu1=P([1,2,3,4]),nu2=P([1,2,3,4,5,6]);
+ if(v==='T'){const V1=P([1,2,3,4,5,6]),V2=P([1,2,3,4,5,6]),r=nu2*V1/(nu1*V2);if(!isNice(r,2)||Math.abs(r-1)<1e-9)return null;
+  return {q:intro+`В части 1 объёмом ${V1} л находится ${nu1} моль газа, в части 2 объёмом ${V2} л — ${nu2} моль газа. Чему равно отношение абсолютной температуры газа 1 к абсолютной температуре газа 2?`,fig:svgPist(V1/(V1+V2),'1','2'),kind:'num',ans:r,unit:'',
+   sol:base+`Из <i>pV</i> = ν<i>RT</i>: ν<sub>1</sub><i>T</i><sub>1</sub>/<i>V</i><sub>1</sub> = ν<sub>2</sub><i>T</i><sub>2</sub>/<i>V</i><sub>2</sub> ⇒ <i>T</i><sub>1</sub>/<i>T</i><sub>2</sub> = ν<sub>2</sub><i>V</i><sub>1</sub>/(ν<sub>1</sub><i>V</i><sub>2</sub>) = (${nu2}·${V1})/(${nu1}·${V2}) = ${f(r)}.`,trap:'Запиши <i>p</i> = ν<i>RT</i>/<i>V</i> для каждой части и приравняй — не угадывай пропорцию.',m:{v,nu1,nu2,V1,V2}};}
+ const T1=P([200,250,300,400,450,600]),T2=P([200,250,300,400,450,600]),Vt=P([4,5,6,8,9,10,12,15,20]),V1=Vt*nu1*T1/(nu1*T1+nu2*T2);if(!isNice(V1,1)||nu1*T1===nu2*T2)return null;
+ return {q:intro+`Общий объём цилиндра равен ${Vt} л. В части 1 находится ${nu1} моль газа при температуре ${T1} К, в части 2 — ${nu2} моль газа при температуре ${T2} К. Чему равен объём части 1? Ответ дайте в литрах.`,fig:svgPist(V1/Vt,'1','2'),kind:'num',ans:V1,unit:'л',
+  sol:base+`Из <i>pV</i> = ν<i>RT</i> при одинаковом давлении <i>V</i> ~ ν<i>T</i>. <i>V</i><sub>1</sub> : <i>V</i><sub>2</sub> = (${nu1}·${T1}) : (${nu2}·${T2}) = ${nu1*T1} : ${nu2*T2}. <i>V</i><sub>1</sub> = ${Vt} · ${nu1*T1}/${nu1*T1+nu2*T2} = ${f(V1)} л.`,trap:'Объём делится пропорционально ν<i>T</i>, а не поровну и не по одному числу молей.',m:{v,nu1,nu2,T1,T2,Vt}};}));
+
+add('mk',7,2,'Уравнение Менделеева — Клапейрона',()=>retry(()=>{
+ const nu=P([0.5,1,2,3,4,5]),T=P([200,250,300,400,500,600]),mm=P([1,2,5,10]),form=P(['A','B']);let ask=P(['p','V','T','nu']),p,V;
+ if(form==='A'){V=rnd(8.31*mm,2);p=nu*T/mm;if(ask==='V')ask='p';}else{p=rnd(83.1*mm,1);V=nu*T/(10*mm);if(ask==='p')ask='V';}
+ if(!isNice(p,1)||!isNice(V,2)||p<20||p>5000||V<1||V>600)return null;
+ const cel=T>=300&&Math.random()<0.4,Tt=cel?tC(T):T+' К',tk=cel?` <i>T</i> = ${f(T-273)} + 273 = ${T} К.`:'',m={form,ask,nu,T,mm,cel},trap='Всё в СИ: кПа → Па (·10<sup>3</sup>), литры → м<sup>3</sup> (·10<sup>−3</sup>), °C → К. Удобно помнить: кПа · л = Дж.';
+ if(ask==='p')return {q:`В сосуде объёмом ${f(V)} л находится ${f(nu)} моль идеального газа при температуре ${Tt}. Каково давление газа? Ответ дайте в кПа.`,ref:1,kind:'num',ans:p,unit:'кПа',
+  sol:`<i>pV</i> = ν<i>RT</i>.${tk} <i>p</i> = ν<i>RT</i>/<i>V</i> = ${f(nu)}·8,31·${T}/(${f(V)}·10<sup>−3</sup>) = ${f(p*1000)} Па = ${f(p)} кПа.`,trap,m};
+ if(ask==='V')return {q:`${f(nu)} моль идеального газа находится при температуре ${Tt} под давлением ${f(p)} кПа. Какой объём занимает газ? Ответ дайте в литрах.`,ref:1,kind:'num',ans:V,unit:'л',
+  sol:`<i>pV</i> = ν<i>RT</i>.${tk} <i>V</i> = ν<i>RT</i>/<i>p</i> = ${f(nu)}·8,31·${T}/(${f(p)}·10<sup>3</sup>) = ${f(V/1000,5)} м<sup>3</sup> = ${f(V)} л.`,trap,m};
+ if(ask==='T')return {q:`В сосуде объёмом ${f(V)} л находится ${f(nu)} моль идеального газа под давлением ${f(p)} кПа. Какова температура газа? Ответ дайте в ${cel?'градусах Цельсия':'кельвинах'}.`,ref:1,kind:'num',ans:cel?T-273:T,unit:cel?'°C':'К',
+  sol:`<i>pV</i> = ν<i>RT</i> ⇒ <i>T</i> = <i>pV</i>/(ν<i>R</i>) = ${f(p)}·10<sup>3</sup> · ${f(V)}·10<sup>−3</sup>/(${f(nu)}·8,31) = ${T} К${cel?` = ${f(T-273)} °C`:''}.`,trap,m};
+ return {q:`В сосуде объёмом ${f(V)} л находится идеальный газ при температуре ${Tt} под давлением ${f(p)} кПа. Чему равно количество вещества газа? Ответ дайте в молях.`,ref:1,kind:'num',ans:nu,unit:'моль',
+  sol:`<i>pV</i> = ν<i>RT</i>.${tk} ν = <i>pV</i>/(<i>RT</i>) = ${f(p)}·10<sup>3</sup> · ${f(V)}·10<sup>−3</sup>/(8,31·${T}) = ${f(nu)} моль.`,trap,m};}));
+
+add('phi',7,6,'Влажность при изотермическом сжатии',()=>retry(()=>{
+ const v=P(['c','c','k','e','pp']),sat=' — больше 100 % быть не может: пар стал насыщенным, излишек сконденсировался. φ<sub>2</sub> = 100 %.',base='Температура постоянна ⇒ давление насыщенного пара не меняется, а давление пара обратно пропорционально объёму (пока пар не насыщен). ';
+ if(v==='c'){const p1=P([20,25,30,40,45,50,60,70,80]),k=P([1.5,2,3,4]),raw=p1*k,p2=Math.min(100,raw);if(!isNice(raw,1))return null;
+  return {q:`Относительная влажность воздуха в цилиндре под поршнем равна ${p1} %. Воздух изотермически сжали, уменьшив его объём ${raz(k)}. Чему стала равна относительная влажность воздуха? Ответ дайте в процентах.`,kind:'num',ans:p2,unit:'%',
+   sol:base+`φ<sub>2</sub> = ${p1} · ${f(k)} = ${f(raw)} %`+(raw>100?sat:'.'),trap:'Проверь, не получилось ли больше 100 %: тогда ответ — ровно 100.',m:{v,p1,k}};}
+ if(v==='k'){const p1=P([20,25,40,50,80]),k=100/p1;
+  return {q:`Относительная влажность воздуха в цилиндре под поршнем равна ${p1} %. Во сколько раз нужно изотермически уменьшить объём воздуха, чтобы водяной пар в нём стал насыщенным?`,kind:'num',ans:k,unit:'',
+   sol:base+`Пар станет насыщенным при φ = 100 %: объём нужно уменьшить в 100/${p1} = ${f(k)} раза.`,trap:'Насыщенный пар — это φ = 100 %, а не «в два раза больше, чем было».',m:{v,p1}};}
+ if(v==='e'){const p1=P([40,50,60,80,90,100]),k=P([1.5,2,2.5,4,5]),p2=p1/k;if(!isNice(p2,1))return null;
+  return {q:`Относительная влажность воздуха в цилиндре под поршнем равна ${p1} %, капель воды в цилиндре нет. Объём воздуха изотермически увеличили ${raz(k)}. Чему стала равна относительная влажность воздуха? Ответ дайте в процентах.`,kind:'num',ans:p2,unit:'%',
+   sol:base+`Объём вырос ${raz(k)} ⇒ давление пара упало ${raz(k)}: φ<sub>2</sub> = ${p1} : ${f(k)} = ${f(p2)} %.`,trap:'При расширении влажность падает во столько же раз, во сколько вырос объём.',m:{v,p1,k}};}
+ const pn=P([2,2.4,3,3.2,4]),p1=P([25,40,50,60,75]),pv=pn*p1/100,k=P([1.5,2,3,4]),raw=p1*k,p2=Math.min(100,raw);if(!isNice(pv,2)||!isNice(raw,1))return null;
+ return {q:`В сосуде под поршнем находится воздух. Парциальное давление водяного пара в нём равно ${f(pv)} кПа, а давление насыщенного водяного пара при этой температуре равно ${f(pn)} кПа. Объём сосуда изотермически уменьшили ${raz(k)}. Чему стала равна относительная влажность воздуха? Ответ дайте в процентах.`,kind:'num',ans:p2,unit:'%',
+  sol:`φ<sub>1</sub> = <i>p</i>/<i>p</i><sub>н</sub> = ${f(pv)}/${f(pn)} = ${p1} %. `+base+`φ<sub>2</sub> = ${p1} · ${f(k)} = ${f(raw)} %`+(raw>100?sat:'.'),trap:'Сначала найди начальную влажность, потом умножай — и не забудь про предел 100 %.',m:{v,pv,pn,k}};}));
+
+// ======================= №8 · термодинамика (число, 1 балл) =======================
+// вещества из справочных данных КИМ: [винительный, родительный, c, именительный, дательный, «…ого бруска»]
+const MAT=[{a:'Алюминиевую',g:'алюминия',c:900,n:'Алюминиевая',d:'Алюминиевой',b:'алюминиевого',cy:'Алюминиевый'},{a:'Железную',g:'железа',c:460,n:'Железная',d:'Железной',b:'железного',cy:'Железный'},
+ {a:'Медную',g:'меди',c:380,n:'Медная',d:'Медной',b:'медного',cy:'Медный'},{a:'Свинцовую',g:'свинца',c:130,n:'Свинцовая',d:'Свинцовой',b:'свинцового',cy:'Свинцовый'},{a:'Чугунную',g:'чугуна',c:500,n:'Чугунная',d:'Чугунной',b:'чугунного',cy:'Чугунный'}];
+const NJ=()=>P([100,150,200,250,300,350,400,450,500,600,700,800,900]);
+
+add('cmt',8,5,'Нагревание и охлаждение: Q = cmΔt',()=>retry(()=>{
+ const v=P(['Q','m','t2','cool']),M=P(MAT),water=Math.random()<0.25,c=water?4200:M.c;
+ const mass=P([0.2,0.4,0.5,1,1.5,2,2.5,3,4,5,10]),t1=P([10,15,20,25,30,40]),dt=P([10,20,30,40,50,60,80,100,150,200]);
+ if(water&&t1+dt>100)return null;const t2=t1+dt,Q=c*mass*dt/1000;if(!isNice(Q,2)||Q<0.5||Q>3000)return null;
+ const cs=`По справочным данным <i>c</i> = ${c} Дж/(кг·К). Δ<i>t</i> = ${t2} − ${t1} = ${dt} °C. `,m={v,c,mass,t1,t2},thing=water?'вода':'деталь',thingG=water?'воды':'детали';
+ if(v==='Q')return {q:`${water?'Воду':M.a+' деталь'} массой ${f(mass)} кг нагрели от ${t1} °C до ${t2} °C. Какое количество теплоты получила ${thing}? Ответ дайте в кДж.`,ref:1,kind:'num',ans:Q,unit:'кДж',
+  sol:cs+`<i>Q</i> = <i>cm</i>Δ<i>t</i> = ${c}·${f(mass)}·${dt} = ${f(Q*1000)} Дж = ${f(Q)} кДж.`,trap:'В формуле стоит разность температур, а ответ просят в килоджоулях.',m};
+ if(v==='cool')return {q:`${water?'Вода':M.n+' деталь'} массой ${f(mass)} кг остыла от ${t2} °C до ${t1} °C. Какое количество теплоты она отдала окружающей среде? Ответ дайте в кДж.`,ref:1,kind:'num',ans:Q,unit:'кДж',
+  sol:cs+`<i>Q</i> = <i>cm</i>Δ<i>t</i> = ${c}·${f(mass)}·${dt} = ${f(Q*1000)} Дж = ${f(Q)} кДж.`,trap:'При остывании тело отдаёт столько же, сколько нужно на такой же нагрев: Δ<i>t</i> берём по модулю.',m};
+ if(v==='m')return {q:`${water?'Воду':M.a+' деталь'} нагрели от ${t1} °C до ${t2} °C, сообщив ей количество теплоты ${f(Q)} кДж. Чему равна масса ${thingG}? Ответ дайте в килограммах.`,ref:1,kind:'num',ans:mass,unit:'кг',
+  sol:cs+`<i>m</i> = <i>Q</i>/(<i>c</i>Δ<i>t</i>) = ${f(Q*1000)}/(${c}·${dt}) = ${f(mass)} кг.`,trap:'Килоджоули сначала переведи в джоули.',m};
+ return {q:`${water?'Воде':M.d+' детали'} массой ${f(mass)} кг, имевшей температуру ${t1} °C, сообщили количество теплоты ${f(Q)} кДж. Какой стала температура ${thingG}? Ответ дайте в градусах Цельсия.`,ref:1,kind:'num',ans:t2,unit:'°C',
+  sol:`По справочным данным <i>c</i> = ${c} Дж/(кг·К). Δ<i>t</i> = <i>Q</i>/(<i>cm</i>) = ${f(Q*1000)}/(${c}·${f(mass)}) = ${dt} °C. <i>t</i><sub>2</sub> = ${t1} + ${dt} = ${t2} °C.`,trap:'Формула даёт изменение температуры: к нему нужно прибавить начальную.',m};}));
+
+add('tq',8,5,'График t(Q): удельная теплоёмкость',vary(['c','c','m','Q'],v=>{
+ const ts=P([10,20,25,50]),qs=P([1,2,4,5,10,20,40,50]),a=R(0,2),j=R(2,4),i=R(2,5),t0=ts*a,te=ts*(a+j),Qe=qs*i,dt=te-t0;
+ let mass,c,M=null;
+ if(v==='m'){M=P(MAT);c=M.c;mass=Qe*1000/(c*dt);if(!isNice(mass,1)||mass<0.1||mass>20)return null;}
+ else{mass=P([0.2,0.25,0.5,1,2,4,5]);c=Qe*1000/(mass*dt);if(!isNice(c,0)||c<100||c>4500)return null;}
+ const xt=[],yt=[];for(let k=1;k<=i+1;k++)xt.push(qs*k);for(let k=1;k<=a+j+1;k++)yt.push(ts*k);
+ const fig=gr({xmax:qs*(i+1.5),ymax:ts*(a+j+1.4),xt,yt,xn:'Q, кДж',yn:'t, °C',paths:[{pts:[[0,t0],[Qe,te]]}],pts:[{x:0,y:t0,t:''},{x:Qe,y:te,t:''}]});
+ const read=`По графику: тело получило ${Qe} кДж, а его температура выросла от ${t0} °C до ${te} °C, то есть на ${dt} °C. `,m={v,qs,ts,a,j,i,mass,c};
+ if(v==='c')return {q:`На рисунке показан график зависимости температуры твёрдого тела массой ${f(mass)} кг от полученного им количества теплоты. Чему равна удельная теплоёмкость вещества тела? Ответ дайте в Дж/(кг·К).`,fig,kind:'num',ans:c,unit:'Дж/(кг·К)',
+  sol:read+`<i>c</i> = <i>Q</i>/(<i>m</i>Δ<i>t</i>) = ${Qe*1000}/(${f(mass)}·${dt}) = ${f(c)} Дж/(кг·К).`,trap:t0>0?'Нужна разность температур, а не координата точки: график начинается не из нуля.':'По оси отложены килоджоули — переведи их в джоули.',m};
+ if(v==='m')return {q:`На рисунке показан график зависимости температуры ${M.b} бруска от полученного им количества теплоты. Чему равна масса бруска? Ответ дайте в килограммах.`,fig,ref:1,kind:'num',ans:mass,unit:'кг',
+  sol:read+`По справочным данным <i>c</i> = ${c} Дж/(кг·К). <i>m</i> = <i>Q</i>/(<i>c</i>Δ<i>t</i>) = ${Qe*1000}/(${c}·${dt}) = ${f(mass)} кг.`,trap:'Теплоёмкость берётся из справочных данных, а Δ<i>t</i> и <i>Q</i> — по двум точкам графика.',m};
+ const D=P([ts,2*ts,3*ts,5*ts,100,150,200].filter(x=>x!==dt)),Qx=Qe*D/dt;if(!isNice(Qx,1))return null;m.D=D;
+ return {q:`На рисунке показан график зависимости температуры твёрдого тела от полученного им количества теплоты. Какое количество теплоты нужно сообщить этому телу, чтобы нагреть его на ${D} °C (тело остаётся твёрдым)? Ответ дайте в кДж.`,fig,kind:'num',ans:Qx,unit:'кДж',
+  sol:read+`Значит, на каждый градус нужно ${Qe}/${dt} = ${f(Qe/dt,4)} кДж. На ${D} °C: <i>Q</i> = ${Qe} · ${D}/${dt} = ${f(Qx)} кДж.`,trap:'Сначала найди, сколько теплоты идёт на один градус (по двум точкам графика), потом умножай.',m};}));
+
+add('plat',8,5,'График с площадкой: плавление и конденсация',()=>retry(()=>{
+ const v=P(['lam','lam','m','cc','L']),qs=P([10,20,25,50,100]),ts=P([20,40,50,100]),i1=R(1,3),i2=i1+R(2,4),i3=i2+R(1,3),a=R(0,1),jm=R(2,3),j3=jm+R(1,2),dQ=qs*(i2-i1);
+ const cool=v==='L',pts=cool?[[0,ts*(a+j3)],[qs*i1,ts*(a+jm)],[qs*i2,ts*(a+jm)],[qs*i3,ts*a]]:[[0,ts*a],[qs*i1,ts*(a+jm)],[qs*i2,ts*(a+jm)],[qs*i3,ts*(a+j3)]];
+ const xt=[],yt=[];for(let k=1;k<=i3;k++)xt.push(qs*k);for(let k=1;k<=a+j3;k++)yt.push(ts*k);
+ const fig=gr({xmax:qs*(i3+0.9),ymax:ts*(a+j3+0.7),xt,yt,xn:'Q, кДж',yn:'t, °C',xl:i3>7?(x=>(x/qs)%2?'':f(x)):undefined,paths:[{pts}]});
+ const m={v,qs,ts,i1,i2,i3,a,jm,j3},plat=`Горизонтальный участок — ${cool?'конденсация':'плавление'}: температура не меняется. Его длина по оси <i>Q</i>: ${qs*i2} − ${qs*i1} = ${dQ} кДж. `;
+ if(v==='lam'||v==='L'){const mass=P([0.1,0.2,0.25,0.5,1,2,4,5]),lam=dQ/mass;if(!isNice(lam,1)||lam<10||lam>3000)return null;m.mass=mass;
+  return {q:cool?`На рисунке показан график зависимости температуры вещества массой ${f(mass)} кг от количества теплоты, которое оно отдало. В начальный момент вещество было газообразным. Чему равна удельная теплота парообразования вещества? Ответ дайте в кДж/кг.`
+   :`На рисунке показан график зависимости температуры тела массой ${f(mass)} кг от полученного им количества теплоты. В начальный момент тело было твёрдым. Чему равна удельная теплота плавления вещества? Ответ дайте в кДж/кг.`,fig,kind:'num',ans:lam,unit:'кДж/кг',
+   sol:plat+`${cool?'<i>L</i>':'λ'} = <i>Q</i>/<i>m</i> = ${dQ}/${f(mass)} = ${f(lam)} кДж/кг.`,trap:'Бери длину площадки, а не координату её конца: левее площадки вещество ещё просто '+(cool?'остывало':'нагревалось')+'.',m};}
+ if(v==='m'){const lamG=P([25,50,60,80,100,120,150,200,250,400]),mass=dQ/lamG;if(!isNice(mass,2)||mass<0.05||mass>20)return null;m.lamG=lamG;
+  return {q:`На рисунке показан график зависимости температуры тела от полученного им количества теплоты. В начальный момент тело было твёрдым. Удельная теплота плавления вещества равна ${lamG} кДж/кг. Чему равна масса тела? Ответ дайте в килограммах.`,fig,kind:'num',ans:mass,unit:'кг',
+   sol:plat+`<i>m</i> = <i>Q</i>/λ = ${dQ}/${lamG} = ${f(mass)} кг.`,trap:'На плавление ушла только теплота, соответствующая площадке.',m};}
+ const r=((i3-i2)/(j3-jm))/(i1/jm);if(Math.abs(r-1)<1e-9)return null;const Rr=r>1?r:1/r;if(!isNice(Rr,2))return null;
+ return {q:`На рисунке показан график зависимости температуры тела от полученного им количества теплоты. В начальный момент тело было твёрдым. Во сколько раз удельная теплоёмкость вещества в жидком состоянии ${r>1?'больше':'меньше'}, чем в твёрдом?`,fig,kind:'num',ans:Rr,unit:'',
+  sol:`<i>c</i> = <i>Q</i>/(<i>m</i>Δ<i>t</i>), масса одна и та же. Твёрдое: ${qs*i1} кДж на ${ts*jm} °C. Жидкое: ${qs*(i3-i2)} кДж на ${ts*(j3-jm)} °C. <i>c</i><sub>ж</sub>/<i>c</i><sub>тв</sub> = (${qs*(i3-i2)}/${ts*(j3-jm)}) : (${qs*i1}/${ts*jm}) = ${fr(rnd(r,9))}.`,trap:'Чем круче идёт график <i>t</i>(<i>Q</i>), тем <b>меньше</b> теплоёмкость. Площадку в расчёт не включай.',m};}));
+
+add('law1',8,3,'Первый закон термодинамики: Q = ΔU + A',()=>retry(()=>{
+ const v=P(['ext','give','dUA','dUdown','two','QdU']),x=NJ(),y=NJ(),rule='<i>Q</i> = Δ<i>U</i> + <i>A</i>, где <i>A</i> — работа <b>газа</b>. ';if(x===y)return null;
+ if(v==='ext')return {q:`Идеальному газу сообщили количество теплоты ${x} Дж, и одновременно внешние силы совершили над ним работу ${y} Дж. На сколько увеличилась внутренняя энергия газа? Ответ дайте в джоулях.`,kind:'num',ans:x+y,unit:'Дж',
+  sol:rule+`Работу совершили над газом ⇒ <i>A</i> = −${y} Дж. Δ<i>U</i> = <i>Q</i> − <i>A</i> = ${x} + ${y} = ${x+y} Дж.`,trap:'Работа внешних сил и работа газа отличаются знаком: газ сжали — его энергия растёт.',m:{v,x,y}};
+ if(v==='give')return {q:`Внешние силы совершили над идеальным газом работу ${y} Дж, при этом газ отдал окружающей среде количество теплоты ${x} Дж. На сколько ${y>x?'увеличилась':'уменьшилась'} внутренняя энергия газа? Ответ дайте в джоулях.`,kind:'num',ans:Math.abs(y-x),unit:'Дж',
+  sol:rule+`Газ отдал теплоту ⇒ <i>Q</i> = −${x} Дж; работу совершили над газом ⇒ <i>A</i> = −${y} Дж. Δ<i>U</i> = <i>Q</i> − <i>A</i> = −${x} + ${y} = ${f(y-x)} Дж: энергия ${y>x?'увеличилась':'уменьшилась'} на ${Math.abs(y-x)} Дж.`,trap:'Расставь знаки у обоих слагаемых: «отдал» — минус, «над газом совершили» — тоже минус у работы газа.',m:{v,x,y}};
+ if(v==='dUA')return {q:`Внутренняя энергия идеального газа увеличилась на ${x} Дж, при этом газ совершил работу ${y} Дж. Какое количество теплоты получил газ? Ответ дайте в джоулях.`,kind:'num',ans:x+y,unit:'Дж',
+  sol:rule+`<i>Q</i> = ${x} + ${y} = ${x+y} Дж: теплота пошла и на нагрев газа, и на работу.`,trap:'Газ и нагрелся, и совершил работу — оба слагаемых складываются.',m:{v,x,y}};
+ if(v==='dUdown')return {q:`Внутренняя энергия идеального газа уменьшилась на ${x} Дж, при этом газ совершил работу ${y} Дж. Какое количество теплоты ${y>x?'получил':'отдал'} газ? Ответ дайте в джоулях.`,kind:'num',ans:Math.abs(y-x),unit:'Дж',
+  sol:rule+`Δ<i>U</i> = −${x} Дж, <i>A</i> = ${y} Дж. <i>Q</i> = −${x} + ${y} = ${f(y-x)} Дж: газ ${y>x?'получил':'отдал'} ${Math.abs(y-x)} Дж.`,trap:'«Уменьшилась на» — это Δ<i>U</i> со знаком минус.',m:{v,x,y}};
+ if(v==='two')return {q:`Идеальный газ в цилиндре сначала нагрели при закреплённом поршне, сообщив ему количество теплоты ${x} Дж. Затем поршень освободили, и газ расширился без теплообмена с окружающей средой, совершив работу ${y} Дж. На сколько ${x>y?'увеличилась':'уменьшилась'} внутренняя энергия газа за оба этапа? Ответ дайте в джоулях.`,kind:'num',ans:Math.abs(x-y),unit:'Дж',
+  sol:`1) Поршень закреплён ⇒ <i>A</i> = 0, Δ<i>U</i><sub>1</sub> = <i>Q</i> = ${x} Дж. 2) Теплообмена нет ⇒ <i>Q</i> = 0, Δ<i>U</i><sub>2</sub> = −<i>A</i> = −${y} Дж. Всего: Δ<i>U</i> = ${x} − ${y} = ${f(x-y)} Дж, то есть энергия ${x>y?'увеличилась':'уменьшилась'} на ${Math.abs(x-y)} Дж.`,trap:'Разбей на этапы: на первом нет работы, на втором нет теплоты.',m:{v,x,y}};
+ return {q:`Идеальный газ получил количество теплоты ${x} Дж, при этом его внутренняя энергия уменьшилась на ${y} Дж. Какую работу совершил газ? Ответ дайте в джоулях.`,kind:'num',ans:x+y,unit:'Дж',
+  sol:rule+`Δ<i>U</i> = −${y} Дж. <i>A</i> = <i>Q</i> − Δ<i>U</i> = ${x} + ${y} = ${x+y} Дж: на работу пошли и полученная теплота, и часть внутренней энергии.`,trap:'Энергия уменьшилась — значит, работа больше полученной теплоты, а не меньше.',m:{v,x,y}};}));
+
+const NUDT=[[1,20],[2,10],[2,20],[1,40],[4,10],[2,50],[4,25],[5,20],[1,100],[2,100],[4,50],[5,40],[4,100],[2,200]];
+add('adi',8,3,'Адиабатный процесс: A = −ΔU',()=>retry(()=>{
+ const v=P(['U12','Ucomp','mono','dT']),base='Теплообмена нет: <i>Q</i> = 0 ⇒ <i>A</i> = −Δ<i>U</i>. ';
+ if(v==='U12'){const U1=NJ()+P([0,300,600]),U2=NJ();if(U2>=U1)return null;
+  return {q:`Идеальный газ расширяется адиабатно, при этом его внутренняя энергия уменьшается от ${U1} Дж до ${U2} Дж. Какую работу совершает газ? Ответ дайте в джоулях.`,kind:'num',ans:U1-U2,unit:'Дж',
+   sol:base+`Δ<i>U</i> = ${U2} − ${U1} = −${U1-U2} Дж ⇒ <i>A</i> = ${U1-U2} Дж: газ совершает работу за счёт внутренней энергии.`,trap:'Работа равна <b>убыли</b> энергии, а не её конечному значению.',m:{v,U1,U2}};}
+ if(v==='Ucomp'){const U1=NJ(),A=NJ();
+  return {q:`Идеальный газ в теплоизолированном цилиндре сжали, совершив над ним работу ${A} Дж. До сжатия внутренняя энергия газа была равна ${U1} Дж. Чему стала равна внутренняя энергия газа? Ответ дайте в джоулях.`,kind:'num',ans:U1+A,unit:'Дж',
+   sol:base+`Работа газа <i>A</i> = −${A} Дж (сжимали его) ⇒ Δ<i>U</i> = +${A} Дж. <i>U</i><sub>2</sub> = ${U1} + ${A} = ${U1+A} Дж.`,trap:'При адиабатном сжатии вся работа внешних сил идёт на рост внутренней энергии.',m:{v,U1,A}};}
+ const [nu,dT]=P(NUDT),A=rnd(1.5*8.31*nu*dT,2);
+ if(v==='mono')return {q:`${f(nu)} моль одноатомного идеального газа адиабатно расширяется, при этом температура газа уменьшается на ${dT} К. Какую работу совершает газ? Ответ дайте в джоулях.`,ref:1,kind:'num',ans:A,unit:'Дж',
+  sol:base+`Для одноатомного газа Δ<i>U</i> = (3/2)ν<i>R</i>Δ<i>T</i> = 1,5·${f(nu)}·8,31·(−${dT}) = −${f(A)} Дж. <i>A</i> = ${f(A)} Дж.`,trap:'Не забудь множитель 3/2: работа равна изменению внутренней энергии, а не ν<i>R</i>Δ<i>T</i>.',m:{v,nu,dT}};
+ return {q:`Над ${f(nu)} моль одноатомного идеального газа в теплоизолированном цилиндре внешние силы совершили работу ${f(A)} Дж. На сколько кельвинов повысилась температура газа?`,ref:1,kind:'num',ans:dT,unit:'К',
+  sol:base+`Работа внешних сил пошла на внутреннюю энергию: Δ<i>U</i> = ${f(A)} Дж = (3/2)ν<i>R</i>Δ<i>T</i>. Δ<i>T</i> = ${f(A)}/(1,5·${f(nu)}·8,31) = ${dT} К.`,trap:'Для одноатомного газа Δ<i>U</i> = (3/2)ν<i>R</i>Δ<i>T</i> — с множителем 3/2.',m:{v,nu,A}};}));
+
+add('eng',8,4,'Тепловая машина: КПД, работа, теплота',()=>retry(()=>{
+ const v=P(['eta','etaA','A','Qx','N']),eta=P([10,20,25,30,40,50,60]),Qn=P([200,250,300,400,500,600,800,1000,1200]),A=Qn*eta/100,Qx=Qn-A;if(!isNice(A,0))return null;
+ const m={v,eta,Qn};
+ if(v==='eta')return {q:`Рабочее тело тепловой машины за цикл получает от нагревателя количество теплоты ${Qn} Дж и отдаёт холодильнику количество теплоты ${Qx} Дж. Чему равен КПД тепловой машины? Ответ дайте в процентах.`,kind:'num',ans:eta,unit:'%',
+  sol:`Работа за цикл: <i>A</i> = <i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub> = ${Qn} − ${Qx} = ${A} Дж. η = <i>A</i>/<i>Q</i><sub>н</sub> = ${A}/${Qn} = ${f(eta/100)}, то есть ${eta} %.`,trap:'В знаменателе — теплота от нагревателя. <i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub> — это не КПД, а доля потерь.',m};
+ if(v==='etaA')return {q:`Тепловая машина за цикл совершает работу ${A} Дж и отдаёт холодильнику количество теплоты ${Qx} Дж. Чему равен КПД тепловой машины? Ответ дайте в процентах.`,kind:'num',ans:eta,unit:'%',
+  sol:`От нагревателя получено <i>Q</i><sub>н</sub> = <i>A</i> + <i>Q</i><sub>х</sub> = ${A} + ${Qx} = ${Qn} Дж. η = <i>A</i>/<i>Q</i><sub>н</sub> = ${A}/${Qn} = ${f(eta/100)}, то есть ${eta} %.`,trap:'Делить работу нужно на теплоту от нагревателя, а её сначала надо найти.',m};
+ if(v==='A')return {q:`КПД тепловой машины равен ${eta} %. За цикл рабочее тело отдаёт холодильнику количество теплоты ${Qx} Дж. Какую работу совершает машина за цикл? Ответ дайте в джоулях.`,kind:'num',ans:A,unit:'Дж',
+  sol:`η = 1 − <i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub> ⇒ <i>Q</i><sub>н</sub> = <i>Q</i><sub>х</sub>/(1 − η) = ${Qx}/${f(1-eta/100)} = ${Qn} Дж. <i>A</i> = <i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub> = ${Qn} − ${Qx} = ${A} Дж.`,trap:'η·<i>Q</i><sub>х</sub> — это не работа: КПД считается от теплоты нагревателя.',m};
+ if(v==='Qx')return {q:`КПД тепловой машины равен ${eta} %. За цикл машина совершает работу ${A} Дж. Какое количество теплоты рабочее тело отдаёт за цикл холодильнику? Ответ дайте в джоулях.`,kind:'num',ans:Qx,unit:'Дж',
+  sol:`<i>Q</i><sub>н</sub> = <i>A</i>/η = ${A}/${f(eta/100)} = ${Qn} Дж. <i>Q</i><sub>х</sub> = <i>Q</i><sub>н</sub> − <i>A</i> = ${Qn} − ${A} = ${Qx} Дж.`,trap:'<i>A</i>/η — это теплота от нагревателя, а не от холодильника: нужен ещё один шаг.',m};
+ const n=P([5,10,20,50]),At=A*n/1000;if(!isNice(At,2))return null;m.n=n;
+ return {q:`КПД тепловой машины равен ${eta} %. За один цикл рабочее тело получает от нагревателя количество теплоты ${Qn} Дж. Какую работу совершит машина за ${n} циклов? Ответ дайте в кДж.`,kind:'num',ans:At,unit:'кДж',
+  sol:`За цикл: <i>A</i> = η<i>Q</i><sub>н</sub> = ${f(eta/100)}·${Qn} = ${A} Дж. За ${n} циклов: ${A}·${n} = ${A*n} Дж = ${f(At)} кДж.`,trap:'Проценты переведи в доли, а ответ — в килоджоули.',m};}));
+
+const CARN=[[500,300],[600,300],[400,300],[500,400],[600,450],[750,300],[1000,300],[600,360],[500,350],[1200,300],[400,320],[800,400],[900,450],[450,360]];
+add('car',8,4,'Идеальная тепловая машина (цикл Карно)',()=>retry(()=>{
+ const v=P(['etaC','A','TxC','TnC','Qn']),[Tn,Tx]=P(CARN),eta=rnd(100*(1-Tx/Tn));if(!isNice(eta,0))return null;
+ const kel=`В кельвинах: <i>T</i><sub>н</sub> = ${Tn} К, <i>T</i><sub>х</sub> = ${Tx} К. `,m={v,Tn,Tx};
+ if(v==='etaC')return {q:`Температура нагревателя идеальной тепловой машины равна ${tC(Tn)}, температура холодильника равна ${tC(Tx)}. Чему равен КПД машины? Ответ дайте в процентах.`,kind:'num',ans:eta,unit:'%',
+  sol:kel+`η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub> = 1 − ${Tx}/${Tn} = ${f(eta/100)}, то есть ${eta} %.`,trap:'В формулу Карно подставляют кельвины. В градусах Цельсия ответ получится неверным.',m};
+ if(v==='A'){const Qn=P([200,300,400,500,600,800,1000,1200,1500,2000]),A=Qn*eta/100;if(!isNice(A,0))return null;m.Qn=Qn;
+  return {q:`Идеальная тепловая машина с температурой нагревателя ${Tn} К и температурой холодильника ${Tx} К за цикл получает от нагревателя количество теплоты ${Qn} Дж. Какую работу она совершает за цикл? Ответ дайте в джоулях.`,kind:'num',ans:A,unit:'Дж',
+   sol:`η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub> = 1 − ${Tx}/${Tn} = ${f(eta/100)}. <i>A</i> = η<i>Q</i><sub>н</sub> = ${f(eta/100)}·${Qn} = ${A} Дж.`,trap:'Сначала КПД по температурам, потом работа как доля теплоты нагревателя.',m};}
+ if(v==='TxC')return {q:`КПД идеальной тепловой машины равен ${eta} %, температура нагревателя равна ${tC(Tn)}. Чему равна температура холодильника? Ответ дайте в градусах Цельсия.`,kind:'num',ans:Tx-273,unit:'°C',
+  sol:`<i>T</i><sub>н</sub> = ${Tn-273} + 273 = ${Tn} К. η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub> ⇒ <i>T</i><sub>х</sub> = <i>T</i><sub>н</sub>(1 − η) = ${Tn}·${f(1-eta/100)} = ${Tx} К = ${Tx-273} °C.`,trap:'Три шага: в кельвины → формула Карно → обратно в градусы Цельсия.',m};
+ if(v==='TnC')return {q:`КПД идеальной тепловой машины равен ${eta} %, температура холодильника равна ${tC(Tx)}. Чему равна температура нагревателя? Ответ дайте в градусах Цельсия.`,kind:'num',ans:Tn-273,unit:'°C',
+  sol:`<i>T</i><sub>х</sub> = ${Tx-273} + 273 = ${Tx} К. η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub> ⇒ <i>T</i><sub>н</sub> = <i>T</i><sub>х</sub>/(1 − η) = ${Tx}/${f(1-eta/100)} = ${Tn} К = ${Tn-273} °C.`,trap:'Температуру холодильника делят на (1 − η), а не на η.',m};
+ const Qx=P([150,200,300,400,450,600,900,1200]),Qn=Qx*Tn/Tx;if(!isNice(Qn,0))return null;m.Qx=Qx;
+ return {q:`Идеальная тепловая машина с температурой нагревателя ${Tn} К и температурой холодильника ${Tx} К за цикл отдаёт холодильнику количество теплоты ${Qx} Дж. Какое количество теплоты она получает за цикл от нагревателя? Ответ дайте в джоулях.`,kind:'num',ans:Qn,unit:'Дж',
+  sol:`η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub> = 1 − <i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub> ⇒ <i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub> = <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>. <i>Q</i><sub>н</sub> = ${Qx}·${Tn}/${Tx} = ${Qn} Дж.`,trap:'Для идеальной машины теплоты относятся как абсолютные температуры.',m};}));
+
+add('wpv',8,3,'Работа газа по графику p–V',vary(['isobar','slope','path','cycle','ratio','choice'],v=>{
+ const sys=P([0,0,1]),pu=sys?P([1,2]):P([50,100,200]),vu=sys?P([0.1,0.2,0.5]):P([1,2]),cf=sys?pu*vu*100:pu*vu,un=sys?'кДж':'Дж';
+ const G_=o=>gr(Object.assign({xt:[1,2,3,4,5],yt:[1,2,3,4],xmax:5.8,ymax:4.8,xn:sys?'V, м³':'V, л',yn:sys?'p, 10⁵ Па':'p, кПа',xl:k=>f(k*vu),yl:k=>f(k*pu)},o));
+ const base=`Работа газа — площадь под графиком в осях <i>p</i>–<i>V</i>${sys?' (10<sup>5</sup> Па · м<sup>3</sup> = 100 кДж)':' (кПа · л = Дж)'}. `,pp=k=>f(k*pu)+(sys?'·10<sup>5</sup> Па':' кПа'),vv=k=>f(k*vu)+(sys?' м<sup>3</sup>':' л');
+ const trA=sys?'На оси давления стоит множитель 10<sup>5</sup> — не потеряй его.':'Берётся изменение объёма, а не конечный объём.',ask=exp=>exp?'Какую работу совершил газ в этом процессе?':'Какую работу совершили над газом внешние силы в этом процессе?';
+ const lab=(pts,off=0)=>pts.map((p,i)=>({x:p[0],y:p[1],t:String(i+1+off)}));
+ if(v==='isobar'){const p=R(1,4),V1=R(1,5),V2=R(1,5);if(V1===V2)return null;const A=rnd(p*Math.abs(V2-V1)*cf),pts=[[V1,p],[V2,p]];
+  return {q:`На рисунке показан процесс 1–2, происходящий с идеальным газом. ${ask(V2>V1)} Ответ дайте в ${un}.`,fig:G_({paths:[{pts,arr:1}],pts:lab(pts)}),kind:'num',ans:A,unit:un,
+   sol:base+`Давление постоянно: <i>A</i> = <i>p</i>|Δ<i>V</i>| = ${pp(p)} · ${vv(Math.abs(V2-V1))} = ${f(A)} ${un}.${V2<V1?' Газ сжимают: работа газа отрицательна, а работа внешних сил положительна.':''}`,trap:trA,m:{v,sys,pu,vu,pts}};}
+ if(v==='slope'){const p1=R(1,4),p2=R(1,4),V1=R(1,5),V2=R(1,5);if(V1===V2||p1===p2)return null;const A=rnd((p1+p2)/2*Math.abs(V2-V1)*cf),pts=[[V1,p1],[V2,p2]];if(!isNice(A,2))return null;
+  return {q:`На рисунке показан процесс 1–2, происходящий с идеальным газом. ${ask(V2>V1)} Ответ дайте в ${un}.`,fig:G_({paths:[{pts,arr:1}],pts:lab(pts)}),kind:'num',ans:A,unit:un,
+   sol:base+`Под наклонным отрезком — трапеция: <i>A</i> = (<i>p</i><sub>1</sub> + <i>p</i><sub>2</sub>)/2 · |Δ<i>V</i>| = (${pp(p1)} + ${pp(p2)})/2 · ${vv(Math.abs(V2-V1))} = ${f(A)} ${un}.`,trap:'Давление меняется — бери среднее давление (площадь трапеции), а не начальное и не конечное.',m:{v,sys,pu,vu,pts}};}
+ if(v==='path'){const V1=R(1,5),V2=R(1,5),p1=R(1,4),p2=R(1,4);if(V1===V2||p1===p2)return null;const first=P(['p','V']),pts=first==='p'?[[V1,p1],[V2,p1],[V2,p2]]:[[V1,p1],[V1,p2],[V2,p2]],pi=first==='p'?p1:p2,A=rnd(pi*Math.abs(V2-V1)*cf);
+  return {q:`На рисунке показан процесс 1–2–3, происходящий с идеальным газом. ${ask(V2>V1).replace('в этом процессе','за весь процесс 1–2–3')} Ответ дайте в ${un}.`,fig:G_({paths:[{pts,arr:1}],pts:lab(pts)}),kind:'num',ans:A,unit:un,
+   sol:base+`На вертикальном участке объём не меняется — работа равна нулю. На горизонтальном: <i>A</i> = <i>p</i>|Δ<i>V</i>| = ${pp(pi)} · ${vv(Math.abs(V2-V1))} = ${f(A)} ${un}.`,trap:'На изохоре работы нет, сколько бы ни менялось давление. Давление бери то, при котором менялся объём.',m:{v,sys,pu,vu,pts}};}
+ if(v==='cycle'){const V1=R(1,3),V2=V1+R(1,3),p1=R(1,3),p2=p1+R(1,2);if(V2>5||p2>4)return null;const sh=P(['rect','triA','triB']),cw=Math.random()<0.6;
+  let pts=sh==='rect'?[[V1,p1],[V1,p2],[V2,p2],[V2,p1]]:sh==='triA'?[[V1,p1],[V1,p2],[V2,p1]]:[[V1,p2],[V2,p2],[V2,p1]];if(!cw)pts=[pts[0]].concat(pts.slice(1).reverse());
+  const A=rnd((sh==='rect'?1:0.5)*(p2-p1)*(V2-V1)*cf);if(!isNice(A,2))return null;const nm=pts.map((_,i)=>i+1).join('–')+'–1';
+  return {q:`На рисунке показан цикл ${nm}, совершаемый идеальным газом. ${cw?'Какую работу совершает газ за цикл?':'Какую работу совершают над газом внешние силы за цикл?'} Ответ дайте в ${un}.`,fig:G_({paths:[{pts,close:1,arr:1}],pts:lab(pts)}),kind:'num',ans:A,unit:un,
+   sol:`Работа за цикл равна площади фигуры внутри цикла в осях <i>p</i>–<i>V</i>${sys?' (10<sup>5</sup> Па · м<sup>3</sup> = 100 кДж)':' (кПа · л = Дж)'}. ${sh==='rect'?'Прямоугольник':'Прямоугольный треугольник'}: ${sh==='rect'?'':'½ · '}(${pp(p2)} − ${pp(p1)}) · (${vv(V2)} − ${vv(V1)}) = ${f(A)} ${un}. Обход ${cw?'по часовой стрелке — работа газа положительна':'против часовой стрелки — работа газа отрицательна, положительную работу совершают внешние силы'}.`,trap:'За цикл считается площадь <b>внутри</b> фигуры, а не под верхней стороной.',m:{v,sys,pu,vu,pts,sh}};}
+ if(v==='ratio'){const pa=R(1,4),pb=R(1,4),a1=R(1,4),a2=a1+R(1,3),b1=R(1,4),b2=b1+R(1,3);if(pa===pb||a2>5||b2>5)return null;const r=pa*(a2-a1)/(pb*(b2-b1));if(Math.abs(r-1)<1e-9)return null;const Rr=r>1?r:1/r;if(!isNice(Rr,2))return null;
+  const pts=[[a1,pa],[a2,pa],[b1,pb],[b2,pb]];
+  return {q:`На рисунке показаны два процесса, происходящие с одним и тем же идеальным газом: 1–2 и 3–4. Во сколько раз работа газа в процессе 1–2 ${r>1?'больше':'меньше'}, чем в процессе 3–4?`,fig:G_({paths:[{pts:pts.slice(0,2),arr:1},{pts:pts.slice(2),arr:1}],pts:[{x:a1,y:pa,t:'1',d:[-11,-9]},{x:a2,y:pa,t:'2',d:[11,-9]},{x:b1,y:pb,t:'3',d:[-11,-9]},{x:b2,y:pb,t:'4',d:[11,-9]}]}),kind:'num',ans:Rr,unit:'',
+   sol:base+`<i>A</i><sub>12</sub> = ${pp(pa)} · ${vv(a2-a1)} = ${f(pa*(a2-a1)*cf)} ${un}; <i>A</i><sub>34</sub> = ${pp(pb)} · ${vv(b2-b1)} = ${f(pb*(b2-b1)*cf)} ${un}. Отношение: ${fr(rnd(r,9))}.`,trap:'Сравнивай площади под графиками: важны и давление, и изменение объёма.',m:{v,sys,pu,vu,pts}};}
+ const ps=SH([1,2,3,4]).slice(0,3),seg=ps.map(p=>{const a=R(1,4),b=a+R(1,3);return [a,b,p];});if(seg.some(s=>s[1]>5))return null;const W=seg.map(s=>s[2]*(s[1]-s[0])),mx=Math.max(...W);if(W.filter(x=>x===mx).length>1)return null;
+ const pts=[];seg.forEach(s=>pts.push([s[0],s[2]],[s[1],s[2]]));
+ return {q:'На рисунке показаны три процесса, происходящие с одним и тем же идеальным газом: 1–2, 3–4 и 5–6. В каком из них газ совершил наибольшую работу?',fig:G_({paths:seg.map(s=>({pts:[[s[0],s[2]],[s[1],s[2]]],arr:1})),pts:pts.map((p,i)=>({x:p[0],y:p[1],t:String(i+1),d:[i%2?11:-11,-9]}))}),kind:'choice',opts:['в процессе 1–2','в процессе 3–4','в процессе 5–6'],ans:String(W.indexOf(mx)+1),
+  sol:base+seg.map((s,i)=>`<i>A</i><sub>${2*i+1}${2*i+2}</sub> = ${pp(s[2])} · ${vv(s[1]-s[0])} = ${f(W[i]*cf)} ${un}`).join('; ')+'.',trap:'Наибольшая работа — не обязательно там, где больше давление или длиннее отрезок: сравнивай произведения.',m:{v,sys,pu,vu,pts}};}));
+
+add('isoq',8,3,'Изобара, одноатомный газ: A : ΔU : Q = 2 : 3 : 5',()=>retry(()=>{
+ const v=P(['QA','QU','AQ','UA','UQ','pdV','nuT']),A=P([40,60,80,100,120,160,200,240,300,400,600,800]),dU=1.5*A,Q=2.5*A;
+ const base='Изобарный процесс, одноатомный газ: <i>A</i> = <i>p</i>Δ<i>V</i> = ν<i>R</i>Δ<i>T</i>, Δ<i>U</i> = (3/2)ν<i>R</i>Δ<i>T</i> = 1,5<i>A</i>, <i>Q</i> = Δ<i>U</i> + <i>A</i> = 2,5<i>A</i>. ',tr='Соотношение <i>A</i> : Δ<i>U</i> : <i>Q</i> = 2 : 3 : 5 верно только для одноатомного газа и только на изобаре.';
+ if(v==='QA')return {q:`Одноатомному идеальному газу в изобарном процессе сообщили количество теплоты ${Q} Дж. Какую работу совершил газ? Ответ дайте в джоулях.`,kind:'num',ans:A,unit:'Дж',sol:base+`<i>A</i> = <i>Q</i>/2,5 = ${Q}/2,5 = ${A} Дж.`,trap:tr,m:{v,x:Q}};
+ if(v==='QU')return {q:`Одноатомному идеальному газу в изобарном процессе сообщили количество теплоты ${Q} Дж. На сколько увеличилась внутренняя энергия газа? Ответ дайте в джоулях.`,kind:'num',ans:dU,unit:'Дж',sol:base+`Δ<i>U</i> = (3/5)<i>Q</i> = 0,6·${Q} = ${dU} Дж.`,trap:tr,m:{v,x:Q}};
+ if(v==='AQ')return {q:`Одноатомный идеальный газ изобарно расширяется и совершает работу ${A} Дж. Какое количество теплоты получает при этом газ? Ответ дайте в джоулях.`,kind:'num',ans:Q,unit:'Дж',sol:base+`<i>Q</i> = 2,5·${A} = ${Q} Дж.`,trap:'Теплота идёт не только на работу, но и на рост внутренней энергии: <i>Q</i> больше <i>A</i>.',m:{v,x:A}};
+ if(v==='UA')return {q:`При изобарном нагревании внутренняя энергия одноатомного идеального газа увеличилась на ${dU} Дж. Какую работу совершил газ? Ответ дайте в джоулях.`,kind:'num',ans:A,unit:'Дж',sol:base+`<i>A</i> = Δ<i>U</i>/1,5 = ${dU}/1,5 = ${A} Дж.`,trap:tr,m:{v,x:dU}};
+ if(v==='UQ')return {q:`При изобарном нагревании внутренняя энергия одноатомного идеального газа увеличилась на ${dU} Дж. Какое количество теплоты получил газ? Ответ дайте в джоулях.`,kind:'num',ans:Q,unit:'Дж',sol:base+`<i>Q</i> = (5/3)Δ<i>U</i> = ${dU}·5/3 = ${Q} Дж.`,trap:tr,m:{v,x:dU}};
+ if(v==='pdV'){const p=P([50,100,150,200,300]),V1=P([1,2,3,4]),V2=V1+P([1,2,3,4]),Qp=2.5*p*(V2-V1);
+  return {q:`Одноатомный идеальный газ изобарно расширяется при давлении ${p} кПа от объёма ${V1} л до объёма ${V2} л. Какое количество теплоты получает при этом газ? Ответ дайте в джоулях.`,kind:'num',ans:Qp,unit:'Дж',sol:base+`<i>A</i> = <i>p</i>Δ<i>V</i> = ${p} кПа · ${V2-V1} л = ${p*(V2-V1)} Дж. <i>Q</i> = 2,5·${p*(V2-V1)} = ${f(Qp)} Дж.`,trap:'Работа — только часть ответа: ещё 1,5<i>A</i> уходит на внутреннюю энергию.',m:{v,p,V1,V2}};}
+ const [nu,dT]=P(NUDT),Qn=rnd(2.5*8.31*nu*dT,3);
+ return {q:`${f(nu)} моль одноатомного идеального газа изобарно нагревают на ${dT} К. Какое количество теплоты получает газ? Ответ дайте в джоулях.`,ref:1,kind:'num',ans:Qn,unit:'Дж',sol:base+`<i>Q</i> = (5/2)ν<i>R</i>Δ<i>T</i> = 2,5·${f(nu)}·8,31·${dT} = ${f(Qn)} Дж.`,trap:'На изобаре множитель 5/2, а не 3/2: часть теплоты уходит на работу.',m:{v,nu,dT}};}));
+
+add('melt',8,5,'Нагреть и расплавить: Q = cmΔt + λm',()=>retry(()=>{
+ const v=P(['pb','ice','steam','icew','cond','mpb','mice']);let q,q1,q2,s1,s2,mass,m;
+ const fin=(Q)=>`<i>Q</i> = ${f(q1)} + ${f(q2)} = ${f(q1+q2)} Дж = ${f(Q)} кДж.`;
+ if(v==='pb'||v==='mpb'){const t1=P([27,127,227]);mass=P([0.5,1,2,3,4,5,10]);q1=130*mass*(327-t1);q2=25000*mass;m={v,t1,mass};
+  const Q=(q1+q2)/1000;if(!isNice(Q,2))return null;
+  if(v==='mpb')return {q:`Куску свинца, взятому при температуре ${t1} °C, сообщили количество теплоты ${f(Q)} кДж. Этого как раз хватило, чтобы нагреть его до температуры плавления и полностью расплавить. Чему равна масса куска? Температура плавления свинца равна 327 °C. Ответ дайте в килограммах.`,ref:1,kind:'num',ans:mass,unit:'кг',
+   sol:`На 1 кг нужно: нагрев <i>c</i>Δ<i>t</i> = 130·${327-t1} = ${130*(327-t1)} Дж и плавление λ = 25 000 Дж, всего ${130*(327-t1)+25000} Дж. <i>m</i> = ${f(Q*1000)}/${130*(327-t1)+25000} = ${f(mass)} кг.`,trap:'Теплота идёт на два этапа — нагрев и плавление; делить нужно на сумму.',m};
+  q=`Какое количество теплоты необходимо, чтобы кусок свинца массой ${f(mass)} кг, взятый при температуре ${t1} °C, нагреть до температуры плавления и полностью расплавить? Температура плавления свинца равна 327 °C.`;s1=`Нагрев до 327 °C: <i>Q</i><sub>1</sub> = <i>cm</i>Δ<i>t</i> = 130·${f(mass)}·${327-t1} = ${f(q1)} Дж.`;s2=`Плавление: <i>Q</i><sub>2</sub> = λ<i>m</i> = 2,5·10<sup>4</sup>·${f(mass)} = ${f(q2)} Дж.`;}
+ else if(v==='ice'||v==='mice'){const t1=P([5,10,20,40]);mass=P([0.1,0.2,0.5,1,2,5]);q1=2100*mass*t1;q2=330000*mass;m={v,t1,mass};
+  const Q=(q1+q2)/1000;if(!isNice(Q,2))return null;
+  if(v==='mice')return {q:`Льду, взятому при температуре −${t1} °C, сообщили количество теплоты ${f(Q)} кДж. Этого как раз хватило, чтобы нагреть лёд до 0 °C и полностью расплавить. Чему равна масса льда? Ответ дайте в килограммах.`,ref:1,kind:'num',ans:mass,unit:'кг',
+   sol:`На 1 кг нужно: нагрев <i>c</i>Δ<i>t</i> = 2100·${t1} = ${2100*t1} Дж и плавление λ = 330 000 Дж, всего ${2100*t1+330000} Дж. <i>m</i> = ${f(Q*1000)}/${2100*t1+330000} = ${f(mass)} кг.`,trap:'Теплоёмкость льда (2100), а не воды; и не забудь нагрев до 0 °C.',m};
+  q=`Какое количество теплоты необходимо, чтобы лёд массой ${f(mass)} кг, взятый при температуре −${t1} °C, нагреть до 0 °C и полностью расплавить?`;s1=`Нагрев льда до 0 °C: <i>Q</i><sub>1</sub> = <i>cm</i>Δ<i>t</i> = 2100·${f(mass)}·${t1} = ${f(q1)} Дж.`;s2=`Плавление: <i>Q</i><sub>2</sub> = λ<i>m</i> = 3,3·10<sup>5</sup>·${f(mass)} = ${f(q2)} Дж.`;}
+ else if(v==='steam'){const t1=P([0,20,50,80]);mass=P([0.1,0.2,0.5,1,2]);q1=4200*mass*(100-t1);q2=2300000*mass;m={v,t1,mass};
+  q=`Какое количество теплоты необходимо, чтобы воду массой ${f(mass)} кг, взятую при температуре ${t1} °C, довести до кипения (100 °C) и полностью превратить в пар?`;s1=`Нагрев до 100 °C: <i>Q</i><sub>1</sub> = <i>cm</i>Δ<i>t</i> = 4200·${f(mass)}·${100-t1} = ${f(q1)} Дж.`;s2=`Парообразование: <i>Q</i><sub>2</sub> = <i>Lm</i> = 2,3·10<sup>6</sup>·${f(mass)} = ${f(q2)} Дж.`;}
+ else if(v==='icew'){const t2=P([10,20,50,100]);mass=P([0.1,0.2,0.5,1,2]);q1=330000*mass;q2=4200*mass*t2;m={v,t2,mass};
+  q=`Какое количество теплоты необходимо, чтобы лёд массой ${f(mass)} кг, взятый при температуре 0 °C, расплавить и получившуюся воду нагреть до ${t2} °C?`;s1=`Плавление: <i>Q</i><sub>1</sub> = λ<i>m</i> = 3,3·10<sup>5</sup>·${f(mass)} = ${f(q1)} Дж.`;s2=`Нагрев воды: <i>Q</i><sub>2</sub> = <i>cm</i>Δ<i>t</i> = 4200·${f(mass)}·${t2} = ${f(q2)} Дж.`;}
+ else{const t2=P([0,20,50,80]);mass=P([0.1,0.2,0.5,1,2]);q1=2300000*mass;q2=4200*mass*(100-t2);m={v,t2,mass};
+  q=`Какое количество теплоты выделится при конденсации водяного пара массой ${f(mass)} кг, взятого при температуре 100 °C, и остывании получившейся воды до ${t2} °C?`;s1=`Конденсация: <i>Q</i><sub>1</sub> = <i>Lm</i> = 2,3·10<sup>6</sup>·${f(mass)} = ${f(q1)} Дж.`;s2=`Остывание воды: <i>Q</i><sub>2</sub> = <i>cm</i>Δ<i>t</i> = 4200·${f(mass)}·${100-t2} = ${f(q2)} Дж.`;}
+ const Q=(q1+q2)/1000;if(!isNice(Q,2))return null;
+ return {q:q+' Ответ дайте в кДж.',ref:1,kind:'num',ans:Q,unit:'кДж',sol:'Два этапа. '+s1+' '+s2+' '+fin(Q),trap:'Два слагаемых, а не одно: и изменение температуры, и переход из одного состояния в другое.',m};}));
+
+SRC.bal='уравнение теплового баланса в №8 — с 2025 года (изменения КИМ ЕГЭ-2025, ФИПИ)';
+add('bal',8,5,'Уравнение теплового баланса',vary(['mix','mixm','metc','mett','ice'],v=>{
+ const cal='Теплоёмкостью калориметра и теплообменом с окружающей средой пренебречь.';
+ if(v==='mix'||v==='mixm'){const m1=P([0.5,1,1.5,2,3,4,5,6]),m2=P([0.5,1,1.5,2,3,4,5,6]),t1=P([60,70,80,90,100]),t2=P([10,15,20,25,30]);if(m1===m2)return null;const th=(m1*t1+m2*t2)/(m1+m2);if(!isNice(th,0))return null;
+  if(v==='mix')return {q:`В калориметр налили ${f(m2)} кг воды при температуре ${t2} °C и ${f(m1)} кг воды при температуре ${t1} °C. Какая температура установится в калориметре? ${cal} Ответ дайте в градусах Цельсия.`,kind:'num',ans:th,unit:'°C',
+   sol:`Горячая вода отдаёт столько же теплоты, сколько получает холодная: <i>cm</i><sub>1</sub>(${t1} − θ) = <i>cm</i><sub>2</sub>(θ − ${t2}). Отсюда θ = (${f(m1)}·${t1} + ${f(m2)}·${t2})/(${f(m1)} + ${f(m2)}) = ${f(th)} °C.`,trap:'Это не среднее арифметическое температур: массы разные, и ответ ближе к температуре той воды, которой больше.',m:{v,m1,m2,t1,t2}};
+  return {q:`В калориметр с водой массой ${f(m2)} кг при температуре ${t2} °C долили горячую воду при температуре ${t1} °C. После установления теплового равновесия температура воды стала равна ${f(th)} °C. Чему равна масса долитой горячей воды? ${cal} Ответ дайте в килограммах.`,kind:'num',ans:m1,unit:'кг',
+   sol:`Холодная вода получила <i>cm</i><sub>2</sub>(${f(th)} − ${t2}), горячая отдала <i>cm</i><sub>1</sub>(${t1} − ${f(th)}); удельная теплоёмкость сокращается. <i>m</i><sub>1</sub> = ${f(m2)}·${f(th-t2)}/${f(t1-th)} = ${f(m1)} кг.`,trap:'У каждой воды своя разность температур — с общей конечной температурой.',m:{v,m2,t1,t2,th}};}
+ if(v==='metc'||v==='mett'){const mw=P([0.1,0.2,0.25,0.4,0.5,1]),tw=P([10,15,20]),th=tw+P([2,3,4,5,6,8,10]),mm=P([0.1,0.2,0.3,0.4,0.5,1]),Qw=4200*mw*(th-tw);
+  if(v==='metc'){const tm=P([80,90,100,120,150,200]),c=Qw/(mm*(tm-th));if(!isNice(c,0)||c<100||c>1000)return null;
+   return {q:`Металлический цилиндр массой ${f(mm)} кг, нагретый до ${tm} °C, опустили в калориметр с водой массой ${f(mw)} кг при температуре ${tw} °C. После установления теплового равновесия температура воды стала равна ${th} °C. Чему равна удельная теплоёмкость металла? ${cal} Ответ дайте в Дж/(кг·К).`,ref:1,kind:'num',ans:c,unit:'Дж/(кг·К)',
+    sol:`Вода получила <i>Q</i> = 4200·${f(mw)}·(${th} − ${tw}) = ${f(Qw)} Дж. Столько же отдал цилиндр: <i>c</i>·${f(mm)}·(${tm} − ${th}) = ${f(Qw)}. <i>c</i> = ${f(Qw)}/(${f(mm)}·${tm-th}) = ${f(c)} Дж/(кг·К).`,trap:'Цилиндр остывает не до нуля, а до общей конечной температуры.',m:{v,mm,tm,mw,tw,th}};}
+  const M=P(MAT),tm=th+Qw/(M.c*mm);if(!isNice(tm,0)||tm>400||tm-th<20)return null;
+  return {q:`${M.cy} цилиндр массой ${f(mm)} кг, вынутый из печи, опустили в калориметр с водой массой ${f(mw)} кг при температуре ${tw} °C. После установления теплового равновесия температура воды стала равна ${th} °C. Какой была температура цилиндра перед погружением? ${cal} Ответ дайте в градусах Цельсия.`,ref:1,kind:'num',ans:tm,unit:'°C',
+   sol:`Вода получила <i>Q</i> = 4200·${f(mw)}·(${th} − ${tw}) = ${f(Qw)} Дж. Столько же отдал цилиндр: ${M.c}·${f(mm)}·(<i>t</i> − ${th}) = ${f(Qw)} ⇒ <i>t</i> − ${th} = ${f(tm-th)} °C, <i>t</i> = ${f(tm)} °C.`,trap:'Баланс даёт, на сколько остыл цилиндр; к этому нужно прибавить конечную температуру.',m:{v,c:M.c,mm,mw,tw,th}};}
+ const mw=P([0.5,0.55,1,1.1,2,2.2,3.3,5.5,11]),tw=P([5,10,11,15,20,22,25,30,33,40,44,50,55,66]),g=4200*mw*tw/330;if(!isNice(g,0)||g<5||g>3000)return null;
+ return {q:`В калориметр с водой массой ${f(mw)} кг при температуре ${tw} °C кладут лёд, имеющий температуру 0 °C. Какая масса льда растает к тому моменту, когда вода остынет до 0 °C? ${cal} Ответ дайте в граммах.`,ref:1,kind:'num',ans:g,unit:'г',
+  sol:`Вода, остывая до 0 °C, отдаёт <i>Q</i> = <i>cm</i>Δ<i>t</i> = 4200·${f(mw)}·${tw} = ${f(4200*mw*tw)} Дж. Вся эта теплота идёт на плавление льда: <i>m</i> = <i>Q</i>/λ = ${f(4200*mw*tw)}/(3,3·10<sup>5</sup>) = ${f(g/1000)} кг = ${f(g)} г.`,trap:'Лёд уже при 0 °C — греть его не нужно, вся теплота идёт на плавление. Ответ просят в граммах.',m:{v,mw,tw}};}));
+
+// ======================= №9 · анализ процессов (все верные из пяти, 2 балла) =======================
+// состояние газа в условных единицах (νR = 1): T = pV
+const st=(n,p,V)=>({n,p,V,T:p*V}); // без округления: сравнения ниже — с допуском
+const TN={V:['изохорное нагревание','изохорное охлаждение'],p:['изобарное расширение','изобарное сжатие'],T:['изотермическое расширение','изотермическое сжатие']};
+// участок: тип процесса и знаки — по правилам, без вычислений
+function segInfo(a,b,nm){const e=(x,y)=>Math.abs(x-y)<1e-9,type=e(a.V,b.V)?'V':e(a.p,b.p)?'p':e(a.T,b.T)?'T':'x';
+ const dV=sgn(rnd(b.V-a.V,9)),dT=sgn(rnd(b.T-a.T,9)),dp=sgn(rnd(b.p-a.p,9));
+ const Q=type==='V'?dT:(type==='p'||type==='T')?dV:(dT*dV>=0?(dT||dV):null);
+ return {a,b,nm,type,dV,dT,dp,Q,name:type==='x'?'':TN[type][(type==='V'?dT:dV)>0?0:1]};}
+function segSum(g){const A=g.dV>0?'<i>A</i> &gt; 0':g.dV<0?'<i>A</i> &lt; 0':'<i>A</i> = 0',U=g.dT>0?'Δ<i>U</i> &gt; 0':g.dT<0?'Δ<i>U</i> &lt; 0':'Δ<i>U</i> = 0',Q=g.Q>0?'<i>Q</i> &gt; 0 (получает)':g.Q<0?'<i>Q</i> &lt; 0 (отдаёт)':'<i>Q</i> = 0';
+ return `<b>${g.nm}</b> — ${g.name}: ${A}, ${U}, ${Q}.`;}
+// утверждения об участке изопроцесса; show — про какую величину спрашивать ('V' на p–T, 'p' на V–T)
+function isoStmts(g,si,show){const out=[],N=g.nm,pr=`В процессе ${N} `,S=(t,ok,k,c)=>out.push({t,ok,k:N+k,c:Object.assign({s:si},c)});
+ if(Math.random()<0.5)S(`Процесс ${N} — ${g.name}.`,true,'t',{y:'type',v:g.type,d:g.type==='V'?g.dT:g.dV});
+ else{const ot=P(['V','p','T'].filter(x=>x!==g.type)),di=P([0,1]);S(`Процесс ${N} — ${TN[ot][di]}.`,false,'t',{y:'type',v:ot,d:di?-1:1});}
+ {const d=P([1,-1,0]),real=show==='V'?g.dV:g.dp;S(pr+(show==='V'?'объём газа ':'давление газа ')+W3(d)+'.',d===real,'q',{y:'chg',q:show,d});}
+ {const d=P([1,-1,0]);S(pr+'внутренняя энергия газа '+W3(d)+'.',d===g.dT,'U',{y:'chg',q:'U',d});}
+ {const d=P([1,-1,0]);S(pr+(d>0?'газ совершает положительную работу.':d<0?'внешние силы совершают над газом положительную работу.':'газ не совершает работу.'),d===g.dV,'A',{y:'A',d});}
+ {const d=P([1,-1]);S(pr+(d>0?'газ получает количество теплоты.':'газ отдаёт количество теплоты.'),d===g.Q,'Q',{y:'Q',d});}
+ if(g.type==='V'&&g.dT>0)S(pr+'изменение внутренней энергии газа равно полученному им количеству теплоты.',true,'L',{y:'dU=Q'});
+ if(g.type==='T'&&g.dV>0)S(pr+'всё полученное газом количество теплоты идёт на совершение работы.',true,'L',{y:'Q=A'});
+ if(g.type==='p'&&g.dV>0){const w=P([0,1]);S(pr+(w?'всё полученное газом количество теплоты идёт на совершение работы.':'изменение внутренней энергии газа равно полученному им количеству теплоты.'),false,'L',{y:w?'Q=A':'dU=Q'});}
+ return out;}
+// сравнение величины в двух состояниях
+function cmpStmt(S,q){const LAB={V:['Объём газа','одинаков'],p:['Давление газа','одинаково'],n:['Концентрация молекул газа','одинакова']}[q],val=s=>q==='n'?1/s.V:s[q];
+ const [i,j]=SH(S.map((s,k)=>k)).slice(0,2),r=rnd(val(S[i])/val(S[j]),9),k='c'+q;
+ if(Math.abs(r-1)<1e-9)return Math.random()<0.5?{t:`${LAB[0]} в состояниях ${S[i].n} и ${S[j].n} ${LAB[1]}.`,ok:true,k,c:{y:'cmp',q,i,j,rel:0}}:{t:`${LAB[0]} в состоянии ${S[i].n} больше, чем в состоянии ${S[j].n}.`,ok:false,k,c:{y:'cmp',q,i,j,rel:1}};
+ const [bi,sj]=r>1?[i,j]:[j,i],Rr=r>1?r:rnd(1/r,6),big=S[bi].n,sm=S[sj].n,mode=P([0,0,1,2]);
+ if(mode===0&&isNice(Rr,2))return {t:`${LAB[0]} в состоянии ${big} ${raz(Rr)} больше, чем в состоянии ${sm}.`,ok:true,k,c:{y:'cmp',q,i:bi,j:sj,r:Rr}};
+ if(mode===1)return {t:`${LAB[0]} в состоянии ${sm} больше, чем в состоянии ${big}.`,ok:false,k,c:{y:'cmp',q,i:sj,j:bi,rel:1}};
+ if(mode===2){const w=P([2,3,4,1.5].filter(x=>Math.abs(x-Rr)>1e-9));return {t:`${LAB[0]} в состоянии ${big} ${raz(w)} больше, чем в состоянии ${sm}.`,ok:false,k,c:{y:'cmp',q,i:bi,j:sj,r:w}};}
+ return {t:`${LAB[0]} в состоянии ${big} больше, чем в состоянии ${sm}.`,ok:true,k,c:{y:'cmp',q,i:bi,j:sj,rel:1}};}
+// вершины цикла [T, y] с целыми координатами: лучи из начала координат, горизонтали, вертикали
+function cycPts(){return retry(()=>{const t=P(['tri1','tri2','ray2h','ray2v','rect']),I=x=>Math.abs(x-Math.round(x))<1e-9;let v;
+ if(t==='tri1'||t==='tri2'){const T1=R(1,3),y1=R(1,3),k=P([2,3,1.5]),T2=T1*k,y2=y1*k;v=t==='tri1'?[[T1,y1],[T2,y2],[T2,y1]]:[[T1,y1],[T2,y2],[T1,y2]];}
+ else if(t==='ray2h'){const s1=P([2,1,3,1.5]),s2=P([1,0.5,1/3,2/3,0.75]);if(s2>=s1)return null;const ya=R(1,3),yb=ya+R(1,3);v=[[ya/s1,ya],[yb/s1,yb],[yb/s2,yb],[ya/s2,ya]];}
+ else if(t==='ray2v'){const s1=P([2,1,3,1.5]),s2=P([1,0.5,1/3,2/3]);if(s2>=s1)return null;const T1=R(1,3),T2=T1+R(1,3);v=[[T1,s1*T1],[T2,s1*T2],[T2,s2*T2],[T1,s2*T1]];}
+ else{const T1=R(1,3),T2=T1+R(1,3),y1=R(1,3),y2=y1+R(1,2);v=[[T1,y1],[T1,y2],[T2,y2],[T2,y1]];}
+ v=v.map(c=>[rnd(c[0],9),rnd(c[1],9)]);if(!v.every(c=>I(c[0])&&I(c[1])&&c[0]>=1&&c[0]<=6&&c[1]>=1&&c[1]<=5))return null;
+ if(Math.random()<0.5)v.reverse();const r=R(0,v.length-1);return v.slice(r).concat(v.slice(0,r));},6000);}
+function cycleCard(ax){return retry(()=>{
+ const v=cycPts(),n=v.length,nm='ABCD'.slice(0,n).split(''),yl=ax==='pT'?'p':'V',oth=ax==='pT'?'V':'p';
+ const S=v.map((c,i)=>ax==='pT'?st(nm[i],c[1],c[0]/c[1]):st(nm[i],c[0]/c[1],c[1]));
+ const G=S.map((s,i)=>segInfo(s,S[(i+1)%n],s.n+S[(i+1)%n].n));if(G.some(g=>g.type==='x'))return null;
+ let pool=[];G.forEach((g,i)=>{pool=pool.concat(isoStmts(g,[i,(i+1)%n],oth));});
+ pool.push(cmpStmt(S,oth));if(ax==='VT')pool.push(cmpStmt(S,'n'));
+ const Ac=G.reduce((a,g)=>a+(g.type==='p'?g.a.p*(g.b.V-g.a.V):g.type==='T'?g.a.T*Math.log(g.b.V/g.a.V):0),0);
+ {const d=P([1,-1]);pool.push({t:d>0?'За цикл газ совершает положительную работу.':'За цикл внешние силы совершают над газом положительную работу.',ok:sgn(rnd(Ac,9))===d,k:'cyc',c:{y:'cyc',d}});}
+ const pk=pick5(pool);if(!pk)return null;
+ const mx=Math.max(...v.map(c=>c[0])),my=Math.max(...v.map(c=>c[1])),dash=[];
+ v.forEach((a,i)=>{const b=v[(i+1)%n];if(Math.abs(a[1]*b[0]-b[1]*a[0])<1e-9)dash.push([[0,0],a[0]<b[0]?a:b]);});
+ const fig=gr({xt:[...Array(mx)].map((_,i)=>i+1),yt:[...Array(my)].map((_,i)=>i+1),xmax:mx+0.9,ymax:my+0.8,xn:'T',yn:yl,xl:k=>U0(k,'T₀'),yl:k=>U0(k,yl+'₀'),dash,paths:[{pts:v,close:1,arr:1}],pts:v.map((c,i)=>({x:c[0],y:c[1],t:nm[i]}))});
+ return {q:`С одноатомным идеальным газом постоянной массы происходит циклический процесс ${nm.join('')+nm[0]}, показанный на рисунке в координатах <i>${yl}</i>–<i>T</i>. Выберите все верные утверждения.`,fig,kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:`В осях <i>${yl}</i>–<i>T</i> прямая через начало координат — ${ax==='pT'?'изохора':'изобара'}, горизонталь — ${ax==='pT'?'изобара':'изохора'}, вертикаль — изотерма. `+G.map(segSum).join(' ')+` ${ax==='pT'?'Объём ~ <i>T</i>/<i>p</i>':'Давление ~ <i>T</i>/<i>V</i>'}; в состояниях ${nm.join(', ')} он${ax==='pT'?'':'о'} относится как ${ratioStr(v.map(c=>[c[0],c[1]]))}. Знак работы за цикл — по сумме работ на участках.`,
+  trap:ax==='pT'?'В осях <i>p</i>–<i>T</i> прямая через начало координат — изохора, а не изобара: меняются и <i>p</i>, и <i>T</i>, постоянен объём. На изотерме Δ<i>U</i> = 0, но теплота и работа не равны нулю.':'В осях <i>V</i>–<i>T</i> прямая через начало координат — изобара, а не изохора. На изотерме Δ<i>U</i> = 0, но теплота и работа не равны нулю.',m:{ax,v}};},4000);}
+add('cpt',9,2,'Цикл на p–T: процессы, работа, теплота',()=>cycleCard('pT'));
+add('cvt',9,2,'Цикл на V–T: давление, работа, теплота',()=>cycleCard('VT'));
+
+const pv0=x=>(Math.abs(x-1)<1e-9?'':f(x))+'<i>p</i><sub>0</sub><i>V</i><sub>0</sub>';
+add('cpv',9,3,'Прямоугольный цикл на p–V',()=>retry(()=>{
+ const num=Math.random()<0.4,k=P([2,3,4]),mm=P([2,3,4]);if(num&&k*mm>8)return null;const cw=Math.random()<0.6;
+ let c=[[1,1],[1,k],[mm,k],[mm,1]];if(!cw)c=[c[0],c[3],c[2],c[1]];const r0=R(0,3);c=c.slice(r0).concat(c.slice(0,r0));
+ const p0=num?P([50,100,200]):1,V0=num?P([1,2,3]):1,Tmin=num?P([100,150,200,250,300]):1,un=p0*V0,Tmax=Tmin*k*mm;if(num&&Tmax>1200)return null;
+ const S=c.map((q,i)=>st(String(i+1),q[1],q[0])),G=S.map((s,i)=>segInfo(s,S[(i+1)%4],s.n+'–'+S[(i+1)%4].n)),en=x=>num?f(x*un)+' Дж':pv0(x),W=(k-1)*(mm-1),pool=[];
+ if(cw){const w=P([W,W,k*mm,(k-1)*mm,k*(mm-1)]);pool.push({t:`Работа газа за цикл равна ${en(w)}.`,ok:w===W,k:'W',c:{y:'W',val:w}});}
+ else pool.push(P([{t:`За цикл внешние силы совершают над газом работу ${en(W)}.`,ok:true,k:'W',c:{y:'W',val:-W}},{t:'За цикл газ совершает положительную работу.',ok:false,k:'W',c:{y:'Wsign',d:1}},{t:`Работа газа за цикл равна ${en(W)}.`,ok:false,k:'W',c:{y:'W',val:W}}]));
+ {const w=P([k*mm,k*mm,k+mm,Math.max(k,mm)]);pool.push({t:`Наибольшая температура газа в цикле ${raz(w)} больше наименьшей.`,ok:w===k*mm,k:'Tr',c:{y:'Tr',r:w}});}
+ if(num){const w=P([Tmin,Tmin,Tmax/k,Tmax/mm]);pool.push({t:`Наименьшая температура газа в цикле равна ${f(w)} К.`,ok:Math.abs(w-Tmin)<1e-9,k:'Tm',c:{y:'Tmin',val:w}});
+  const i=R(0,3),Ti=S[i].T*Tmin,w2=P([Ti,Ti,Ti*2,Tmax/2].filter(x=>isNice(x,0)));pool.push({t:`Температура газа в состоянии ${S[i].n} равна ${f(w2)} К.`,ok:Math.abs(w2-Ti)<1e-9,k:'Tat',c:{y:'Tat',i,val:w2}});}
+ G.forEach((g,i)=>{const si=[i,(i+1)%4],N=g.nm;
+  {const d=P([1,-1]);pool.push({t:`На участке ${N} газ ${d>0?'получает':'отдаёт'} количество теплоты.`,ok:d===g.Q,k:N+'Q',c:{y:'Q',s:si,d}});}
+  if(g.dV===0||Math.random()<0.35)pool.push({t:`На участке ${N} газ не совершает работу.`,ok:g.dV===0,k:N+'A',c:{y:'A',s:si,val:0}});
+  else{const A=g.a.p*(g.b.V-g.a.V),alt=(g.a.p===1?k:1)*(g.b.V-g.a.V),w=P([A,A,-A,alt]);pool.push({t:`На участке ${N} ${w>0?'газ совершает работу':'внешние силы совершают над газом работу'} ${en(Math.abs(w))}.`,ok:Math.abs(w-A)<1e-9,k:N+'A',c:{y:'A',s:si,val:w}});}
+  {const dU=1.5*(g.b.T-g.a.T),w=P([dU,dU,dU/1.5,-dU]);pool.push({t:`На участке ${N} внутренняя энергия газа ${w>0?'увеличивается':'уменьшается'} на ${en(Math.abs(w))}.`,ok:Math.abs(w-dU)<1e-9,k:N+'U',c:{y:'dU',s:si,val:w}});}});
+ {const i=c.findIndex(q=>q[0]===1&&q[1]===k),j=c.findIndex(q=>q[0]===mm&&q[1]===1);pool.push({t:`Температура газа в состояниях ${S[i].n} и ${S[j].n} одинакова.`,ok:k===mm,k:'Teq',c:{y:'Teq',i,j}});}
+ const pk=pick5(pool);if(!pk)return null;
+ const fig=num?gr({xt:[1,2,3,4,5],yt:[1,2,3,4],xmax:5.8,ymax:4.8,xn:'V, л',yn:'p, кПа',xl:x=>f(x*V0),yl:y=>f(y*p0),paths:[{pts:c,close:1,arr:1}],pts:c.map((q,i)=>({x:q[0],y:q[1],t:String(i+1)}))}):pvUnits({paths:[{pts:c,close:1,arr:1}],pts:c.map((q,i)=>({x:q[0],y:q[1],t:String(i+1)}))});
+ return {q:`С одноатомным идеальным газом постоянной массы происходит циклический процесс 1–2–3–4–1, показанный на рисунке.${num?` Наибольшая температура газа в цикле равна ${Tmax} К.`:''} Выберите все верные утверждения.`,fig,kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:`Вертикальные участки — изохоры: <i>A</i> = 0, <i>Q</i> = Δ<i>U</i>. Горизонтальные — изобары: <i>A</i> = <i>p</i>Δ<i>V</i>, <i>Q</i> = 2,5<i>A</i>. Для одноатомного газа Δ<i>U</i> = (3/2)Δ(<i>pV</i>). Температура ~ <i>pV</i>: в состояниях 1, 2, 3, 4 она относится как ${S.map(s=>f(s.T)).join(' : ')}${num?`, наименьшая равна ${Tmax}/${k*mm} = ${Tmin} К`:''}. Работа за цикл — площадь прямоугольника ${en(W)}; обход ${cw?'по часовой стрелке, работа газа положительна':'против часовой стрелки, работа газа отрицательна'}. `+G.map(segSum).join(' '),
+  trap:'За цикл считается площадь внутри фигуры. Изменение внутренней энергии — с множителем 3/2, а на изохоре работы нет.',m:{k,mm,c,num,p0,V0,Tmax}};}));
+
+// пересекаются ли отрезки (включая касание)
+const ori=(a,b,c)=>sgn((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]));
+const onS=(a,b,c)=>Math.min(a[0],b[0])<=c[0]&&c[0]<=Math.max(a[0],b[0])&&Math.min(a[1],b[1])<=c[1]&&c[1]<=Math.max(a[1],b[1]);
+function segX(a,b,c,d){const o1=ori(a,b,c),o2=ori(a,b,d),o3=ori(c,d,a),o4=ori(c,d,b);if(o1!==o2&&o3!==o4)return true;return (o1===0&&onS(a,b,c))||(o2===0&&onS(a,b,d))||(o3===0&&onS(c,d,a))||(o4===0&&onS(c,d,b));}
+// утверждение «величина изменилась в … раз»: верное значение real, правдоподобные неверные alts
+function ratS(pool,lab,gen,real,alts,k,cl){const nice=x=>x>0&&isNice(x>1?x:1/x,2);if(!nice(real))return;const w=P([real,real].concat(alts.filter(x=>nice(x)&&Math.abs(x-real)>1e-9)));pool.push({t:`${lab} ${chg(w,gen)}.`,ok:Math.abs(w-real)<1e-9,k,c:Object.assign({r:w},cl)});}
+const VKV='среднеквадратичная скорость теплового движения молекул газа';
+function speedS(pool,pre,rT,k,cl){if(Math.abs(rT-1)<1e-9)return;const sv=Math.sqrt(rT);if(isNice(sv>1?sv:1/sv,2))ratS(pool,pre+VKV,'f',sv,[rT],k,cl);else if(isNice(rT>1?rT:1/rT,2))pool.push({t:`${pre}${VKV} ${chg(rT,'f')}.`,ok:false,k,c:Object.assign({r:rT},cl)});}
+
+add('two',9,2,'Два процесса на p–V: во сколько раз изменились величины',()=>retry(()=>{
+ const pt=()=>[R(1,5),R(1,4)],a=pt(),b=pt(),c=pt(),d=pt(),same=(x,y)=>x[0]===y[0]&&x[1]===y[1];
+ if(b[0]<a[0]||d[0]<c[0]||same(a,b)||same(c,d)||segX(a,b,c,d))return null;
+ const pu=P([50,100]),vu=P([1,2]),cf=pu*vu,S=[a,b,c,d].map((q,i)=>st(String(i+1),q[1],q[0])),PR=[[0,1,'1–2'],[2,3,'3–4']],pool=[],sols=[];
+ const A=PR.map(([i,j])=>(S[i].p+S[j].p)/2*(S[j].V-S[i].V));
+ PR.forEach(([i,j,N],pi)=>{const s1=S[i],s2=S[j],rV=s2.V/s1.V,rp=s2.p/s1.p,rT=s2.T/s1.T,pre=`В процессе ${N} `;
+  if(Math.abs(rV-1)>1e-9){const q=P(['V','n','rho']);
+   if(q==='V')ratS(pool,pre+'объём газа','m',rV,[rT,1/rV],N+'V',{y:'r',pr:pi,q});
+   if(q==='n')ratS(pool,pre+'концентрация молекул газа','f',1/rV,[rV,rT],N+'V',{y:'r',pr:pi,q});
+   if(q==='rho')ratS(pool,pre+'плотность газа','f',1/rV,[rV,1/rT],N+'V',{y:'r',pr:pi,q});}
+  {const q=P(['T','U']);ratS(pool,pre+(q==='T'?'абсолютная температура газа':'внутренняя энергия газа'),'f',rT,[rV,rp,1/rT,1].filter(x=>Math.abs(x-rT)>1e-9),N+'T',{y:'r',pr:pi,q});}
+  speedS(pool,pre,rT,N+'v',{y:'r',pr:pi,q:'v'});
+  sols.push(`<b>${N}</b>: <i>V</i> ${f(s1.V*vu)} → ${f(s2.V*vu)} л; <i>pV</i> ${f(s1.T*cf)} → ${f(s2.T*cf)} Дж, значит температура и внутренняя энергия ${Math.abs(rT-1)<1e-9?'в начале и в конце одинаковы':rT>1?'выросли':'уменьшились'}; работа газа ${f(A[pi]*cf)} Дж.`);});
+ {const mode=P([0,1,2]);
+  if(mode===0){const rel=P([1,-1,0]);pool.push({t:rel===0?'Работа газа в процессах 1–2 и 3–4 одинакова.':`Работа газа в процессе 1–2 ${rel>0?'больше':'меньше'}, чем в процессе 3–4.`,ok:sgn(rnd(A[0]-A[1],9))===rel,k:'Ac',c:{y:'Acmp',rel}});}
+  else{const pi=mode-1,[i,j,N]=PR[pi],dV=S[j].V-S[i].V;
+   if(dV===0)pool.push(P([{t:`В процессе ${N} газ не совершает работу.`,ok:true,k:'A'+pi,c:{y:'Aval',pr:pi,val:0}},{t:`В процессе ${N} газ совершает положительную работу.`,ok:false,k:'A'+pi,c:{y:'Apos',pr:pi}}]));
+   else{const w=P([A[pi],A[pi],S[j].p*dV,S[i].p*dV,S[j].T-S[i].T].filter(x=>x>0));pool.push({t:`В процессе ${N} газ совершает работу ${f(w*cf)} Дж.`,ok:Math.abs(w-A[pi])<1e-9,k:'A'+pi,c:{y:'Aval',pr:pi,val:w*cf}});}}}
+ const pk=pick5(pool);if(!pk)return null;
+ const dl=(p,q)=>{const L=Math.hypot(p[0]-q[0],p[1]-q[1])||1;return [(p[0]-q[0])/L*13,-(p[1]-q[1])/L*13];};
+ const fig=gr({xt:[1,2,3,4,5],yt:[1,2,3,4],xmax:5.8,ymax:4.8,xn:'V, л',yn:'p, кПа',xl:x=>f(x*vu),yl:y=>f(y*pu),paths:[{pts:[a,b],arr:1},{pts:[c,d],arr:1}],
+  pts:[{x:a[0],y:a[1],t:'1',d:dl(a,b)},{x:b[0],y:b[1],t:'2',d:dl(b,a)},{x:c[0],y:c[1],t:'3',d:dl(c,d)},{x:d[0],y:d[1],t:'4',d:dl(d,c)}]});
+ return {q:'На рисунке показаны два процесса, происходящие с одной и той же порцией идеального газа: 1–2 и 3–4. Выберите все верные утверждения.',fig,kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:'Масса газа постоянна: <i>T</i> ~ <i>pV</i>, внутренняя энергия ~ <i>T</i>, концентрация и плотность ~ 1/<i>V</i>, скорость молекул ~ √<i>T</i>, работа — площадь под графиком (кПа · л = Дж). '+sols.join(' '),
+  trap:'Температуру определяет произведение <i>pV</i>, а не одно давление. Концентрация и плотность меняются обратно объёму, скорость молекул — как корень из температуры.',m:{pts:[a,b,c,d],pu,vu}};}));
+
+add('p123',9,3,'Переход 1–2–3: изобара и изохора',()=>retry(()=>{
+ const V1=R(1,5),p1=R(1,4),first=P(['p','V']);let c;
+ if(first==='p'){const V2=R(1,5),p3=R(1,4);if(V2===V1||p3===p1)return null;c=[[V1,p1],[V2,p1],[V2,p3]];}else{const p2=R(1,4),V3=R(1,5);if(p2===p1||V3===V1)return null;c=[[V1,p1],[V1,p2],[V3,p2]];}
+ const S=c.map((q,i)=>st(String(i+1),q[1],q[0])),G=[segInfo(S[0],S[1],'1–2'),segInfo(S[1],S[2],'2–3')],pool=[],op=first==='p'?S[2].p:S[0].p;
+ G.forEach((g,i)=>{const rT=g.b.T/g.a.T,N=g.nm,si=[i,i+1],pre=`На участке ${N} `;
+  ratS(pool,pre+'абсолютная температура газа','f',rT,[1/rT,rT*rT,1],N+'T',{y:'r',s:si,q:'T'});
+  speedS(pool,pre,rT,N+'v',{y:'r',s:si,q:'v'});
+  {const d=P([1,-1]);pool.push({t:`${pre}газ ${d>0?'получает':'отдаёт'} количество теплоты.`,ok:d===g.Q,k:N+'Q',c:{y:'Q',s:si,d}});}
+  if(g.type==='V')pool.push(P([{t:`${pre}газ не совершает работу.`,ok:true,k:N+'A',c:{y:'A',s:si,val:0}},{t:`${pre}газ совершает положительную работу.`,ok:false,k:N+'A',c:{y:'Apos',s:si}}]));
+  else{const A=g.a.p*(g.b.V-g.a.V),w=P([A,A,-A,op*(g.b.V-g.a.V)]);pool.push({t:`${pre}${w>0?'газ совершает работу':'внешние силы совершают над газом работу'} ${pv0(Math.abs(w))}.`,ok:Math.abs(w-A)<1e-9,k:N+'A',c:{y:'A',s:si,val:w}});}});
+ {const r=rnd(S[2].T/S[0].T,9),Rr=r>1?r:rnd(1/r,6);
+  if(Math.abs(r-1)<1e-9)pool.push(P([{t:'Температура газа в состояниях 1 и 3 одинакова.',ok:true,k:'T13',c:{y:'cmp13',rel:0}},{t:'Внутренняя энергия газа в состоянии 3 больше, чем в состоянии 1.',ok:false,k:'T13',c:{y:'cmp13',rel:1}}]));
+  else{const mode=P([0,1,2]);
+   if(mode===0&&isNice(Rr,2))pool.push({t:`В состоянии 3 температура газа ${raz(Rr)} ${r>1?'выше':'ниже'}, чем в состоянии 1.`,ok:true,k:'T13',c:{y:'r13',r}});
+   else if(mode===1){const rel=P([1,-1]);pool.push({t:`Внутренняя энергия газа в состоянии 3 ${rel>0?'больше':'меньше'}, чем в состоянии 1.`,ok:sgn(r-1)===rel,k:'T13',c:{y:'cmp13',rel}});}
+   else pool.push({t:'Температура газа в состояниях 1 и 3 одинакова.',ok:false,k:'T13',c:{y:'cmp13',rel:0}});}}
+ const pk=pick5(pool);if(!pk)return null;
+ return {q:'На рисунке показан переход одноатомного идеального газа постоянной массы из состояния 1 в состояние 3 через состояние 2. Выберите все верные утверждения.',fig:pvUnits({paths:[{pts:c,arr:1}],pts:c.map((q,i)=>({x:q[0],y:q[1],t:String(i+1)}))}),kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:`<i>T</i> ~ <i>pV</i>: в состояниях 1, 2, 3 температура относится как ${S.map(s=>f(s.T)).join(' : ')}. Скорость молекул ~ √<i>T</i>. `+G.map(g=>segSum(g)+(g.type==='p'?` Работа газа: <i>p</i>Δ<i>V</i> = ${f(g.a.p*(g.b.V-g.a.V))}<i>p</i><sub>0</sub><i>V</i><sub>0</sub>.`:'')).join(' '),
+  trap:'На вертикальном участке работы нет. На горизонтальном в работу входит то давление, при котором менялся объём. Для скорости молекул — корень из отношения температур.',m:{c}};}));
+
+add('ice',9,5,'Лёд и вода: график температуры от времени',()=>retry(()=>{
+ const first=P(['heat','cool']),tn=()=>-P([20,30,40]),tp=()=>P([20,30,40,60]),ys=first==='heat'?[tn(),0,0,tp(),0,0,tn()]:[tp(),0,0,tn(),0,0,tp()];
+ const xs=[0.6];[R(1,2),R(2,3),R(1,2),R(1,2),R(2,3),R(1,2)].forEach(d=>xs.push(rnd(xs[xs.length-1]+d*0.8,2)));
+ const heat=first==='heat'?[1,1,1,-1,-1,-1]:[-1,-1,-1,1,1,1],cont=i=>ys[i]===0&&ys[i+1]===0?'mix':(ys[i]+ys[i+1]<0?'ice':'water');
+ const CN={ice:'только лёд',water:'только вода',mix:'смесь льда и воды'},PN=['нагревание льда','плавление льда','нагревание воды','охлаждение воды','кристаллизация воды','охлаждение льда'],pool=[];
+ for(let i=0;i<6;i++){const N=`${i+1}–${i+2}`,cc=cont(i),h=heat[i],dt=sgn(ys[i+1]-ys[i]);
+  {const x=P(['ice','water','mix']);pool.push({t:`На участке ${N} в сосуде находится ${CN[x]}.`,ok:x===cc,k:N+'c',c:{y:'cont',s:i,v:x}});}
+  {const d=P([1,-1,0]);pool.push({t:`На участке ${N} внутренняя энергия вещества ${W3(d)}.`,ok:d===h,k:N+'U',c:{y:'U',s:i,d}});}
+  {const d=P([1,-1]);pool.push({t:`На участке ${N} вещество ${d>0?'получает':'отдаёт'} количество теплоты.`,ok:d===h,k:N+'U',c:{y:'heat',s:i,d}});}
+  {const d=P([1,-1,0]);pool.push({t:`На участке ${N} ${EKIN} ${W3(d)}.`,ok:d===dt,k:N+'E',c:{y:'Ek',s:i,d}});}
+  if(cc==='mix'){const x=P(['melt','cryst']);pool.push({t:`На участке ${N} происходит ${x==='melt'?'плавление льда':'кристаллизация воды'}.`,ok:(x==='melt')===(h>0),k:N+'c',c:{y:'proc',s:i,v:x}});}}
+ for(const i of [1,2,4,5]){const real=(i===1||i===4)?cont(i-1):cont(i),x=P(['ice','water']);pool.push({t:`В состоянии ${i+1} в сосуде ${x==='ice'?'нет воды: всё вещество — лёд':'нет льда: всё вещество — вода'}.`,ok:x===real,k:'pt'+i,c:{y:'pt',i,v:x}});}
+ const pk=pick5(pool);if(!pk)return null;
+ const pts=xs.map((x,i)=>[x,ys[i]]),ymin=Math.min(...ys)-12,ymax=Math.max(...ys)+18,yt=[];for(let t=Math.ceil((ymin+5)/20)*20;t<=ymax-8;t+=20)yt.push(t);
+ const lab=i=>ys[i]!==0?(ys[i]>0?[0,-12]:[i===0?-3:3,13]):((i===1||i===4)?(ys[i-1]<0?[-2,-12]:[-2,13]):(ys[i+1]<0?[2,-12]:[2,13]));
+ const fig=gr({xmax:xs[6]+0.9,ymin,ymax,xt:[],yt,xn:'время',yn:'t, °C',xl:false,dash:[[[0,0],[xs[6]+0.5,0]]],paths:[{pts}],pts:pts.map((p,i)=>({x:p[0],y:p[1],t:String(i+1),d:lab(i)}))});
+ const order=first==='heat'?[0,1,2,3,4,5]:[3,4,5,0,1,2];
+ return {q:first==='heat'?'В сосуде находится лёд. Сосуд сначала нагревают, а затем охлаждают. На рисунке показан график зависимости температуры вещества в сосуде от времени. Выберите все верные утверждения.':'В сосуде находится вода. Сосуд сначала охлаждают, а затем нагревают. На рисунке показан график зависимости температуры вещества в сосуде от времени. Выберите все верные утверждения.',fig,kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:'Наклонные участки — нагревание или охлаждение одной фазы: меняются температура и средняя кинетическая энергия молекул. Горизонтальные участки при 0 °C — плавление или кристаллизация: в сосуде смесь льда и воды, температура постоянна, но внутренняя энергия меняется — растёт при плавлении (теплоту подводят) и убывает при кристаллизации (теплоту отводят). Здесь: '+order.map((k,i)=>`${i+1}–${i+2} — ${PN[k]}`).join('; ')+'.',
+  trap:'На площадке температура не меняется, а внутренняя энергия меняется: теплота идёт на разрушение или образование кристаллической решётки.',m:{pts}};}));
+
+add('tq2',9,5,'Графики t(Q) для двух тел',()=>retry(()=>{
+ const cool=Math.random()<0.3,qs=P([10,20,50]),ts=P([20,40,50]),mass=P([0.5,1,2]);
+ const body=()=>{const a=R(0,1),jm=R(1,3),j3=jm+R(1,2),i1=R(1,3),i2=i1+R(1,3),i3=i2+R(1,2);return {a,jm,j3,i1,i2,i3};},B=[body(),body()];
+ if(B.some(b=>b.i3>7||b.a+b.j3>5)||B[0].a+B[0].jm===B[1].a+B[1].jm)return null;
+ const mk=b=>cool?[[0,b.a+b.j3],[b.i1,b.a+b.jm],[b.i2,b.a+b.jm],[b.i3,b.a]]:[[0,b.a],[b.i1,b.a+b.jm],[b.i2,b.a+b.jm],[b.i3,b.a+b.j3]],PT=B.map(mk);
+ const at=(p,x)=>{for(let i=0;i<3;i++)if(x>=p[i][0]&&x<=p[i+1][0])return p[i][1]+(p[i+1][1]-p[i][1])*(x-p[i][0])/(p[i+1][0]-p[i][0]);return null;};
+ let ov=0;for(let x=0;x<=7;x+=0.25){const y1=at(PT[0],x),y2=at(PT[1],x);if(y1!==null&&y2!==null&&Math.abs(y1-y2)<1e-9)ov++;}if(ov>1)return null;
+ const eN=PT.map(p=>p[3]);if(Math.hypot(eN[0][0]-eN[1][0],eN[0][1]-eN[1][1])<0.9)return null;
+ const who=['первого','второго'],whoN=['первое','второе'],ph=cool?['в газообразном состоянии','в жидком состоянии']:['в твёрдом состоянии','в жидком состоянии'],trn=cool?'парообразования':'плавления';
+ const c1=b=>b.i1/(cool?b.j3-b.jm:b.jm),c2=b=>(b.i3-b.i2)/(cool?b.jm:b.j3-b.jm),lam=b=>b.i2-b.i1,pool=[];
+ const cmpR=(labA,labB,x,y,k,cl)=>{const r=rnd(x/y,9),sp=labB?' '+labB:'';
+  if(Math.abs(r-1)<1e-9){pool.push(P([{t:`${labA} первого и второго веществ${sp} одинакова.`,ok:true,k,c:Object.assign({rel:0},cl)},{t:`${labA} первого вещества${sp} больше, чем второго.`,ok:false,k,c:Object.assign({rel:1},cl)}]));return;}
+  const Rr=r>1?r:rnd(1/r,6),mode=P([0,1,2]);
+  if(mode===0&&isNice(Rr,2))pool.push({t:`${labA} первого вещества${sp} ${raz(Rr)} ${r>1?'больше':'меньше'}, чем второго.`,ok:true,k,c:Object.assign({r},cl)});
+  else if(mode===1&&isNice(Rr,2))pool.push({t:`${labA} первого вещества${sp} ${raz(Rr)} ${r>1?'меньше':'больше'}, чем второго.`,ok:false,k,c:Object.assign({r:rnd(1/r,6)},cl)});
+  else{const rel=P([1,-1]);pool.push({t:`${labA} первого вещества${sp} ${rel>0?'больше':'меньше'}, чем второго.`,ok:sgn(r-1)===rel,k,c:Object.assign({rel},cl)});}};
+ cmpR('Удельная теплоёмкость',ph[0],c1(B[0]),c1(B[1]),'c1',{y:'cr',ph:1});
+ cmpR('Удельная теплоёмкость',ph[1],c2(B[0]),c2(B[1]),'c2',{y:'cr',ph:2});
+ cmpR('Удельная теплота '+trn,'',lam(B[0]),lam(B[1]),'lam',{y:'lr'});
+ {const rel=P([1,-1]),t1=B[0].a+B[0].jm,t2=B[1].a+B[1].jm;pool.push({t:`Температура ${cool?'кипения':'плавления'} первого вещества ${rel>0?'выше':'ниже'}, чем второго.`,ok:sgn(t1-t2)===rel,k:'tm',c:{y:'tm',rel}});}
+ for(const bi of [0,1]){const b=B[bi];
+  {const w=P([b.i2,b.i2,b.i1,b.i2-b.i1].filter((x,i)=>i<2||x!==b.i2))*qs;pool.push({t:cool?`Чтобы ${whoN[bi]} вещество охладить от начальной температуры и полностью сконденсировать, от него нужно отвести ${w} кДж теплоты.`:`Чтобы ${whoN[bi]} тело нагреть от начальной температуры и полностью расплавить, ему нужно сообщить ${w} кДж теплоты.`,ok:w===b.i2*qs,k:'full'+bi,c:{y:'Qfull',b:bi,val:w}});}
+  {const tr=qs*lam(b)/mass,w=P([tr,tr,qs*b.i2/mass].concat(mass!==1?[qs*lam(b)]:[]).filter((x,i)=>i<2||Math.abs(x-tr)>1e-9));pool.push({t:`Удельная теплота ${trn} ${who[bi]} вещества равна ${f(w)} кДж/кг.`,ok:Math.abs(w-tr)<1e-9,k:'lam',c:{y:'lam',b:bi,val:w}});}
+  {const rel=P([1,-1]);pool.push({t:`Удельная теплоёмкость ${who[bi]} вещества ${ph[1]} ${rel>0?'больше':'меньше'}, чем ${ph[0]}.`,ok:sgn(rnd(c2(b)-c1(b),9))===rel,k:'self'+bi,c:{y:'self',b:bi,rel}});}
+  {const x=R(1,b.i3-1)+0.5;if(x<b.i3&&Math.abs(x-b.i1)>0.1&&Math.abs(x-b.i2)>0.1){const vv=P(['done','notyet']);
+    pool.push({t:(cool?`Когда каждое вещество отдало по ${f(x*qs)} кДж теплоты, ${whoN[bi]} вещество `:`Когда каждому телу сообщили по ${f(x*qs)} кДж теплоты, ${whoN[bi]} тело `)+(vv==='done'?(cool?'уже полностью сконденсировалось.':'уже полностью расплавилось.'):(cool?'ещё не начало конденсироваться.':'ещё не начало плавиться.')),ok:vv==='done'?x>b.i2:x<b.i1,k:'st'+bi,c:{y:'state',b:bi,x,v:vv}});}}}
+ const pk=pick5(pool);if(!pk)return null;
+ const sc=p=>p.map(q=>[q[0]*qs,q[1]*ts]),xt=[],yt=[],mxI=Math.max(B[0].i3,B[1].i3),myJ=Math.max(B[0].a+B[0].j3,B[1].a+B[1].j3);for(let k=1;k<=mxI;k++)xt.push(qs*k);for(let k=1;k<=myJ;k++)yt.push(ts*k);
+ const fig=gr({xmax:qs*(mxI+1),ymax:ts*(myJ+0.8),xt,yt,xn:'Q, кДж',yn:'t, °C',paths:[{pts:sc(PT[0])},{pts:sc(PT[1]),cls:'cv2'}],txt:[0,1].map(i=>({x:PT[i][3][0]*qs,y:PT[i][3][1]*ts,t:String(i+1),dx:11,dy:-4}))});
+ return {q:cool?`На рисунке показаны графики зависимости температуры двух веществ 1 и 2 одинаковой массы ${f(mass)} кг от количества теплоты, которое они отдали. В начальный момент оба вещества были газообразными. Выберите все верные утверждения.`
+   :`На рисунке показаны графики зависимости температуры двух тел 1 и 2 одинаковой массы ${f(mass)} кг от полученного ими количества теплоты. В начальный момент оба тела были твёрдыми. Выберите все верные утверждения.`,fig,kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:`Массы одинаковы. На наклонном участке <i>c</i> = <i>Q</i>/(<i>m</i>Δ<i>t</i>): чем положе график <i>t</i>(<i>Q</i>), тем больше удельная теплоёмкость. Горизонтальный участок — ${cool?'конденсация':'плавление'}: его высота — температура ${cool?'кипения':'плавления'}, а длина по оси <i>Q</i> равна ${cool?'<i>Lm</i>':'λ<i>m</i>'}. `+[0,1].map(i=>{const b=B[i];return `Вещество ${i+1}: ${ph[0]} — ${qs*b.i1} кДж на ${ts*(cool?b.j3-b.jm:b.jm)} °C; площадка при ${ts*(b.a+b.jm)} °C длиной ${qs*lam(b)} кДж (${f(qs*lam(b)/mass)} кДж/кг); ${ph[1]} — ${qs*(b.i3-b.i2)} кДж на ${ts*(cool?b.jm:b.j3-b.jm)} °C.`;}).join(' '),
+  trap:cool?'Круче график — меньше теплоёмкость. Длину площадки дели на массу; а чтобы «охладить и сконденсировать», бери координату конца площадки, а не её длину.':'Круче график — меньше теплоёмкость. Длину площадки дели на массу; а чтобы «нагреть и расплавить», бери координату конца площадки, а не её длину.',m:{cool,qs,ts,mass,B}};}));
+
+add('por',9,7,'Перегородка, проницаемая для гелия',()=>retry(()=>{
+ const [n1,n2]=P([[1,2],[2,2],[1,4],[2,1],[4,2],[1,1],[2,4],[1,3],[3,3],[2,6],[3,6],[4,4],[0.5,1],[0.5,2]]),hv=P([['неон','неона',20],['аргон','аргона',40]]),mass=Math.random()<0.4,heL=Math.random()<0.5;
+ const X=heL?'правой':'левой',Y=heL?'левой':'правой',Xa=heL?'правую':'левую',am=(nu,M,g)=>mass?`${f(nu*M)} г ${g}`:`${f(nu)} моль ${g}`;
+ const aX=n1+n2/2,aY=n2/2,rX=aX/n1,rXY=aX/aY,pool=[],S=(t,ok,k,code,val)=>pool.push({t,ok,k,c:{y:'por',code,val}});
+ S('Концентрация атомов гелия в обеих частях сосуда стала одинаковой.',true,'he','nHeEq');
+ S(`Весь гелий перешёл в ${Xa} часть сосуда.`,false,'he','allHe');
+ S(`Давление в ${Y} части сосуда уменьшилось в 2 раза.`,true,'pY','pY',0.5);
+ S(`Давление в ${Y} части сосуда не изменилось.`,false,'pY','pY',1);
+ if(isNice(rX,2))S(`Давление в ${X} части сосуда увеличилось ${raz(rX)}.`,true,'pX','pX',rX);
+ {const w=(n1+n2)/n1;if(isNice(w,2)&&Math.abs(w-rX)>1e-9)S(`Давление в ${X} части сосуда увеличилось ${raz(w)}.`,false,'pX','pX',w);}
+ S(`Давление в ${X} части сосуда не изменилось.`,false,'pX','pX',1);
+ S(`После установления равновесия давление в ${X} части сосуда больше, чем в ${Y}.`,true,'cmp','pXgtY');
+ S('После установления равновесия давление в обеих частях сосуда одинаково.',false,'cmp','pEq');
+ if(isNice(rXY,2))S(`После установления равновесия давление в ${X} части сосуда ${raz(rXY)} больше, чем в ${Y}.`,true,'cmp','pXY',rXY);
+ S(`После установления равновесия число атомов в ${X} части сосуда больше, чем в ${Y}.`,true,'N','NXgtY');
+ S(`Внутренняя энергия ${hv[1]} не изменилась.`,true,'Uh','Uheavy',1);
+ S(`Внутренняя энергия газа в ${Y} части сосуда уменьшилась в 2 раза.`,true,'UY','UY',0.5);
+ S('Внутренняя энергия всего гелия в сосуде уменьшилась в 2 раза.',false,'UY','UHe',0.5);
+ S('Суммарная внутренняя энергия газов в сосуде не изменилась.',true,'Ut','Utot',1);
+ S(`Концентрация атомов ${hv[1]} в ${X} части сосуда уменьшилась.`,false,'Uh','nHeavy',-1);
+ S(`Парциальное давление гелия в ${X} части сосуда равно давлению газа в ${Y} части.`,true,'pp','ppHe');
+ const pk=pick5(pool);if(!pk)return null;
+ return {q:`Сосуд разделён на две равные части неподвижной перегородкой, которая пропускает атомы гелия и не пропускает атомы ${hv[1]}. Сначала в ${X} части находится ${am(n1,hv[2],hv[1])}, а в ${Y} — ${am(n2,4,'гелия')}. Температура газов одинакова и остаётся постоянной. Выберите все верные утверждения о состоянии газов после установления равновесия.`,fig:svgPor(heL?'гелий':hv[0],heL?hv[0]:'гелий'),ref:mass?1:0,kind:'multi',stmts:pk.stmts,ans:pk.ans,
+  sol:(mass?`Количество вещества: ν = <i>m</i>/<i>M</i> — ${f(n1)} моль ${hv[1]} и ${f(n2)} моль гелия. `:'')+`Гелий проходит сквозь перегородку, пока его концентрация по обе стороны не выровняется: в каждой части окажется по ${f(n2/2)} моль гелия. ${cap(hv[0])} остаётся на месте. В ${X} части стало ${f(n1)} + ${f(n2/2)} = ${f(aX)} моль газа (было ${f(n1)}), в ${Y} — ${f(aY)} моль (было ${f(n2)}). Объёмы и температура одинаковы, поэтому давление, число частиц и внутренняя энергия в каждой части пропорциональны количеству вещества в ней.`,
+  trap:'Давления по обе стороны не выравниваются: выравнивается только концентрация того газа, для которого перегородка проницаема.',m:{n1,n2}};}));
+
+const FP={heat:{V:1,p:0,T:1,A:1,Q:1,t:'Газ медленно нагревают.',s:'Поршень свободен, его масса и наружное давление не меняются ⇒ давление газа постоянно: это изобарное нагревание. Объём растёт (<i>V</i> ~ <i>T</i>), концентрация падает, газ совершает работу, внутренняя энергия растёт; <i>Q</i> = Δ<i>U</i> + <i>A</i> > 0, причём <i>Q</i> больше и Δ<i>U</i>, и <i>A</i>.'},
+ cool:{V:-1,p:0,T:-1,A:-1,Q:-1,t:'Газ медленно охлаждают.',s:'Поршень свободен ⇒ давление газа постоянно: это изобарное охлаждение. Объём уменьшается (<i>V</i> ~ <i>T</i>), концентрация растёт, работу совершают внешние силы, внутренняя энергия убывает; газ отдаёт теплоту, и отдаёт больше, чем убыль внутренней энергии.'},
+ sandT:{V:-1,p:1,T:0,A:-1,Q:-1,t:'Стенки цилиндра хорошо проводят тепло, температура окружающего воздуха постоянна. На поршень медленно насыпают песок.',s:'Температура газа равна температуре воздуха и не меняется: изотермическое сжатие. Груз на поршне растёт ⇒ давление растёт, объём уменьшается, концентрация растёт. Δ<i>U</i> = 0, поэтому вся работа внешних сил уходит наружу в виде теплоты.'},
+ unsandT:{V:1,p:-1,T:0,A:1,Q:1,t:'Стенки цилиндра хорошо проводят тепло, температура окружающего воздуха постоянна. С поршня медленно убирают лежавший на нём песок.',s:'Температура газа не меняется: изотермическое расширение. Груз на поршне уменьшается ⇒ давление падает, объём растёт, концентрация падает. Δ<i>U</i> = 0, поэтому вся полученная теплота идёт на работу газа.'},
+ sandAd:{V:-1,p:1,T:1,A:-1,Q:0,t:'Цилиндр и поршень не проводят тепло. На поршень насыпают песок.',s:'Теплообмена нет: адиабатное сжатие. Давление растёт, объём уменьшается, концентрация растёт. <i>Q</i> = 0, поэтому работа внешних сил идёт на рост внутренней энергии — газ нагревается.'}};
+add('fpis',9,7,'Газ под подвижным поршнем',()=>retry(()=>{
+ const sc=P(Object.keys(FP)),F=FP[sc],pool=[],QN={p:'Давление газа',V:'Объём газа',n:'Концентрация молекул газа',U:'Внутренняя энергия газа',F:'Сила давления газа на поршень',E:cap(EKIN)+' газа'},real={p:F.p,V:F.V,n:-F.V,U:F.T,F:F.p,E:F.T};
+ for(const q of Object.keys(QN)){const d=P([1,-1,0]);pool.push({t:`${QN[q]} ${W3(d)}.`,ok:d===real[q],k:q==='F'?'p':q==='E'?'U':q,c:{y:'chg',q,d}});}
+ {const d=P([1,-1]);pool.push({t:d>0?'Газ совершает положительную работу.':'Внешние силы совершают над газом положительную работу.',ok:d===F.A,k:'A',c:{y:'A',d}});}
+ {const d=P([1,-1,0]);pool.push({t:d>0?'Газ получает количество теплоты.':d<0?'Газ отдаёт количество теплоты.':'Газ не обменивается теплотой с окружающей средой.',ok:d===F.Q,k:'Q',c:{y:'Q',d}});}
+ if(sc==='heat')pool.push(P([{t:'Всё полученное газом количество теплоты идёт на увеличение его внутренней энергии.',ok:false,k:'L',c:{y:'law',v:'Q=dU'}},{t:'Полученное газом количество теплоты больше работы, совершённой газом.',ok:true,k:'L',c:{y:'law',v:'Q>A'}}]));
+ if(sc==='cool')pool.push({t:'Количество теплоты, отданное газом, равно уменьшению его внутренней энергии.',ok:false,k:'L',c:{y:'law',v:'Q=dU'}});
+ if(sc==='sandT')pool.push({t:'Работа внешних сил равна количеству теплоты, которое отдаёт газ.',ok:true,k:'L',c:{y:'law',v:'Q=A'}});
+ if(sc==='unsandT')pool.push({t:'Всё полученное газом количество теплоты идёт на совершение работы.',ok:true,k:'L',c:{y:'law',v:'Q=A'}});
+ if(sc==='sandAd')pool.push({t:'Работа внешних сил равна увеличению внутренней энергии газа.',ok:true,k:'L',c:{y:'law',v:'A=-dU'}});
+ const pk=pick5(pool);if(!pk)return null;
+ return {q:`В вертикальном цилиндре под поршнем, который может двигаться без трения, находится одноатомный идеальный газ постоянной массы. Наружное давление не меняется. ${F.t} Выберите все верные утверждения об этом процессе.`,fig:svgCyl(sc!=='heat'&&sc!=='cool'),kind:'multi',stmts:pk.stmts,ans:pk.ans,sol:F.s,
+  trap:sc==='heat'||sc==='cool'?'Свободный поршень при неизменном грузе — это постоянное давление, а не постоянный объём.':sc==='sandAd'?'Нет теплообмена — не значит, что температура постоянна: при адиабатном сжатии газ нагревается.':'Постоянная температура — не значит, что нет теплообмена: на изотерме <i>Q</i> = <i>A</i>.',m:{sc}};}));
+
+add('hum',9,6,'Влажность: сравнить два дня',()=>retry(()=>{
+ const sc=P(['T','T','p']),pool=[],S=(t,ok,k,c)=>pool.push({t,ok,k,c});let q,sol,m;
+ if(sc==='T'){const pn=P([2,2.4,3.2,4]),[fA,fB]=SH([25,30,40,50,60,75,80]).slice(0,2),pA=pn*fA/100,pB=pn*fB/100;if(!isNice(pA,2)||!isNice(pB,2))return null;const d=sgn(pB-pA),r=pB/pA,Rr=r>1?r:1/r;
+  {const w=P([fA,fA,fB,100-fA]);S(`Относительная влажность воздуха в понедельник была равна ${w} %.`,w===fA,'fA',{y:'phi',day:0,val:w});}
+  {const rel=P([1,-1]);S(`Относительная влажность воздуха во вторник была ${rel>0?'выше':'ниже'}, чем в понедельник.`,rel===d,'cmpf',{y:'cmp',q:'phi',rel});}
+  if(isNice(Rr,2)){const tr=P([1,1,0]);S(`Плотность водяного пара в воздухе во вторник была ${raz(Rr)} ${(tr?d>0:d<0)?'больше':'меньше'}, чем в понедельник.`,!!tr,'rho',{y:'ratio',q:'rho',r:tr?r:1/r});}
+  S(P(['Давление насыщенного водяного пара в понедельник и во вторник было одинаковым.']),true,'pn',{y:'cmp',q:'pn',rel:0});
+  S(`Давление насыщенного водяного пара во вторник было ${d>0?'больше':'меньше'}, чем в понедельник.`,false,'pn',{y:'cmp',q:'pn',rel:d});
+  {const rel=P([1,-1,0]);S(rel===0?'Точка росы в понедельник и во вторник была одинаковой.':`Точка росы во вторник была ${rel>0?'выше':'ниже'}, чем в понедельник.`,rel===d,'dew',{y:'cmp',q:'dew',rel});}
+  {const rel=P([1,-1]);S(`Концентрация молекул водяного пара в воздухе во вторник была ${rel>0?'больше':'меньше'}, чем в понедельник.`,rel===d,'rho',{y:'cmp',q:'n',rel});}
+  S(`${d>0?'Во вторник':'В понедельник'} водяной пар в воздухе был насыщенным.`,false,'sat',{y:'sat',day:d>0?1:0});
+  q=`В понедельник и во вторник температура воздуха была одинаковой. Парциальное давление водяного пара в воздухе в понедельник было равно ${f(pA)} кПа, а во вторник — ${f(pB)} кПа. Давление насыщенного водяного пара при этой температуре равно ${f(pn)} кПа. Выберите все верные утверждения.`;
+  sol=`Температура одинакова ⇒ давление насыщенного пара одно и то же (${f(pn)} кПа). φ = <i>p</i>/<i>p</i><sub>н</sub>: в понедельник ${f(pA)}/${f(pn)} = ${fA} %, во вторник ${f(pB)}/${f(pn)} = ${fB} %. При одинаковой температуре плотность и концентрация пара пропорциональны его давлению (отношение ${f(pB)}/${f(pA)}). Точка росы выше там, где больше парциальное давление пара.`;m={sc,pn,pA,pB};}
+ else{const warm=P([1,-1]),W=(rel,a,b,c)=>rel>0?a:rel<0?b:c;
+  {const rel=P([1,-1,0]);S(`Относительная влажность воздуха днём была ${W(rel,'выше, чем утром','ниже, чем утром','такой же, как утром')}.`,rel===-warm,'phi',{y:'cmp',q:'phi',rel});}
+  {const rel=P([1,-1,0]);S(`Давление насыщенного водяного пара днём было ${W(rel,'больше, чем утром','меньше, чем утром','таким же, как утром')}.`,rel===warm,'pn',{y:'cmp',q:'pn',rel});}
+  {const rel=P([1,-1,0]);S(`Точка росы днём была ${W(rel,'выше, чем утром','ниже, чем утром','такой же, как утром')}.`,rel===0,'dew',{y:'cmp',q:'dew',rel});}
+  {const rel=P([1,-1,0]),qq=P(['n','rho']);S(`${qq==='n'?'Концентрация молекул водяного пара':'Плотность водяного пара'} в воздухе днём была ${W(rel,'больше, чем утром','меньше, чем утром','такой же, как утром')}.`,rel===-warm,'n',{y:'cmp',q:qq,rel});}
+  S(`${warm>0?'Утром':'Днём'} водяной пар был ближе к насыщению, чем ${warm>0?'днём':'утром'}.`,true,'phi2',{y:'cmp',q:'phi',rel:-warm});
+  S(`${warm>0?'Днём':'Утром'} водяной пар был ближе к насыщению, чем ${warm>0?'утром':'днём'}.`,false,'phi2',{y:'cmp',q:'phi',rel:warm});
+  q=`Утром и днём парциальное давление водяного пара в воздухе было одинаковым, но днём воздух был ${warm>0?'теплее':'холоднее'}, чем утром. Роса не выпадала. Выберите все верные утверждения.`;
+  sol=`Давление насыщенного пара зависит только от температуры: чем теплее, тем оно больше. Парциальное давление пара одно и то же, поэтому φ = <i>p</i>/<i>p</i><sub>н</sub> днём ${warm>0?'ниже':'выше'}. Точка росы определяется парциальным давлением пара — она одинакова. Из <i>p</i> = <i>nkT</i>: при том же давлении в более тёплом воздухе концентрация (и плотность) пара меньше.`;m={sc,warm};}
+ const pk=pick5(pool);if(!pk)return null;
+ return {q,kind:'multi',stmts:pk.stmts,ans:pk.ans,sol,trap:sc==='T'?'Давление насыщенного пара зависит только от температуры — от количества пара в воздухе оно не зависит.':'Одинаковое давление пара — не значит одинаковая влажность: влажность зависит ещё и от давления насыщенного пара, то есть от температуры.',m};}));
+
+// ======================= №10 · как изменятся величины, соответствие (2 балла) =======================
+const QNAME={V:'Объём газа',p:'Давление газа',T:'Абсолютная температура газа',U:'Внутренняя энергия газа',E:cap(EKIN)+' газа',n:'Концентрация молекул газа',rho:'Плотность газа'};
+const qval=(s,q)=>q==='n'||q==='rho'?1/s.V:(q==='U'||q==='E')?s.T:s[q];
+
+add('carn',10,4,'Цикл Карно: как изменятся КПД, работа, теплота',()=>{
+ const v=P(['Qx','Qx','Qn','Qn','scale']),NM={eta:'КПД тепловой машины',A:'Работа газа за цикл',Qn:'Количество теплоты, полученное газом от нагревателя за цикл',Qx:'Количество теплоты, отданное газом холодильнику за цикл'};let text,eff,sol,m;
+ if(v==='scale'){const qd=P([1,-1]);
+  text=`Абсолютные температуры нагревателя и холодильника идеальной тепловой машины, работающей по циклу Карно, увеличили в одинаковое число раз. Количество теплоты, которое газ получает от нагревателя за цикл, при этом ${qd>0?'увеличилось':'уменьшилось'}.`;
+  eff={eta:0,A:qd,Qx:qd};sol='η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>: отношение температур не изменилось ⇒ КПД прежний. <i>A</i> = η<i>Q</i><sub>н</sub> и <i>Q</i><sub>х</sub> = (1 − η)<i>Q</i><sub>н</sub> меняются так же, как <i>Q</i><sub>н</sub>.';m={v,qd};}
+ else{const what=P(['Tn','Tx']),dir=P([1,-1]),e=what==='Tn'?dir:-dir;
+  text=`Идеальная тепловая машина работает по циклу Карно. Температуру ${what==='Tn'?'нагревателя':'холодильника'} ${dir>0?'повысили':'понизили'}, а температуру ${what==='Tn'?'холодильника':'нагревателя'} оставили прежней. Количество теплоты, которое газ за цикл ${v==='Qx'?'отдаёт холодильнику':'получает от нагревателя'}, не изменилось.`;
+  eff=v==='Qx'?{eta:e,Qn:e,A:e}:{eta:e,A:e,Qx:-e};
+  sol=`η = 1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>: ${what==='Tn'?'<i>T</i><sub>н</sub>':'<i>T</i><sub>х</sub>'} ${dir>0?'выросла':'уменьшилась'} ⇒ КПД ${e>0?'увеличился':'уменьшился'}. `+(v==='Qx'?'<i>Q</i><sub>х</sub> прежнее: <i>Q</i><sub>н</sub> = <i>Q</i><sub>х</sub>/(1 − η) и <i>A</i> = <i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub> меняются в ту же сторону, что и КПД.':'<i>Q</i><sub>н</sub> прежнее: <i>A</i> = η<i>Q</i><sub>н</sub> меняется как КПД, а <i>Q</i><sub>х</sub> = (1 − η)<i>Q</i><sub>н</sub> — в обратную сторону.');m={v,what,dir};}
+ const keys=SH(Object.keys(eff)).slice(0,2);m.keys=keys;
+ return {q:text+' Как изменились при этом следующие величины?',kind:'change',rows:keys.map(k=>NM[k]),ans:keys.map(k=>CHD(eff[k])).join(''),sol,
+  trap:'Сначала реши, что стало с КПД (по температурам), и посмотри, какая теплота осталась прежней: от этого зависит, куда меняются остальные величины.',m};});
+
+add('path',10,2,'Процесс 1–2–3 на графике: как меняются величины',vary(['pT','VT','pV','UV'],ax=>{
+ const pt=()=>[R(1,5),R(1,4)],c=[pt(),pt(),pt()],eq=(a,b)=>a[0]===b[0]&&a[1]===b[1];if(eq(c[0],c[1])||eq(c[1],c[2])||eq(c[0],c[2]))return null;
+ const kind=(a,b)=>a[1]===b[1]?'h':a[0]===b[0]?'v':(ax!=='pV'&&a[1]*b[0]===b[1]*a[0])?'ray':'x',K=[kind(c[0],c[1]),kind(c[1],c[2])];if(K[0]===K[1])return null;
+ if(ax!=='pV'&&K.includes('x'))return null;
+ if(ax==='pV')for(const i of [0,1])if(K[i]==='x'){const a=c[i],b=c[i+1],d1=(b[1]-a[1])*a[0]+a[1]*(b[0]-a[0]),d2=(b[1]-a[1])*b[0]+b[1]*(b[0]-a[0]);if(d1*d2<=0)return null;} // на наклонном отрезке T должна меняться монотонно
+ const S=c.map((q,i)=>ax==='pT'?st(String(i+1),q[1],q[0]/q[1]):ax==='VT'?st(String(i+1),q[0]/q[1],q[1]):ax==='pV'?st(String(i+1),q[1],q[0]):st(String(i+1),q[1]/q[0],q[0]));
+ const qs=SH({pT:['V','n','rho','U'],VT:['p','n','rho','U'],pV:['T','U','n','rho'],UV:['p','T','n','rho']}[ax]).slice(0,2);if(qs.includes('n')&&qs.includes('rho'))return null;
+ const dirs=qs.map((q,i)=>sgn(rnd(qval(S[i+1],q)-qval(S[i],q),9)));
+ const D={pT:{ray:'прямая через начало координат в осях <i>p</i>–<i>T</i> — изохора, <i>V</i> = const',h:'горизонталь — изобара: <i>V</i> ~ <i>T</i>',v:'вертикаль — изотерма: <i>V</i> ~ 1/<i>p</i>, <i>U</i> = const'},
+  VT:{ray:'прямая через начало координат в осях <i>V</i>–<i>T</i> — изобара, <i>p</i> = const',h:'горизонталь — изохора: <i>p</i> ~ <i>T</i>',v:'вертикаль — изотерма: <i>p</i> ~ 1/<i>V</i>, <i>U</i> = const'},
+  pV:{h:'горизонталь — изобара: <i>T</i> ~ <i>V</i>',v:'вертикаль — изохора: <i>T</i> ~ <i>p</i>, концентрация и плотность не меняются',x:'наклонный отрезок — не изопроцесс: <i>T</i> ~ <i>pV</i>, сравни произведения в концах'},
+  UV:{ray:'прямая через начало координат: <i>U</i> = (3/2)<i>pV</i> ~ <i>V</i> ⇒ <i>p</i> = const (изобара), <i>T</i> ~ <i>V</i>',h:'горизонталь: <i>U</i> = const ⇒ <i>T</i> = const (изотерма), <i>p</i> ~ 1/<i>V</i>',v:'вертикаль — изохора: <i>T</i> и <i>p</i> меняются так же, как <i>U</i>'}}[ax];
+ const AX={pT:['T','p','T₀','p₀'],VT:['T','V','T₀','V₀'],pV:['V','p','V₀','p₀'],UV:['V','U','V₀','U₀']}[ax],dash=[];
+ [0,1].forEach(i=>{if(K[i]==='ray')dash.push([[0,0],c[i][0]<c[i+1][0]?c[i]:c[i+1]]);});
+ const fig=gr({xt:[1,2,3,4,5],yt:[1,2,3,4],xmax:5.8,ymax:4.8,xn:AX[0],yn:AX[1],xl:k=>U0(k,AX[2]),yl:k=>U0(k,AX[3]),dash,paths:[{pts:c,arr:1}],pts:c.map((q,i)=>({x:q[0],y:q[1],t:String(i+1)}))});
+ return {q:`На рисунке показан процесс 1–2–3, происходящий с ${ax==='UV'?'одноатомным ':''}идеальным газом постоянной массы, в координатах <i>${AX[1]}</i>–<i>${AX[0]}</i>${ax==='UV'?' (<i>U</i> — внутренняя энергия газа)':''}. Как изменяются следующие величины на указанных участках?`,fig,kind:'change',
+  rows:qs.map((q,i)=>`${QNAME[q]} на участке ${i+1}–${i+2}`),ans:dirs.map(CHD).join(''),
+  sol:qs.map((q,i)=>`<b>${i+1}–${i+2}</b>: ${D[K[i]]}. ${QNAME[q]} ${W3(dirs[i])}.`).join(' ')+' Концентрация и плотность меняются обратно объёму.',
+  trap:'Сначала определи тип каждого участка по осям графика, и только потом — что происходит с величиной. Вопросы относятся к разным участкам.',m:{ax,c,qs}};}));
+
+add('mix',10,7,'Смесь газов: выпустили и добавили',()=>retry(()=>{
+ const [gA,gB]=P([['гелия','аргона'],['азота','кислорода'],['неона','аргона'],['водорода','гелия']]),n1=P([1,2,3,4]),n2=P([1,2,3,4]),half=Math.random()<0.7,dn=P([0.5,1,1.5,2,2.5,3,4]);
+ const a2=half?n1/2+dn:n1+dn,b2=half?n2/2:n2,pool=[[`Парциальное давление ${gA}`,a2/n1,'pA'],[`Парциальное давление ${gB}`,b2/n2,'pB'],['Давление смеси газов в сосуде',(a2+b2)/(n1+n2),'pS'],[`Концентрация молекул ${gB}`,b2/n2,'nB'],[`Концентрация молекул ${gA}`,a2/n1,'nA']];
+ const rows=SH(pool).slice(0,2);if(rows[0][2][1]===rows[1][2][1])return null; // не два вопроса про один и тот же газ
+ return {q:`В сосуде неизменного объёма находится смесь ${f(n1)} моль ${gA} и ${f(n2)} моль ${gB}. Температура газов поддерживается постоянной. ${half?`Из сосуда выпустили половину его содержимого, а затем добавили в сосуд ${f(dn)} моль ${gA}.`:`В сосуд добавили ещё ${f(dn)} моль ${gA}.`} Как изменились в результате следующие величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>CH(r[1])).join(''),
+  sol:`Объём и температура постоянны ⇒ парциальное давление и концентрация каждого газа пропорциональны его количеству вещества, а давление смеси — суммарному количеству (закон Дальтона). Количество ${gA}: ${f(n1)} → ${f(a2)} моль; ${gB}: ${f(n2)} → ${f(b2)} моль; всего: ${f(n1+n2)} → ${f(a2+b2)} моль.`,
+  trap:half?'«Выпустили половину содержимого» — вдвое уменьшилось количество каждого газа, а не одного из них.':'Добавление одного газа не меняет парциальное давление и концентрацию другого.',m:{n1,n2,half,dn,keys:rows.map(r=>r[2])}};}));
+
+const ISO={Vh:{t:'изохорно нагревают',V:0,p:1,T:1,ask:['p','U','E','n','rho'],s:'Изохора: <i>V</i> = const ⇒ концентрация и плотность не меняются; <i>p</i> ~ <i>T</i>. Температура растёт ⇒ давление, внутренняя энергия и энергия молекул растут.'},
+ Vc:{t:'изохорно охлаждают',V:0,p:-1,T:-1,ask:['p','U','E','n','rho'],s:'Изохора: <i>V</i> = const ⇒ концентрация и плотность не меняются; <i>p</i> ~ <i>T</i>. Температура падает ⇒ давление, внутренняя энергия и энергия молекул уменьшаются.'},
+ pe:{t:'изобарно расширяется',V:1,p:0,T:1,ask:['T','U','E','n','rho'],s:'Изобара: <i>p</i> = const ⇒ <i>V</i> ~ <i>T</i>. Объём растёт ⇒ температура, внутренняя энергия и энергия молекул растут, а концентрация и плотность (~ 1/<i>V</i>) уменьшаются.'},
+ pc:{t:'изобарно сжимают',V:-1,p:0,T:-1,ask:['T','U','E','n','rho'],s:'Изобара: <i>p</i> = const ⇒ <i>V</i> ~ <i>T</i>. Объём уменьшается ⇒ температура, внутренняя энергия и энергия молекул уменьшаются, а концентрация и плотность (~ 1/<i>V</i>) растут.'},
+ Te:{t:'изотермически расширяется',V:1,p:-1,T:0,ask:['p','U','E','n','rho'],s:'Изотерма: <i>T</i> = const ⇒ внутренняя энергия и энергия молекул не меняются; <i>p</i> ~ 1/<i>V</i>. Объём растёт ⇒ давление, концентрация и плотность уменьшаются.'},
+ Tc:{t:'изотермически сжимают',V:-1,p:1,T:0,ask:['p','U','E','n','rho'],s:'Изотерма: <i>T</i> = const ⇒ внутренняя энергия и энергия молекул не меняются; <i>p</i> ~ 1/<i>V</i>. Объём уменьшается ⇒ давление, концентрация и плотность растут.'},
+ Ae:{t:'адиабатно расширяется',V:1,p:-1,T:-1,ask:['p','T','U','n','rho'],s:'Адиабата: <i>Q</i> = 0, газ совершает работу за счёт внутренней энергии ⇒ <i>U</i> и <i>T</i> уменьшаются. Объём растёт ⇒ концентрация и плотность уменьшаются; давление падает (и из-за объёма, и из-за температуры).'},
+ Ac:{t:'адиабатно сжимают',V:-1,p:1,T:1,ask:['p','T','U','n','rho'],s:'Адиабата: <i>Q</i> = 0, работа внешних сил идёт на внутреннюю энергию ⇒ <i>U</i> и <i>T</i> растут. Объём уменьшается ⇒ концентрация и плотность растут; давление растёт.'}};
+add('isoc',10,2,'Названный процесс: как изменятся величины',()=>retry(()=>{
+ const id=P(Object.keys(ISO)),I=ISO[id],qs=SH(I.ask).slice(0,2);if(qs.includes('n')&&qs.includes('rho')||qs.includes('U')&&qs.includes('E'))return null;
+ const d=q=>q==='p'?I.p:(q==='T'||q==='U'||q==='E')?I.T:-I.V;
+ return {q:`Идеальный газ постоянной массы ${I.t}. Как изменяются при этом следующие величины?`,kind:'change',rows:qs.map(q=>QNAME[q]),ans:qs.map(q=>CHD(d(q))).join(''),sol:I.s,
+  trap:id[0]==='T'?'На изотерме внутренняя энергия идеального газа не меняется, хотя газ и получает или отдаёт теплоту.':id[0]==='A'?'В адиабатном процессе температура меняется, хотя теплообмена нет.':'Концентрация и плотность следят только за объёмом: нет изменения объёма — нет изменения концентрации.',m:{id,qs}};}));
+
+add('sat',10,6,'Жидкость и насыщенный пар под поршнем',()=>retry(()=>{
+ const dir=P([1,-1]),pool=[['Давление пара',0,'p'],['Плотность пара',0,'rho'],['Концентрация молекул пара',0,'n'],['Масса пара',-dir,'mv'],['Масса жидкости',dir,'ml']]; // dir = 1 — сжатие
+ const rows=SH(pool).slice(0,2);if(rows[0][1]===0&&rows[1][1]===0&&Math.random()<0.6)return null;
+ return {q:`В цилиндре под поршнем находятся жидкость и её насыщенный пар. Поршень медленно ${dir>0?'опускают, уменьшая':'поднимают, увеличивая'} объём под ним; температура поддерживается постоянной, и в конце процесса в цилиндре ещё остаётся жидкость. Как изменяются при этом следующие величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>CHD(r[1])).join(''),
+  sol:`Пока есть жидкость, пар остаётся насыщенным. Давление насыщенного пара зависит только от температуры, а она постоянна ⇒ давление, плотность и концентрация пара не меняются. Объём пара ${dir>0?'уменьшается — часть пара конденсируется: масса пара уменьшается, масса жидкости растёт':'растёт — часть жидкости испаряется: масса пара растёт, масса жидкости уменьшается'}.`,
+  trap:'Насыщенный пар — не идеальный газ постоянной массы: при сжатии его давление не растёт, а «лишний» пар превращается в жидкость.',m:{dir,keys:rows.map(r=>r[2])}};}));
+
+const ADDG={a:{nu:'k',V:'k',T:1,t:k=>`Объём сосуда увеличили ${raz(k)} и одновременно добавили в него газ так, что количество вещества газа тоже увеличилось ${raz(k)}. Температура газа не изменилась.`},
+ b:{nu:'k',V:1,T:1,t:k=>`В сосуд неизменного объёма добавили газ так, что количество вещества газа увеличилось ${raz(k)}. Температура газа не изменилась.`},
+ c:{nu:'1/k',V:1,T:1,t:k=>`Из сосуда неизменного объёма выпустили часть газа так, что количество вещества газа уменьшилось ${raz(k)}. Температура газа не изменилась.`},
+ d:{nu:'k',V:1,T:'1/k',t:k=>`В сосуд неизменного объёма добавили газ так, что количество вещества газа увеличилось ${raz(k)}, а абсолютную температуру газа уменьшили ${raz(k)}.`},
+ e:{nu:'1/k',V:1,T:'k',t:k=>`Из сосуда неизменного объёма выпустили часть газа так, что количество вещества газа уменьшилось ${raz(k)}, а абсолютную температуру оставшегося газа увеличили ${raz(k)}.`},
+ g:{nu:'1/k',V:'1/k',T:1,t:k=>`Объём сосуда уменьшили ${raz(k)} и одновременно выпустили часть газа так, что количество вещества газа тоже уменьшилось ${raz(k)}. Температура газа не изменилась.`}};
+add('addg',10,2,'Газ добавили или выпустили: p = νRT/V',()=>retry(()=>{
+ const id=P(Object.keys(ADDG)),A=ADDG[id],k=P([2,3,1.5,4]),val=x=>x==='k'?k:x==='1/k'?1/k:1,nu=val(A.nu),V=val(A.V),T=val(A.T);
+ const F={p:nu*T/V,U:nu*T,n:nu/V,rho:nu/V,E:T},NM={p:'Давление газа',U:'Внутренняя энергия газа',n:'Концентрация молекул газа',rho:'Плотность газа',E:cap(EKIN)+' газа'};
+ const qs=SH(Object.keys(F)).slice(0,2);if(qs.includes('n')&&qs.includes('rho'))return null;
+ return {q:`В сосуде находится идеальный газ. ${A.t(k)} Как изменились в результате следующие величины?`,kind:'change',rows:qs.map(q=>NM[q]),ans:qs.map(q=>CH(F[q])).join(''),
+  sol:`<i>p</i> = ν<i>RT</i>/<i>V</i>, концентрация и плотность ~ ν/<i>V</i>, внутренняя энергия ~ ν<i>T</i>, средняя энергия одной молекулы ~ <i>T</i>. Здесь количество вещества ${chg(nu,'n')}, объём ${chg(V,'m')}, абсолютная температура ${chg(T,'f')}.`,
+  trap:'Внутренняя энергия газа зависит не только от температуры, но и от количества газа. А средняя энергия одной молекулы — только от температуры.',m:{id,k,qs}};}));
+
+add('uns',10,6,'Ненасыщенный пар в закрытом сосуде',()=>retry(()=>{
+ const dir=P([1,-1]),pool=[['Концентрация молекул водяного пара',0,'n'],['Плотность водяного пара',0,'rho'],['Парциальное давление водяного пара',dir,'p'],['Относительная влажность воздуха',-dir,'phi'],['Давление насыщенного водяного пара при температуре воздуха в сосуде',dir,'pn'],['Масса водяного пара в сосуде',0,'m']];
+ const rows=SH(pool).slice(0,2);if(rows[0][1]===0&&rows[1][1]===0)return null;
+ return {q:`В закрытом сосуде постоянного объёма находится воздух с ненасыщенным водяным паром. Сосуд ${dir>0?'нагревают':'охлаждают, причём роса на стенках не выпадает'}. Как изменяются при этом следующие величины?`,kind:'change',rows:rows.map(r=>r[0]),ans:rows.map(r=>CHD(r[1])).join(''),
+  sol:`Сосуд закрыт, роса не выпадает ⇒ масса, плотность и концентрация пара не меняются. <i>p</i> = <i>nkT</i>: температура ${dir>0?'растёт — парциальное давление пара растёт':'падает — парциальное давление пара уменьшается'}. Давление насыщенного пара ${dir>0?'растёт':'падает'} с температурой гораздо быстрее, поэтому φ = <i>p</i>/<i>p</i><sub>н</sub> ${dir>0?'уменьшается':'растёт'}.`,
+  trap:'Давление пара и относительная влажность меняются в разные стороны: при нагревании пара в закрытом сосуде давление растёт, а влажность падает.',m:{dir,keys:rows.map(r=>r[2])}};}));
+
+// соответствие «величина — формула»
+const FORM=[{id:'nuVT',ctx:'Одноатомный идеальный газ в количестве ν моль находится в сосуде объёмом <i>V</i> при абсолютной температуре <i>T</i>.',it:[['давление газа','ν<i>RT</i>/<i>V</i>'],['внутренняя энергия газа','(3/2)ν<i>RT</i>'],['концентрация молекул газа','ν<i>N</i><sub>A</sub>/<i>V</i>'],['средняя кинетическая энергия теплового движения одной молекулы','(3/2)<i>kT</i>']],dis:['ν<i>RT</i>','(3/2)ν<i>RT</i>/<i>V</i>','ν<i>V</i>/(<i>RT</i>)','<i>kT</i>/<i>V</i>']},
+ {id:'NVT',ctx:'В сосуде объёмом <i>V</i> находится <i>N</i> молекул одноатомного идеального газа при абсолютной температуре <i>T</i>.',it:[['давление газа','<i>NkT</i>/<i>V</i>'],['внутренняя энергия газа','(3/2)<i>NkT</i>'],['концентрация молекул газа','<i>N</i>/<i>V</i>']],dis:['<i>NkT</i>','(3/2)<i>kT</i>/<i>V</i>','<i>NV</i>/(<i>kT</i>)','<i>N</i>/(<i>kT</i>)']},
+ {id:'isob',ctx:'Одноатомный идеальный газ изобарно расширяется при давлении <i>p</i> от объёма <i>V</i><sub>1</sub> до объёма <i>V</i><sub>2</sub>.',it:[['работа газа','<i>p</i>(<i>V</i><sub>2</sub> − <i>V</i><sub>1</sub>)'],['изменение внутренней энергии газа','(3/2)<i>p</i>(<i>V</i><sub>2</sub> − <i>V</i><sub>1</sub>)'],['количество теплоты, полученное газом','(5/2)<i>p</i>(<i>V</i><sub>2</sub> − <i>V</i><sub>1</sub>)']],dis:['(1/2)<i>p</i>(<i>V</i><sub>2</sub> − <i>V</i><sub>1</sub>)','2<i>p</i>(<i>V</i><sub>2</sub> − <i>V</i><sub>1</sub>)','<i>p</i>(<i>V</i><sub>2</sub> + <i>V</i><sub>1</sub>)']},
+ {id:'eng',ctx:'Рабочее тело тепловой машины за цикл получает от нагревателя количество теплоты <i>Q</i><sub>н</sub> и отдаёт холодильнику количество теплоты <i>Q</i><sub>х</sub>.',it:[['работа, совершаемая машиной за цикл','<i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub>'],['КПД тепловой машины','(<i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub>)/<i>Q</i><sub>н</sub>']],dis:['<i>Q</i><sub>х</sub>/<i>Q</i><sub>н</sub>','(<i>Q</i><sub>н</sub> − <i>Q</i><sub>х</sub>)/<i>Q</i><sub>х</sub>','<i>Q</i><sub>н</sub> + <i>Q</i><sub>х</sub>']},
+ {id:'carnot',ctx:'Идеальная тепловая машина (цикл Карно) с температурой нагревателя <i>T</i><sub>н</sub> и температурой холодильника <i>T</i><sub>х</sub> получает от нагревателя за цикл количество теплоты <i>Q</i>.',it:[['КПД машины','1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>'],['работа машины за цикл','<i>Q</i>(1 − <i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>)'],['количество теплоты, отданное холодильнику за цикл','<i>QT</i><sub>х</sub>/<i>T</i><sub>н</sub>']],dis:['<i>T</i><sub>х</sub>/<i>T</i><sub>н</sub>','<i>QT</i><sub>н</sub>/<i>T</i><sub>х</sub>','<i>Q</i>(<i>T</i><sub>н</sub> − <i>T</i><sub>х</sub>)/<i>T</i><sub>х</sub>']},
+ {id:'melt',ctx:'Кусок льда массой <i>m</i>, взятый при температуре плавления, полностью расплавили, а получившуюся воду нагрели на Δ<i>t</i>. Удельная теплота плавления льда λ, удельная теплоёмкость воды <i>c</i>.',it:[['количество теплоты, пошедшее на плавление льда','λ<i>m</i>'],['количество теплоты, пошедшее на нагревание воды','<i>cm</i>Δ<i>t</i>'],['всё количество теплоты, полученное веществом','<i>m</i>(λ + <i>c</i>Δ<i>t</i>)']],dis:['λ<i>m</i>Δ<i>t</i>','<i>cm</i>/Δ<i>t</i>','λ/<i>m</i>']}];
+// формы графиков для изобарного и изохорного нагревания (по оси x — T)
+const GSH={isobar:{name:'изобарно нагревают',q:{V:'lin0',U:'lin0',p:'const',n:'hyp',v:'sqrt'}},isochor:{name:'изохорно нагревают',q:{p:'lin0',U:'lin0',V:'const',n:'const',v:'sqrt'}}};
+const GQN={V:'объём газа',U:'внутренняя энергия газа',p:'давление газа',n:'концентрация молекул газа',v:'среднеквадратичная скорость теплового движения молекул'};
+function miniG(shape,lab){const o={w:150,h:124,ml:22,xmax:4.6,ymax:4.6,xt:[],yt:[],xn:'T',yn:'',xl:false,yl:false,fw:150,txt:[{x:2.3,y:4.55,t:lab,dy:4}]};
+ if(shape==='lin0')o.paths=[{pts:[[0,0],[4,3.6]]}];if(shape==='const')o.paths=[{pts:[[0.5,2.3],[4,2.3]]}];if(shape==='hyp')o.fns=[{f:x=>2.1/x,x0:0.55,x1:4}];if(shape==='sqrt')o.fns=[{f:x=>1.8*Math.sqrt(x),x0:0,x1:4}];return gr(o);}
+add('form',10,3,'Соответствие: величина — формула или график',vary(['f','f','g'],v=>{
+ if(v==='f'){const F=P(FORM),rows=SH(F.it).slice(0,2),rest=F.it.filter(x=>!rows.includes(x)).map(x=>x[1]),opts=SH(rows.map(r=>r[1]).concat(SH(rest.concat(F.dis)).slice(0,2)));
+  return {q:F.ctx+' Установите соответствие между физическими величинами и формулами, по которым их можно рассчитать.',kind:'match',rows:rows.map((r,i)=>'АБ'[i]+') '+r[0]),opts,ans:rows.map(r=>opts.indexOf(r[1])+1).join(''),
+   sol:rows.map((r,i)=>`${'АБ'[i]}) ${cap(r[0])}: ${r[1]}.`).join(' '),trap:'Проверь размерность: лишнее или пропущенное деление на объём — самая частая ошибка в таких заданиях.',m:{v,set:F.id,names:rows.map(r=>r[0])}};}
+ const pr=P(['isobar','isochor']),Q=GSH[pr].q,ks=Object.keys(Q),[q1,q2]=SH(ks).slice(0,2);if(Q[q1]===Q[q2])return null;
+ const dis=SH(ks.filter(k=>Q[k]!==Q[q1]&&Q[k]!==Q[q2]));if(dis.length<2)return null;const o=SH([q1,q2,dis[0],dis[1]]);
+ const why={lin0:'прямая пропорциональность (луч из начала координат)',const:'величина не меняется (горизонталь)',hyp:'обратная пропорциональность (гипербола)',sqrt:'пропорциональность корню из <i>T</i>'};
+ return {q:`Одноатомный идеальный газ постоянной массы ${GSH[pr].name}. На графиках А и Б показано, как при этом зависят от абсолютной температуры <i>T</i> две физические величины. Установите соответствие между графиками и величинами, зависимости которых они изображают.`,fig:`<div class="two">${miniG(Q[q1],'А')}${miniG(Q[q2],'Б')}</div>`,kind:'match',rows:['График А','График Б'],opts:o.map(k=>GQN[k]),ans:[q1,q2].map(k=>o.indexOf(k)+1).join(''),
+  sol:(pr==='isobar'?'Изобара: <i>p</i> = const, <i>V</i> ~ <i>T</i>, <i>U</i> ~ <i>T</i>, концентрация ~ 1/<i>V</i> ~ 1/<i>T</i>, скорость молекул ~ √<i>T</i>. ':'Изохора: <i>V</i> = const и концентрация постоянна, <i>p</i> ~ <i>T</i>, <i>U</i> ~ <i>T</i>, скорость молекул ~ √<i>T</i>. ')+`График А — ${why[Q[q1]]}: ${GQN[q1]}. График Б — ${why[Q[q2]]}: ${GQN[q2]}.`,
+  trap:'Сначала выпиши, как каждая величина из списка зависит от <i>T</i> в этом процессе, и только потом сопоставляй с графиками.',m:{v,pr,sh:[Q[q1],Q[q2]],opts:o}};}));
+
+// ====== Интерфейс тренажёра ======
+const LINES=[7,8,9,10];
+const TOPIC={1:'1. Газ: p, n, T, энергия и скорость молекул',2:'2. Уравнение состояния и изопроцессы',3:'3. Работа газа и первый закон',4:'4. Тепловые машины',5:'5. Теплота и фазовые переходы',6:'6. Пар и влажность',7:'7. Смеси, поршни, перегородки'};
+const MAXP=l=>l<=8?1:2;
+const TARGET={7:75,8:90,9:120,10:90};
+const INTERVAL=[10*60e3,864e5,3*864e5,7*864e5,16*864e5,35*864e5];
+const LS='termo_7_10_v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+let ST={v:1,t:{},days:{},exams:[]};
+function blank(){return {n:0,ok:0,streak:0,box:0,due:0,err:false,last:0,slow:0};}
+const T=id=>ST.t[id]||(ST.t[id]=blank());
+
+// ---------- хранение ----------
+let dbRef=null,writing=false,dirty=false,timer=null;
+function merge(a,b){const r={v:1,t:{},days:{},exams:[]};const ids=new Set(Object.keys(a.t||{}).concat(Object.keys(b.t||{})));
+ for(const id of ids){const x=(a.t||{})[id],y=(b.t||{})[id];r.t[id]=!x?y:!y?x:((y.last||0)>(x.last||0)?y:x);}
+ const ds=new Set(Object.keys(a.days||{}).concat(Object.keys(b.days||{})));for(const d of ds){const x=(a.days||{})[d]||{n:0,ok:0},y=(b.days||{})[d]||{n:0,ok:0};r.days[d]=x.n>=y.n?x:y;}
+ const ex=(a.exams||[]).concat(b.exams||[]);r.exams=ex.filter((e,i)=>ex.findIndex(z=>z.d===e.d)===i).sort((p,q)=>p.d-q.d).slice(-40);return r;}
+function setSync(t){const el=$('#sync');if(el)el.textContent=t;}
+function save(){try{localStorage.setItem(LS,JSON.stringify(ST));}catch(e){}if(!dbRef)return;dirty=true;clearTimeout(timer);timer=setTimeout(flush,1500);}
+async function flush(){if(!dbRef||writing||!dirty)return;writing=true;dirty=false;
+ try{await dbRef.set({st:JSON.stringify(ST),at:Date.now()});setSync('Прогресс сохранён в аккаунте');}catch(e){setSync('Не удалось сохранить в аккаунт — прогресс есть в этом браузере');}
+ writing=false;if(dirty)flush();}
+async function initDb(){try{if(!window.claude||!window.claude.use){setSync('Офлайн-версия: прогресс хранится в этом браузере');return;}
+ const db=await window.claude.use('db');if(!db){setSync('Прогресс хранится в этом браузере');return;}
+ const ref=db.doc('progress/termo');const to=setTimeout(()=>setSync('Аккаунт пока недоступен — прогресс хранится в браузере'),10000);
+ const snap=await ref.get();clearTimeout(to);if(snap.exists){const d=snap.data();if(d&&d.st){try{ST=merge(ST,JSON.parse(d.st));}catch(e){}}}
+ dbRef=ref;setSync('Прогресс сохраняется в аккаунте');render();}catch(e){setSync('Прогресс хранится в этом браузере');}}
+try{const s=localStorage.getItem(LS);if(s)ST=merge(ST,JSON.parse(s));}catch(e){}
+
+// ---------- данные ----------
+const BYID={};G.forEach(g=>BYID[g.id]=g);
+function bookLine(g){return `<div class="book">Откуда тип: ${SRC[g.id]||'сборник Демидовой 2027, задание '+g.line}</div>`;}
+function acc(st){return st.n?Math.round(100*st.ok/st.n):null;}
+function record(id,ok,sec){const st=T(id),g=BYID[id];st.n++;st.last=Date.now();const fast=sec<=TARGET[g.line]*1.5;
+ if(ok){st.ok++;st.streak++;if(!fast)st.slow++;
+  if(fast){st.box=Math.min(st.box+1,INTERVAL.length);st.due=Date.now()+INTERVAL[st.box-1];}else{st.due=Date.now()+INTERVAL[0];}
+  if(st.err&&st.streak>=2)st.err=false;}
+ else{st.streak=0;st.box=0;st.err=true;st.due=Date.now()+INTERVAL[0];}
+ const d=today();ST.days[d]=ST.days[d]||{n:0,ok:0};ST.days[d].n++;if(ok)ST.days[d].ok++;save();}
+
+// ---------- серия ----------
+let S=null; // {list:[ids], i, card, t0, results:[], filter}
+function pickSeries(filter,onlyErr,len=12){
+ let pool=G.filter(g=>filter==='all'||g.line===+filter||(filter.startsWith('t')&&g.topic===+filter.slice(1)));
+ if(onlyErr)pool=pool.filter(g=>T(g.id).err);if(!pool.length)return [];
+ const now=Date.now();const errs=SH(pool.filter(g=>T(g.id).err)),due=SH(pool.filter(g=>!T(g.id).err&&T(g.id).n&&T(g.id).due<=now)),
+  fresh=SH(pool.filter(g=>!T(g.id).n)),rest=pool.filter(g=>T(g.id).n&&!T(g.id).err&&T(g.id).due>now).sort((a,b)=>(T(a.id).box-T(b.id).box)||((acc(T(a.id))||0)-(acc(T(b.id))||0)));
+ let out=[];for(const g of errs.concat(due,fresh,rest))if(!out.includes(g.id))out.push(g.id);
+ out=out.slice(0,len);while(out.length<len)out.push(P(pool).id);
+ return out;}
+function startSeries(filter,onlyErr){const list=pickSeries(filter,onlyErr);if(!list.length){$('#train').innerHTML='<div class="panel">Здесь пока пусто. '+(onlyErr?'Ошибок нет — отлично.':'')+'</div>';return;}
+ S={list,i:0,results:[],filter,onlyErr};nextCard();}
+function nextCard(){window.scrollTo(0,0);if(S.i>=S.list.length){finishSeries();return;}const g=BYID[S.list[S.i]];S.card=g.gen();S.g=g;S.t0=Date.now();S.done=false;drawCard();}
+function answerUI(c,pref){
+ if(c.kind==='num')return `<div class="ansrow"><span>Ответ:</span><input id="${pref}in" inputmode="decimal" autocomplete="off" placeholder="число"><span class="unit">${c.unit||''}</span></div>`;
+ if(c.kind==='multi')return `<div class="stm">${c.stmts.map((s,i)=>`<label class="st"><input type="checkbox" value="${i+1}" name="${pref}m"><span><b>${i+1})</b> ${s.t}</span></label>`).join('')}</div>`;
+ if(c.kind==='change')return `<div class="chg"><div class="leg">1 — увеличится · 2 — уменьшится · 3 — не изменится</div>${c.rows.map((r,i)=>`<div class="chrow"><span>${r}</span><span class="seg">${[1,2,3].map(v=>`<label><input type="radio" name="${pref}c${i}" value="${v}"><b>${v}</b></label>`).join('')}</span></div>`).join('')}</div>`;
+ if(c.kind==='choice')return `<div class="opts">${c.opts.map((o,i)=>`<label class="opt"><input type="radio" name="${pref}o" value="${i+1}"><span>${o}</span></label>`).join('')}</div>`;
+ if(c.kind==='match')return `<div class="mt"><ol class="mopts">${c.opts.map(o=>`<li>${o}</li>`).join('')}</ol>${c.rows.map((r,i)=>`<div class="chrow"><span><b>${r}</b></span><span class="seg">${[1,2,3,4].map(v=>`<label><input type="radio" name="${pref}x${i}" value="${v}"><b>${v}</b></label>`).join('')}</span></div>`).join('')}</div>`;}
+function readAns(c,pref){
+ if(c.kind==='num'){const v=($('#'+pref+'in')||{}).value||'';return v.trim();}
+ if(c.kind==='multi')return [...document.querySelectorAll(`input[name="${pref}m"]:checked`)].map(x=>x.value).sort().join('');
+ if(c.kind==='change')return c.rows.map((r,i)=>{const x=document.querySelector(`input[name="${pref}c${i}"]:checked`);return x?x.value:'_';}).join('');
+ if(c.kind==='choice'){const x=document.querySelector(`input[name="${pref}o"]:checked`);return x?x.value:'';}
+ if(c.kind==='match')return c.rows.map((r,i)=>{const x=document.querySelector(`input[name="${pref}x${i}"]:checked`);return x?x.value:'_';}).join('');}
+function isOk(c,a){if(c.kind==='num'){const x=parseFloat(a.replace(/\s/g,'').replace(',','.').replace('−','-'));return isFinite(x)&&Math.abs(x-c.ans)<=1e-6*Math.max(1,Math.abs(c.ans));}return a===String(c.ans);}
+function points(c,a,line){if(MAXP(line)===1)return isOk(c,a)?1:0;if(isOk(c,a))return 2;
+ if(c.kind==='multi'){const A=new Set(a.split('').filter(Boolean)),B=new Set(String(c.ans).split(''));let d=0;for(const x of A)if(!B.has(x))d++;for(const x of B)if(!A.has(x))d++;return d===1?1:0;}
+ let d=0;for(let i=0;i<String(c.ans).length;i++)if(a[i]!==String(c.ans)[i])d++;return d===1?1:0;}
+function fmtAns(c){return c.kind==='num'?f(c.ans)+(c.unit?' '+c.unit:''):c.kind==='choice'?c.opts[+c.ans-1]:String(c.ans);}
+function feedback(c,g,ok,given){return `<div class="fb ${ok?'ok':'bad'}"><div class="verdict">${ok?'Верно':'Неверно'}${ok?'':` — правильный ответ: <b>${fmtAns(c)}</b>`}${given&&!ok?` <span class="muted">(твой: ${esc(given)})</span>`:''}</div>
+ <div class="sol">${c.sol}</div>${c.trap?`<div class="trap"><b>Ловушка:</b> ${c.trap}</div>`:''}<div class="ref">Вкладка «Конспект»: раздел ${TOPIC[g.topic]}</div>${bookLine(g)}</div>`;}
+function drawCard(){const c=S.card,g=S.g;
+ $('#train').innerHTML=`<div class="topbar"><button class="back" id="home">← Меню</button><span class="sw">Другой номер:${LINES.map(l=>`<button class="mini${S.filter===String(l)?' on':''}" data-l="${l}">${l}</button>`).join('')}</span></div><div class="panel card"><div class="cardhead"><span class="tag">№${g.line}</span><span class="ttl">${g.title}</span><span class="prog">${S.i+1}/${S.list.length}</span></div>
+ <div class="q">${c.q}</div>${c.fig?`<div class="figwrap">${c.fig}</div>`:''}${c.ref?REFD:''}<div id="ansbox">${answerUI(c,'a')}</div>
+ <div class="btns"><button id="chk" class="pri">Проверить</button><button id="idk">Не знаю</button><button id="quit" class="ghost">Закончить серию</button></div><div id="fbox"></div></div>`;
+ $('#chk').onclick=()=>check(false);$('#idk').onclick=()=>check(true);$('#quit').onclick=()=>finishSeries();$('#home').onclick=goHome;
+ document.querySelectorAll('#train .mini').forEach(b=>b.onclick=()=>startSeries(b.dataset.l,false));
+ const inp=$('#ain');if(inp)inp.focus();}
+function check(idk){if(S.done){S.i++;nextCard();return;}const c=S.card,g=S.g;const a=idk?'':readAns(c,'a');
+ if(!idk&&(a===''||a.includes('_'))){$('#fbox').innerHTML='<div class="hint">Сначала дай ответ (или нажми «Не знаю»).</div>';return;}
+ const ok=!idk&&isOk(c,a);const sec=(Date.now()-S.t0)/1000;record(g.id,ok,sec);S.results.push({id:g.id,ok,sec});S.done=true;
+ if(!ok&&S.list.length<24&&S.list.slice(S.i+1).indexOf(g.id)<0){const pos=Math.min(S.i+P([3,4]),S.list.length);S.list.splice(pos,0,g.id);}
+ $('#fbox').innerHTML=feedback(c,g,ok,a)+(ok&&sec>TARGET[g.line]*1.5?`<div class="muted small">Верно, но ${Math.round(sec)} с — цель до ${TARGET[g.line]} с. Карточка вернётся раньше.</div>`:'');
+ $('#chk').textContent='Дальше';$('#idk').style.display='none';document.querySelectorAll('#ansbox input').forEach(x=>x.disabled=true);$('#chk').focus();}
+function finishSeries(){if(!S)return;const n=S.results.length,ok=S.results.filter(r=>r.ok).length;const bad=[...new Set(S.results.filter(r=>!r.ok).map(r=>r.id))];
+ $('#train').innerHTML=`<div class="panel"><h3>Серия окончена</h3><p>Верно: <b>${ok}</b> из ${n}${n?` (${Math.round(100*ok/n)}%)`:''}.</p>
+ ${bad.length?`<p>Ошибки (вернутся с другими числами):</p><ul>${bad.map(id=>`<li>№${BYID[id].line} · ${BYID[id].title}</li>`).join('')}</ul>`:'<p>Без ошибок.</p>'}
+ <div class="btns"><button class="pri" id="again">Ещё серия</button>${bad.length?'<button id="errs">Прорешать ошибки</button>':''}<button id="tomenu">В меню</button></div></div>`;
+ $('#tomenu').onclick=goHome;
+ $('#again').onclick=()=>startSeries(S.filter,false);if($('#errs'))$('#errs').onclick=()=>startSeries('all',true);S=null;renderBadges();}
+function goHome(){S=null;show('train');}
+function trainHome(){const d=ST.days[today()]||{n:0,ok:0};const chips=['all'].concat(LINES.map(String)).map(x=>`<button class="chip" data-f="${x}">${x==='all'?'Все 7–10':'№'+x}</button>`).join('');
+ const tchips=Object.keys(TOPIC).map(k=>`<button class="chip sm" data-f="t${k}">${TOPIC[k]}</button>`).join('');
+ $('#train').innerHTML=`<div class="panel"><p class="muted">Серия — 12 карточек. Сначала идут ошибки и то, что пора повторить; числа каждый раз новые.</p>
+ <div class="lab">По номеру задания</div><div class="chips">${chips}</div><div class="lab">По разделу конспекта</div><div class="chips">${tchips}</div>
+ <p class="muted small">Сегодня: ${d.n} карточек${d.n?`, верно ${Math.round(100*d.ok/d.n)}%`:''}.</p></div>`;
+ document.querySelectorAll('#train .chip').forEach(b=>b.onclick=()=>startSeries(b.dataset.f,false));}
+
+// ---------- как на ЕГЭ ----------
+let EX=null;
+function examStart(){const cards=LINES.map(l=>{const g=P(G.filter(x=>x.line===l));return {g,c:g.gen()};});EX={cards,t0:Date.now(),done:false};
+ $('#exam').innerHTML=`<div class="topbar"><button class="back" id="exhome">← Меню</button></div><div class="panel"><p class="muted">Четыре задания подряд, как в бланке: №7 и №8 — по 1 баллу, №9 и №10 — по 2 балла (1 балл за одну ошибку). Ориентир — 7 минут.</p></div>`+
+ cards.map((x,i)=>`<div class="panel card"><div class="cardhead"><span class="tag">№${x.g.line}</span><span class="ttl">${x.g.title}</span></div><div class="q">${x.c.q}</div>${x.c.fig?`<div class="figwrap">${x.c.fig}</div>`:''}${x.c.ref?REFD:''}<div>${answerUI(x.c,'e'+i)}</div><div id="efb${i}"></div></div>`).join('')+
+ `<div class="panel"><button class="pri" id="exchk">Проверить вариант</button> <button id="exback">В меню</button> <span id="exres"></span></div>`;
+ $('#exchk').onclick=examCheck;$('#exhome').onclick=$('#exback').onclick=()=>{EX=null;examHome();window.scrollTo(0,0);};}
+function examCheck(){if(EX.done){examStart();return;}let sum=0;const sec=(Date.now()-EX.t0)/1000;
+ EX.cards.forEach((x,i)=>{const a=readAns(x.c,'e'+i);const p=points(x.c,a,x.g.line);sum+=p;const max=MAXP(x.g.line);record(x.g.id,p===max,sec/4);
+  $('#efb'+i).innerHTML=`<div class="pts">${p} из ${max}</div>`+feedback(x.c,x.g,p===max,a.replace(/_/g,'?'));});
+ document.querySelectorAll('#exam input').forEach(x=>x.disabled=true);EX.done=true;ST.exams.push({d:Date.now(),s:sum,sec:Math.round(sec)});save();
+ $('#exres').innerHTML=`<b>${sum} из 6</b> · ${Math.floor(sec/60)} мин ${Math.round(sec%60)} с`;$('#exchk').textContent='Новый вариант';renderBadges();}
+function examHome(){const h=ST.exams.slice(-5).reverse();$('#exam').innerHTML=`<div class="panel"><p>Вариант из четырёх заданий 7–10 — по одному каждого номера, случайные типы и числа. Балл — по правилам ЕГЭ.</p>
+ <button class="pri" id="exgo">Начать вариант</button>${h.length?`<div class="lab">Последние варианты</div><ul>${h.map(e=>`<li>${new Date(e.d).toLocaleDateString('ru-RU')} — ${e.s} из 6, ${Math.round(e.sec/60)} мин</li>`).join('')}</ul>`:''}</div>`;$('#exgo').onclick=examStart;}
+
+// ---------- ошибки, итоги ----------
+function errorsView(){const e=G.filter(g=>T(g.id).err);
+ $('#errors').innerHTML=`<div class="panel">${e.length?`<p>Тип уходит из списка после двух верных ответов подряд (с новыми числами).</p><ul class="elist">${e.map(g=>`<li><span class="tag">№${g.line}</span> ${g.title} <span class="muted small">· верно ${acc(T(g.id))}% из ${T(g.id).n}</span></li>`).join('')}</ul><button class="pri" id="errgo">Прорешать ошибки</button>`:'<p>Ошибок нет. Новые появятся здесь сами.</p>'}</div>`;
+ if($('#errgo'))$('#errgo').onclick=()=>{show('train');startSeries('all',true);};}
+function statsView(){const now=Date.now();
+ const row=(name,gs)=>{let n=0,ok=0,m=0,seen=0;gs.forEach(g=>{const s=T(g.id);n+=s.n;ok+=s.ok;if(s.box>=3)m++;if(s.n)seen++;});
+  return `<tr><td>${name}</td><td>${seen}/${gs.length}</td><td>${n?Math.round(100*ok/n)+'%':'—'}</td><td>${m}/${gs.length}</td></tr>`;};
+ const lines=LINES.map(l=>row('№'+l,G.filter(g=>g.line===l))).join('');const tops=Object.keys(TOPIC).map(k=>row(TOPIC[k],G.filter(g=>g.topic===+k))).join('');
+ const weak=G.filter(g=>{const s=T(g.id);return s.n>=3&&s.ok/s.n<0.7;}).sort((a,b)=>acc(T(a.id))-acc(T(b.id)));
+ const days=[];for(let i=34;i>=0;i--){const d=new Date(now-i*864e5);const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');days.push(ST.days[k]?ST.days[k].n:0);}
+ let streak=0;for(let i=days.length-1;i>=0;i--){if(days[i]>0)streak++;else if(i<days.length-1)break;}
+ const tot=Object.values(ST.t).reduce((a,s)=>a+s.n,0);
+ $('#stats').innerHTML=`<div class="panel"><p>Всего ответов: <b>${tot}</b> · дней подряд: <b>${streak}</b></p>
+ <div class="heat">${days.map(n=>`<span class="hc l${n===0?0:n<6?1:n<16?2:3}" title="${n}"></span>`).join('')}</div><div class="muted small">Активность за 5 недель</div>
+ <table class="st"><tr><th>Номер</th><th>Типы начаты</th><th>Точность</th><th>Освоено</th></tr>${lines}</table>
+ <table class="st"><tr><th>Раздел</th><th>Типы начаты</th><th>Точность</th><th>Освоено</th></tr>${tops}</table>
+ <div class="muted small">«Освоено» — три верных быстрых ответа подряд с перерывами.</div>
+ ${weak.length?`<div class="lab">Слабые места (точность ниже 70%)</div><ul>${weak.map(g=>`<li>№${g.line} · ${g.title} — ${acc(T(g.id))}%</li>`).join('')}</ul>`:''}
+ <div class="btns"><button id="reset" class="ghost">Сбросить прогресс</button></div><div id="rconf"></div></div>`;
+ $('#reset').onclick=()=>{$('#rconf').innerHTML='<p>Точно стереть весь прогресс? <button id="ry" class="bad">Да, стереть</button> <button id="rn">Нет</button></p>';$('#ry').onclick=()=>{ST={v:1,t:{},days:{},exams:[]};save();statsView();renderBadges();};$('#rn').onclick=()=>$('#rconf').innerHTML='';};}
+
+// ---------- навигация ----------
+function renderBadges(){const n=G.filter(g=>T(g.id).err).length;$('#errn').textContent=n?n:'';}
+function show(tab){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==tab);
+ if(tab==='train'){S=null;trainHome();}if(tab==='exam'){EX=null;examHome();}window.scrollTo(0,0);if(tab==='errors')errorsView();if(tab==='stats')statsView();}
+function render(){renderBadges();const cur=document.querySelector('nav button.on');if(!cur)return;const t=cur.dataset.tab;if(t==='errors')errorsView();else if(t==='stats')statsView();else if(t==='train'&&!S)trainHome();}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&S&&!$('#train').hidden&&$('#chk')){e.preventDefault();check(false);}});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.tab));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#train').hidden&&S)goHome();else if(!$('#exam').hidden&&EX){EX=null;examHome();}}});
+// ---------- конспект: мини-графики и счётчик типов ----------
+(function(){const b={w:170,h:130,ml:22,xmax:4.7,ymax:4.7,xt:[],yt:[],xl:false,yl:false,fw:170},L=(x,y,t,a)=>({x,y,t,a:a||'start'});
+ const F=(xn,yn,o,capt)=>`<div>${gr(Object.assign({},b,{xn,yn},o))}${capt}</div>`,el=$('#mg');
+ if(el)el.innerHTML=F('T','p',{dash:[[[0,0],[0.7,0.56]]],paths:[{pts:[[0.7,0.56],[3.3,2.64]]},{pts:[[0.5,3.9],[2.3,3.9]]},{pts:[[4.3,0.6],[4.3,3]]}],txt:[L(1.9,0.75,'V = const'),L(0.6,4.15,'p = const'),L(4.45,3.45,'T = const','end')]},'оси <i>p</i>–<i>T</i>')
+  +F('T','V',{dash:[[[0,0],[0.7,0.56]]],paths:[{pts:[[0.7,0.56],[3.3,2.64]]},{pts:[[0.5,3.9],[2.3,3.9]]},{pts:[[4.3,0.6],[4.3,3]]}],txt:[L(1.9,0.75,'p = const'),L(0.6,4.15,'V = const'),L(4.45,3.45,'T = const','end')]},'оси <i>V</i>–<i>T</i>')
+  +F('V','p',{fns:[{f:x=>2.1/x,x0:0.55,x1:4.3}],paths:[{pts:[[0.9,3.9],[3.2,3.9]]},{pts:[[4.2,1.2],[4.2,3.2]]}],txt:[L(1.5,1.75,'T = const'),L(0.9,4.1,'p = const'),L(4.1,2.6,'V = const','end')]},'оси <i>p</i>–<i>V</i>');
+ const c=$('#cnt');if(c)c.innerHTML=`${G.length} типов задач: ${LINES.map(l=>'№'+l+' — '+G.filter(g=>g.line===l).length).join(', ')}. Тип — это отдельный сюжет со своим видом: расчёт, график, таблица, цикл, поршень, «как изменится», соответствие. Внутри типа несколько вариантов вопроса.`;})();
+show('train');renderBadges();initDb();
+
+</script>
+</body>
+</html>

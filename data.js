@@ -2,7 +2,7 @@
 // Как добавить тренажёр — см. ТЗ_для_Opus.md.
 self.EGE_DATA = {
   // Меняй при ЛЮБОМ изменении файлов: по этой строке телефон обновляет офлайн-кэш.
-  version: "2026-11-13-1",
+  version: "2026-11-14-1",
 
   subjects: [
     { id: "math", title: "Математика" },
@@ -31,6 +31,7 @@ self.EGE_DATA = {
     { id: "rus-14",     subject: "rus",  title: "№14. Слитно, дефис, раздельно",         file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t14" }, days: [1, 4], ready: true },
     { id: "rus-15",     subject: "rus",  title: "№15. Н и НН",                           file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t15" }, days: [1, 4], ready: true },
 
+    { id: "termo",      subject: "phys", title: "МКТ и термодинамика 7–10",              file: "trainers/termo.html",      days: [3, 5], ready: true },
     { id: "electro",    subject: "phys", title: "Электродинамика 11–15",                 file: "trainers/electro.html",    days: [3, 5], ready: true }
   ],
 
