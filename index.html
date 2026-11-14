@@ -393,20 +393,26 @@
     if (TR.mockFrom && id >= TR.mockFrom && id <= TR.mockTo) return 'mock';
     return 'normal';
   }
+  // Неделя → её понедельник. Нужен, чтобы выбрать набор блоков по дате (TR.next действует с TR.next.from).
+  var WID = new WeakMap();
+  function cfgFor(id) { return (TR.next && id && id >= TR.next.from) ? TR.next : TR; }
   function peekWeek(id) {
     var w = T.weeks[id];
-    if (w) { w.items = w.items || {}; w.days = w.days || {}; if (!TR.types[w.type]) w.type = defaultType(id); return w; }
-    return { type: defaultType(id), items: {}, days: {}, note: '', mood: false };
+    if (w) { w.items = w.items || {}; w.days = w.days || {}; if (!TR.types[w.type]) w.type = defaultType(id); }
+    else w = { type: defaultType(id), items: {}, days: {}, note: '', mood: false };
+    WID.set(w, id);
+    return w;
   }
   function editWeek(id) { if (!T.weeks[id]) T.weeks[id] = peekWeek(id); return T.weeks[id]; }
   function hasData(w) {
     return Object.keys(w.items || {}).length > 0 || Object.keys(w.days || {}).length > 0 || !!(w.note || '').trim() || !!w.mood;
   }
-  function itemsOf(w) { return TR.items[w.type] || TR.items.normal; }
-  function fixedFor(type, d) {
+  function itemsOf(w) { var c = cfgFor(WID.get(w)); return c.items[w.type] || c.items.normal; }
+  function fixedFor(type, d, id) {
+    var c = cfgFor(id);
     if (type === 'recovery') return d === 6 ? ['Математика 16:00–19:00'] : [];
-    if (type === 'mock' && TR.fixedMock && TR.fixedMock[d]) return TR.fixedMock[d];
-    return (TR.fixed && TR.fixed[d]) || [];
+    if (type === 'mock' && c.fixedMock && c.fixedMock[d]) return c.fixedMock[d];
+    return (c.fixed && c.fixed[d]) || [];
   }
 
   function stats(w) {
@@ -429,13 +435,13 @@
     if (r.scrDays) r.scrAvg = Math.round(sum / r.scrDays);
     return r;
   }
-  // Светофор по правилу 7 плана v4
+  // Светофор по плану v4. С TR.next.from «меньше 70% блоков» — не признак (правка плана 14.11.2026)
   function signsFor(id, w) {
     var s = stats(w), ph = phase(id), signs = [];
     if (s.low) signs.push('энергия 2 и ниже три дня подряд');
     if (s.late >= 2) signs.push(s.late + ' ' + plural(s.late, 'ночь', 'ночи', 'ночей') + ' после 23:30 перед учебным днём');
     var judge = ph === 'past' || (ph === 'current' && todayIdx() === 6);
-    if (judge && s.bTot > 0 && s.bDone / s.bTot < 0.7) signs.push('сделано меньше 70% блоков');
+    if (!cfgFor(id).noPctSign && judge && s.bTot > 0 && s.bDone / s.bTot < 0.7) signs.push('сделано меньше 70% блоков');
     if (w.mood) signs.push('ничего не хочется или трудно заснуть');
     return signs;
   }
@@ -505,7 +511,7 @@
     } else {
       h += '<div class="empty">' + (w.type === 'recovery' ? 'Только школьная ДЗ и допы' : 'Своих блоков нет — отдых') + '</div>';
     }
-    var fixed = fixedFor(w.type, d);
+    var fixed = fixedFor(w.type, d, id);
     if (fixed.length) h += '<div class="fixed">' + fixed.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>';
 
     var attr = ' data-w="' + id + '" data-d="' + d + '"';
@@ -653,7 +659,7 @@
       '<div class="tiles">' +
       '<div class="tile wide"><div class="k">Сделано за неделю</div><div class="v">' + pct + '%</div>' +
       '<div class="bar"><i style="width:' + pct + '%"></i></div><div class="s">занимался ' + n + ' из 7 дней</div></div>' +
-      '<div class="tile"><div class="k">Блоки</div><div class="v">' + fmtNum(s.bDone) + ' из ' + s.bTot + '</div><div class="s">цель — 70% и выше</div></div>' +
+      '<div class="tile"><div class="k">Блоки</div><div class="v">' + fmtNum(s.bDone) + ' из ' + s.bTot + '</div><div class="s">' + (cfgFor(weekId).noPctSign ? 'цель — все блоки' : 'цель — 70% и выше') + '</div></div>' +
       '<div class="tile"><div class="k">Память</div><div class="v">' + (s.mTot ? fmtNum(s.mDone) + ' из ' + s.mTot : '—') + '</div><div class="s">20 минут в будни</div></div>' +
       '<div class="tile"><div class="k">Экран в среднем</div><div class="v"' + (over ? ' style="color:var(--half)"' : '') + '>' + fmtMin(s.scrAvg) + '</div><div class="s">цель ' + fmtMin(T.screenGoal) + '</div></div>' +
       '<div class="tile"><div class="k">Ночи после 23:30</div><div class="v">' + s.late + '</div><div class="s">перед учебным днём</div></div>' +

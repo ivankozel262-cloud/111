@@ -2,7 +2,7 @@
 // Как добавить тренажёр — см. ТЗ_для_Opus.md.
 self.EGE_DATA = {
   // Меняй при ЛЮБОМ изменении файлов: по этой строке телефон обновляет офлайн-кэш.
-  version: "2026-11-14-1",
+  version: "2026-11-15-1",
 
   subjects: [
     { id: "math", title: "Математика" },
@@ -19,20 +19,20 @@ self.EGE_DATA = {
   // preset  — необязательно: что записать в память браузера перед открытием файла.
   //           Так семь строк орфографии открывают один общий файл сразу на нужном задании.
   trainers: [
-    { id: "pervyi-hod", subject: "math", title: "Первый ход (планиметрия, №18)",         file: "trainers/pervyi-hod.html", days: [2],    ready: true },
-    { id: "razminka",   subject: "math", title: "Разминка по чертежу",                   file: "trainers/razminka.html",   days: [2],    ready: true },
-    { id: "teoriya",    subject: "math", title: "Формулы и факты (теория планиметрии)",  file: "trainers/teoriya.html",    days: [2],    ready: true },
+    { id: "pervyi-hod", subject: "math", title: "Первый ход (планиметрия, №18)",         file: "trainers/pervyi-hod.html", days: [1],    ready: true },
+    { id: "razminka",   subject: "math", title: "Разминка по чертежу",                   file: "trainers/razminka.html",   days: [1],    ready: true },
+    { id: "teoriya",    subject: "math", title: "Формулы и факты (теория планиметрии)",  file: "trainers/teoriya.html",    days: [1],    ready: true },
 
-    { id: "rus-9",      subject: "rus",  title: "№9. Гласные в корне",                   file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t9"  }, days: [1, 4], ready: true },
-    { id: "rus-10",     subject: "rus",  title: "№10. Приставки, Ъ и Ь",                 file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t10" }, days: [1, 4], ready: true },
-    { id: "rus-11",     subject: "rus",  title: "№11. Суффиксы",                         file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t11" }, days: [1, 4], ready: true },
-    { id: "rus-12",     subject: "rus",  title: "№12. Окончания глаголов, причастия",    file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t12" }, days: [1, 4], ready: true },
-    { id: "rus-13",     subject: "rus",  title: "№13. НЕ и НИ",                          file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t13" }, days: [1, 4], ready: true },
-    { id: "rus-14",     subject: "rus",  title: "№14. Слитно, дефис, раздельно",         file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t14" }, days: [1, 4], ready: true },
-    { id: "rus-15",     subject: "rus",  title: "№15. Н и НН",                           file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t15" }, days: [1, 4], ready: true },
+    { id: "rus-9",      subject: "rus",  title: "№9. Гласные в корне",                   file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t9"  }, days: [2, 3, 5], ready: true },
+    { id: "rus-10",     subject: "rus",  title: "№10. Приставки, Ъ и Ь",                 file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t10" }, days: [2, 3, 5], ready: true },
+    { id: "rus-11",     subject: "rus",  title: "№11. Суффиксы",                         file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t11" }, days: [2, 3, 5], ready: true },
+    { id: "rus-12",     subject: "rus",  title: "№12. Окончания глаголов, причастия",    file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t12" }, days: [2, 3, 5], ready: true },
+    { id: "rus-13",     subject: "rus",  title: "№13. НЕ и НИ",                          file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t13" }, days: [2, 3, 5], ready: true },
+    { id: "rus-14",     subject: "rus",  title: "№14. Слитно, дефис, раздельно",         file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t14" }, days: [2, 3, 5], ready: true },
+    { id: "rus-15",     subject: "rus",  title: "№15. Н и НН",                           file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t15" }, days: [2, 3, 5], ready: true },
 
-    { id: "termo",      subject: "phys", title: "МКТ и термодинамика 7–10",              file: "trainers/termo.html",      days: [3, 5], ready: true },
-    { id: "electro",    subject: "phys", title: "Электродинамика 11–15",                 file: "trainers/electro.html",    days: [3, 5], ready: true }
+    { id: "termo",      subject: "phys", title: "МКТ и термодинамика 7–10",              file: "trainers/termo.html",      days: [6], ready: true },
+    { id: "electro",    subject: "phys", title: "Электродинамика 11–15",                 file: "trainers/electro.html",    days: [6], ready: true }
   ],
 
   // Обычная неделя из плана v4 (действует с 23.11). Ключ — день недели, 1 — пн … 7 — вс.
@@ -47,6 +47,7 @@ self.EGE_DATA = {
   ],
 
   // Трекер плана v4. День: 0 — пн … 6 — вс. mem: true — «Память» (считается отдельно от блоков).
+  // items, fixed, fixedMock ниже — недели до 23.11.2026; с 23.11 действует набор из next.
   tracker: (function () {
     function mem(t) { return { id: "mem", name: "Память", sub: "10 мин дома + 10 в дороге", time: t, mem: true }; }
     function it(id, name, time, sub) { return { id: id, name: name, time: time, sub: sub || "" }; }
@@ -109,6 +110,60 @@ self.EGE_DATA = {
       seed: {
         "2026-11-02": { type: "recovery", items: { "5_fdz": 1, "5_mv": 1 }, days: {}, note: "", mood: false },
         "2026-11-09": { type: "light", items: {}, days: {}, note: "", mood: false }
+      },
+      // Правка плана v4 от 14.11.2026: с недели 23.11 — четыре длинных блока (Вт русский, Пт информатика,
+      // Сб математика и ДЗ по физике). Недели до from считаются по блокам выше, история не меняется.
+      // noPctSign: «сделано меньше 70% блоков» больше не признак светофора.
+      next: {
+        from: "2026-11-23",
+        noPctSign: true,
+        items: {
+          normal: [
+            [mem("17:15")],
+            [mem("16:30"), it("rus", "Русский: длинный блок", "19:00", "правило номера → 30 заданий → смешанные")],
+            [mem("17:15")],
+            [mem("16:30")],
+            [mem("17:10"), it("inf", "Информатика: длинный блок", "17:30", "ДЗ курса → 2–3 задания с нуля без папки")],
+            [it("mat", "Математика: длинный блок", "11:00", "ДЗ курса → неравенство и экономическая → 1 часть"), it("fdz", "Физика: ДЗ курса", "15:00", "к понедельнику")],
+            []
+          ],
+          mock: [
+            [mem("17:15")],
+            [mem("16:30"), it("rus", "Русский: длинный блок", "19:00", "правило номера → 30 заданий → смешанные")],
+            [mem("17:15")],
+            [mem("16:30")],
+            [mem("17:10"), it("inf", "Информатика: длинный блок", "17:30", "ДЗ курса → 2–3 задания с нуля без папки")],
+            [it("mock", "Пробник", "9:30", "один предмет, на время, без подсказок"), it("fdz", "Физика: ДЗ курса", "15:00", "к понедельнику")],
+            []
+          ],
+          light: [
+            [mem("17:15")],
+            [mem("16:30"), it("rus", "Русский: ядро", "19:00", "30 заданий на номер недели, 50 минут")],
+            [mem("17:15")],
+            [mem("16:30")],
+            [mem("17:10"), it("inf", "Информатика: ядро", "17:30", "2 задания с нуля без папки, 50 минут")],
+            [it("mat", "Математика: ядро", "11:00", "неравенство и экономическая, 50 минут"), it("fdz", "Физика: ДЗ курса", "15:00", "минимум")],
+            []
+          ],
+          recovery: [
+            [], [], [], [], [],
+            [it("fdz", "Ф-ДЗ", "11:00", "минимум"), it("idz", "И-ДЗ", "12:15", "минимум"), it("mv", "Лекция и М-В", "14:15", "по 30 минут")],
+            []
+          ]
+        },
+        fixed: [
+          ["Малый резерв 19:45–20:30", "Семинар по физике 21:00–23:00"],
+          ["Проверка 22:05"],
+          ["Информатика 19:00–22:00"],
+          ["Резерв Р1 18:30–21:00", "Проверка 21:05"],
+          ["Лекция по физике 21:00–22:30"],
+          ["Бег 9:30", "Проверка 14:05", "После 16:30 свободно"],
+          ["Резерв Р2 11:00–13:30", "Математика 16:00–19:00", "Итог недели 21:05"]
+        ],
+        fixedMock: {
+          5: ["Проверка 14:05", "Бег после пробника"],
+          6: ["Р2 11:00–13:30: ядро математики, если пробник не по математике", "Математика 16:00–19:00", "Итог недели 21:05"]
+        }
       }
     };
   })()
