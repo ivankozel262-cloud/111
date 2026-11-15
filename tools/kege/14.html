@@ -1,0 +1,140 @@
+<!-- title: КЕГЭ 14 — системы счисления: шаблоны -->
+<header class="head">
+  <div class="kicker">КЕГЭ · задание 14</div>
+  <h1>Системы счисления: шаблоны (Python)</h1>
+  <p class="meta">Основа — три шаблона с твоих скринов, остальное добавлено. Весь код запущен, ответы в комментариях сверены. По проекту КИМ-2027 задание 14 не меняется. Ловушки и самопроверка — в отдельном файле.</p>
+</header>
+
+<section class="card">
+  <div class="sec-h"><h2>Система: три вопроса к условию</h2><span class="tag soft">ПОНЯТЬ</span></div>
+  <div class="q">
+    <div class="q-h">1. Где неизвестное?</div>
+    <div class="q-row"><span>неизвестных нет: «значение выражения записали в системе счисления с основанием q»</span><span>цифры числа · <b>А</b></span></div>
+    <div class="q-row"><span>x — <b>цифра внутри числа</b>: 97968x15<sub>15</sub>, «неизвестная цифра из алфавита…»</span><span>перебор цифр · <b>Б</b></span></div>
+    <div class="q-row"><span>x — <b>число в выражении</b>: 7<sup>170</sup> + 7<sup>100</sup> − x, «x не превышает 2030»</span><span>перебор x, внутри А · <b>В</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">2. Что посчитать? (А и В)</div>
+    <p>Меняется только условие на цифру <code>d</code> — таблица под шаблоном А.</p>
+  </div>
+  <div class="q">
+    <div class="q-h">3. Наименьшее или наибольшее? (Б и В)</div>
+    <div class="q-row"><span><b>наименьшее</b> x</span><span>перебор снизу вверх, первый подходящий, <code>break</code></span></div>
+    <div class="q-row"><span><b>наибольшее</b> x</span><span>перебор сверху вниз (<code>reversed</code>), первый подходящий, <code>break</code></span></div>
+  </div>
+  <p class="note"><b>Без <code>break</code> программа печатает все подходящие x</b> — на твоих же скринах вышло 2 ответа в Б и 5 ответов в В. Основание больше 36 — шаблон <b>Г</b> (запас).</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">А</span><h2>Цифры числа в системе с основанием q</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="pair">
+<pre class="code">n = 16**820 - 2**761 + 14
+q = 4                  <i># основание</i>
+k = 0
+while n &gt; 0:
+    d = n % q          <i># последняя цифра</i>
+    n = n // q         <i># отрезали её</i>
+    if d == 0:         <i># условие на цифру</i>
+        k += 1
+print(k)               <i># 378</i></pre>
+  <ul class="notes">
+    <li>Цифры идут справа налево — для подсчёта порядок не важен.</li>
+    <li>Ведущих нулей цикл не даёт → считает только <b>значащие</b> нули.</li>
+    <li><b>d — число, а не буква:</b> цифра «A» — это <code>d == 10</code>, «F» — <code>15</code>, «Q» в 27-ричной — <code>26</code>.</li>
+  </ul>
+  </div>
+  <p class="sub-h">Что спрашивают → что меняешь:</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>значащих нулей</td><td><code>if d == 0: k += 1</code></td></tr>
+      <tr><td>цифр «5» / цифр «A»</td><td><code>if d == 5:</code> / <code>if d == 10:</code></td></tr>
+      <tr><td>цифр с числовым значением больше 9 <b>(демо-2026)</b></td><td><code>if d &gt; 9:</code></td></tr>
+      <tr><td>чётных цифр, больших 9 <b>(досрок-2026)</b></td><td><code>if d &gt; 9 and d % 2 == 0:</code></td></tr>
+      <tr><td>сумма цифр</td><td><code>k += d</code> без if</td></tr>
+      <tr><td>сколько всего цифр</td><td><code>k += 1</code> без if</td></tr>
+      <tr><td>цифр 5 на 28 больше, чем 0</td><td>два счётчика <code>k5</code>, <code>k0</code>; условие <code>k5 - k0 == 28</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Б</span><h2>x — неизвестная цифра внутри числа</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="pair">
+<pre class="code"><b>from string import printable</b>
+for x in <b>printable[:15]</b>:  <i># 0..9, a..e</i>
+    s1 = int(f'97968{x}15', 15)
+    s2 = int(f'7{x}233', 15)
+    s = s1 + s2
+    if s % 14 == 0:
+        print(x, s <b>//</b> 14)   <i># 5 116071912</i>
+        <b>break</b>              <i># наименьшее x</i></pre>
+  <ul class="notes">
+    <li><code>printable[:b]</code> — ровно b цифр системы с основанием b. Алфавит руками не пишешь.</li>
+    <li><code>int</code> понимает и маленькие буквы: <code>'c'</code> = 12.</li>
+    <li><b>Наибольшее:</b> <code>for x in reversed(printable[:15]):</code> → <code>c 116073712</code>.</li>
+    <li>Частное — только <code>//</code>.</li>
+  </ul>
+  </div>
+  <p class="sub-h">Другое условие → меняешь одну-две строки:</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>числа в <b>разных</b> системах (12, 17, 15)</td><td>x перебирать до <b>меньшего</b> основания: <code>printable[:12]</code></td></tr>
+      <tr><td><b>две</b> неизвестные x и y</td><td>второй цикл внутри первого: <code>for y in printable[:b]:</code></td></tr>
+      <tr><td>равенство «… = 60x05<sub>15</sub>»</td><td><code>if левая == правая: print(правая)</code></td></tr>
+      <tr><td>наименьшее <b>значение выражения</b></td><td>подходящие s — в список, потом <code>print(min(res) // k)</code></td></tr>
+      <tr><td>неизвестное <b>основание</b>: 52x31<sub>y</sub> = 198983</td><td><code>for y in range(6, 37):</code> — с цифры на 1 больше самой большой (5), внутри <code>for x in printable[:y]:</code></td></tr>
+      <tr><td>основание <b>больше 36</b></td><td><code>int</code> не работает → шаблон <b>Г</b></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">В</span><h2>x — число в выражении: перебор x, внутри А</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="pair">
+<pre class="code">for x in <b>range(2030, 0, -1)</b>: <i># наибольшее</i>
+    n = 7**170 + 7**100 - x
+    <b>k = 0</b>                  <i># для каждого x</i>
+    while n &gt; 0:
+        if n % 7 == 0:
+            k += 1
+        n //= 7
+    if k == 73:
+        print(x)               <i># 1715</i>
+        <b>break</b></pre>
+  <ul class="notes">
+    <li><b>Наименьшее:</b> <code>for x in range(1, 2031):</code> → <code>343</code>.</li>
+    <li>«не превышает 2030» — 2030 <b>входит</b>: верх range — 2031.</li>
+    <li><code>k = 0</code> — внутри цикла по x, иначе счёт копится.</li>
+  </ul>
+  </div>
+  <p class="sub-h">«при котором нулей <b>больше всего</b>» — твой шаблон в два прохода:</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>1-й проход</td><td>счётчик каждого x — в список: <code>res.append(k)</code>; <code>print(max(res))</code> → 73</td></tr>
+      <tr><td>2-й проход</td><td>тот же цикл, в конце <code>if k == 73: print(x)</code> → наибольшее/наименьшее по правилу из системы</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Г</span><h2>Основание больше 36: число из списка цифр</h2><span class="tag soft">ЗАПАС</span></div>
+  <div class="pair">
+<pre class="code">def to10(ds, b):        <i># ds — цифры списком</i>
+    n = 0
+    for d in ds:
+        n = n * b + d   <i># сдвиг + цифра</i>
+    return n
+
+for x in range(158):    <i># цифры 0..157</i>
+    s1 = to10([2, 7, 3, x, 2], 158)
+    s2 = to10([1, x, 3, 9, 0], 158)
+    s = s1 + s2
+    if s % 73 == 0:
+        print(x, s // 73)  <i># 56 29017200</i>
+                           <i># 129 32961670</i></pre>
+  <ul class="notes">
+    <li><code>int('273x2', 158)</code> → <code>ValueError: int() base must be &gt;= 2 and &lt;= 36</code>.</li>
+    <li>Встречается в тренировочных сборниках (273x2<sub>158</sub> + 1x390<sub>158</sub>); в демоверсиях 2025–2026 и на досроке-2026 основания были не больше 29.</li>
+  </ul>
+  </div>
+</section>
