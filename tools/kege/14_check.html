@@ -12,7 +12,6 @@
     <tbody>
       <tr><td>Программа напечатала <b>несколько</b> x</td><td>нет <code>break</code>; печатаются все подходящие</td><td>наименьшее — снизу вверх + <code>break</code>; наибольшее — <code>reversed</code> + <code>break</code></td></tr>
       <tr><td><code>ValueError: invalid literal for int() with base 12: '19c61'</code></td><td>x перебирался до большего основания, а в числе с основанием 12 цифры <code>c</code> нет</td><td>x — до <b>меньшего</b> основания: <code>printable[:12]</code></td></tr>
-      <tr><td><code>ValueError: int() base must be &gt;= 2 and &lt;= 36</code></td><td>основание больше 36</td><td>шаблон Г: <code>to10([...], b)</code></td></tr>
       <tr><td><code>ValueError: invalid literal for int() with base 2: '52031'</code></td><td>перебор основания начат слишком низко: в записи есть цифра 5</td><td>основание — от самой большой цифры + 1: <code>range(6, 37)</code></td></tr>
       <tr><td>Ответ <code>116071912.0</code></td><td>деление <code>/</code> даёт дробное число</td><td><code>//</code></td></tr>
       <tr><td><code>OverflowError: integer division result too large for a float</code></td><td><code>n = n / q</code> на огромном числе</td><td><code>n = n // q</code></td></tr>
@@ -33,14 +32,13 @@
     <li><b>Д2.</b> Подсчёт цифр «A» в 16-ричной записи: <code>if d == 'A': k += 1</code></li>
     <li><b>Д3.</b> <code>k = 0</code> стоит над строкой <code>for x in range(1, 2031):</code>, внутри — подсчёт нулей и <code>if k == 73: print(x)</code></li>
     <li><b>Д4.</b> Задача «наибольшее x», в программе <code>for x in printable[:15]:</code> … <code>print(x, s // 14)</code> без <code>break</code></li>
-    <li><b>Д5.</b> <code>s = int('273x2'.replace('x', str(x)), 158)</code></li>
-    <li><b>Д6.</b> <code>for y in range(2, 37):</code> → <code>int(f'52{x}31', y)</code></li>
+    <li><b>Д5.</b> <code>for y in range(2, 37):</code> → <code>int(f'52{x}31', y)</code></li>
   </ol>
 </section>
 
 <section class="card long">
   <div class="sec-h"><h2>3. Задачи</h2></div>
-  <p>Сначала назови шаблон (А–Г) и ловушку, потом решай.</p>
+  <p>Сначала назови шаблон (А–В) и ловушку, потом решай.</p>
   <ol class="rules">
     <li><b>(Демо-2026)</b> Значение выражения 2·2187<sup>2020</sup> + 729<sup>2021</sup> − 2·243<sup>2022</sup> + 81<sup>2023</sup> − 2·27<sup>2024</sup> − 6561 записали в системе счисления с основанием 27. Сколько в этой записи цифр с числовым значением, превышающим 9?</li>
     <li><b>(По мотивам досрока-2026)</b> Значение выражения 2·2187<sup>567</sup> + 729<sup>566</sup> − 2·243<sup>565</sup> + 81<sup>564</sup> − 2·27<sup>563</sup> − 6561 записали в системе счисления с основанием 27. Сколько в этой записи чётных цифр с числовым значением больше 9?</li>
@@ -53,7 +51,6 @@
     <li>88x4y<sub>9</sub> + 7x44y<sub>11</sub>, x и y — допустимые в этих системах цифры. Найдите <b>наименьшее значение выражения</b>, кратное 43. В ответе — частное от деления этого значения на 43.</li>
     <li><b>(Демо-2025)</b> Значение выражения 7<sup>170</sup> + 7<sup>100</sup> − x, где x — целое положительное число, не превышающее 2030, записали в 7-ричной системе. Определите <b>наибольшее</b> x, при котором в записи ровно 71 нуль.</li>
     <li>Значение выражения 5<sup>2026</sup> + 7·5<sup>1013</sup> + 10<sup>7</sup> − X записали в системе счисления с основанием 6. Определите минимальное натуральное X, при котором цифр 5 в этой записи на 28 больше, чем цифр 0.</li>
-    <li><b>(Запас, Г)</b> 273x2<sub>158</sub> + 1x390<sub>158</sub>. Найдите все x, при которых значение кратно 73, и для каждого — частное от деления на 73.</li>
     <li>52x31<sub>y</sub> = 198983<sub>10</sub>, x — цифра, y — основание (не больше 36). Найдите x и y.</li>
   </ol>
 </section>
@@ -61,7 +58,7 @@
 <section class="card pb">
   <div class="sec-h"><h2>Ответы</h2></div>
   <div class="rule">
-    <p><b>Раздел 2.</b> <b>Д1</b> — <code>ValueError: invalid literal for int() with base 12: '19c61'</code>; перебирать <code>printable[:12]</code>. <b>Д2</b> — всегда 0; <code>d == 10</code>. <b>Д3</b> — ничего не напечатает: k копится через все x (к концу 142943) и уже на первом x проскакивает 73; <code>k = 0</code> — внутрь цикла. <b>Д4</b> — печатает <code>5 …</code> и <code>c …</code>; нужно <code>reversed(printable[:15])</code> и <code>break</code> → <code>c 116073712</code>. <b>Д5</b> — <code>ValueError: int() base must be &gt;= 2 and &lt;= 36</code>; шаблон Г. <b>Д6</b> — <code>ValueError: invalid literal for int() with base 2: '52031'</code>; <code>range(6, 37)</code>.</p>
+    <p><b>Раздел 2.</b> <b>Д1</b> — <code>ValueError: invalid literal for int() with base 12: '19c61'</code>; перебирать <code>printable[:12]</code>. <b>Д2</b> — всегда 0; <code>d == 10</code>. <b>Д3</b> — ничего не напечатает: k копится через все x (к концу 142943) и уже на первом x проскакивает 73; <code>k = 0</code> — внутрь цикла. <b>Д4</b> — печатает <code>5 …</code> и <code>c …</code>; нужно <code>reversed(printable[:15])</code> и <code>break</code> → <code>c 116073712</code>. <b>Д5</b> — <code>ValueError: invalid literal for int() with base 2: '52031'</code>; <code>range(6, 37)</code>.</p>
   </div>
   <div class="tbl"><table>
     <thead><tr><th>№</th><th>Ответ</th><th>Шаблон и ловушка</th></tr></thead>
@@ -77,8 +74,7 @@
       <tr><td>9</td><td>3753</td><td>Б, две неизвестные (обе до 9), <code>min(res) // 43</code>; x = 0, y = 4</td></tr>
       <tr><td>10</td><td>2029</td><td>В, наибольшее → сверху вниз; таких x всего 630</td></tr>
       <tr><td>11</td><td>5</td><td>В, два счётчика: <code>k5 - k0 == 28</code></td></tr>
-      <tr><td>12</td><td>x = 56 → 29017200; x = 129 → 32961670</td><td>Г, без <code>break</code>: нужны все x</td></tr>
-      <tr><td>13</td><td>x = 7, y = 14</td><td>Б с неизвестным основанием, <code>range(6, 37)</code></td></tr>
+      <tr><td>12</td><td>x = 7, y = 14</td><td>Б с неизвестным основанием, <code>range(6, 37)</code></td></tr>
     </tbody>
   </table></div>
 </section>
