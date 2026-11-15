@@ -1,0 +1,151 @@
+<!-- title: КЕГЭ 16 — рекурсия: шаблоны -->
+<header class="head">
+  <div class="kicker">КЕГЭ · задание 16</div>
+  <h1>Рекурсия: шаблоны (Python)</h1>
+  <p class="meta">★ — учить наизусть. Весь код запущен на Python 3.10 (как в школе) и новее. По проекту КИМ-2027 задание 16 не меняется.</p>
+</header>
+
+<section class="card">
+  <div class="sec-h"><h2>Система: три вопроса к условию + последняя строка</h2><span class="tag soft">ПОНЯТЬ</span></div>
+  <div class="q">
+    <div class="q-h">1. Кто кого вызывает?</div>
+    <div class="q-row"><span>одна F</span><span><b>А</b></span></div>
+    <div class="q-row"><span>F и G друг через друга</span><span><b>В</b></span></div>
+    <div class="q-row"><span>F — формула от G (сама себя не вызывает)</span><span><b>Г</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">2. Куда шаг?</div>
+    <div class="q-row"><span>к меньшим n (<code>n-1</code>, <code>n-2</code>, <code>n//2</code>), база снизу</span><span>цикл <b>вверх</b> · <b>А</b></span></div>
+    <div class="q-row"><span>к большим n (<code>n+1</code>, <code>n+2</code>), база сверху «n &gt; 3000»</span><span>цикл <b>вниз</b> · <b>Б</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">3. Цикл или функция?</div>
+    <p><b>Цикл — по умолчанию</b>: при любом n не кричит и не молчит. Функция (<b>Д</b>) — если шаги в разные стороны (<code>n+3</code> и <code>n-1</code>) и порядок цикла не придумать, или n маленькие.</p>
+  </div>
+  <div class="q">
+    <div class="q-h">4. Что спрашивают?</div>
+    <p>→ последняя строка (таблица в конце).</p>
+  </div>
+  <p class="note"><b>Все шаблоны — один скелет А</b>: меняются направление цикла, число словарей и последняя строка.</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">А</span><h2>Одна F, шаг вниз — цикл вверх ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">F = {}
+for n in range(1, 3000):   <i># до N+1 и выше</i>
+    if n &lt; 110:  F[n] = n
+    if n &gt;= 110: F[n] = n + F[n - 1]
+print(F[2025] - F[2021])     <i># 8094</i></pre>
+  <ul class="notes">
+    <li>Условия — переписать из задачи как есть.</li>
+    <li>Проверка в уме: F(2025) − F(2021) = 2025 + 2024 + 2023 + 2022.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Б</span><h2>Шаг к большим n — цикл вниз ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">F = {}
+for n in <b>reversed(range(0, 4000))</b>:  <i># 3999...0</i>
+    if n &gt; 3000:  F[n] = n
+    if n &lt;= 3000: F[n] = (2*n + 4) * F[n + 2]
+x = F[20] // F[28]
+print(sum(map(int, str(x))))        <i># 21</i></pre>
+  <ul class="notes">
+    <li>Верх range — выше порога хотя бы на шаг: нужны F[3001], F[3002].</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">В</span><h2>Две функции друг через друга ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">F = {}; G = {}               <i># два словаря</i>
+for n in range(1, 10):       <i># один цикл</i>
+    if n == 1: F[n] = 1; G[n] = 1
+    if n &gt; 1:
+        F[n] = 2 * G[n - 1] + 5 * n
+        G[n] = F[n - 1] + 2 * n
+print(F[4] + G[4])           <i># 89</i></pre>
+  <ul class="notes">
+    <li>Строка, которой нужно значение <b>того же n</b> (<code>G[n] = F[n] + ...</code>), идёт второй.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Г</span><h2>F — формула от G: цикл для G ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">G = {}                  <i># F(n)=2*(G(n-3)+8)</i>
+for n in range(1, 16000):
+    if n &lt; 10:  G[n] = 2 * n
+    if n &gt;= 10: G[n] = G[n - 2] + 1
+print(2 * (G[15548 - 3] + 8))   <i># F(15548)</i></pre>
+  <ul class="notes">
+    <li>Ответ 15588. Тип из основной волны 11.06.2025: F сама себя не вызывает — словарь F не нужен.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Д</span><h2>Функция — шапка из двух защит ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code"><b>import sys</b>
+<b>sys.setrecursionlimit(10000)</b>   <i># от «кричит»</i>
+<b>from functools import lru_cache</b>
+
+<b>@lru_cache(None)</b>               <i># от «молчит»</i>
+def F(n):
+    if n &lt; 110:  return n
+    if n &gt;= 110: return n + F(n - 1)
+
+print(F(2025) - F(2021))       <i># 8094</i></pre>
+  <ul class="notes">
+    <li><b>Две функции:</b> две <code>def</code>, над <b>каждой</b> <code>@lru_cache(None)</code>; F вызывает <code>G(n - 1)</code>, G вызывает <code>F(n - 1)</code>; <code>print(F(4) + G(4))</code>.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><h2>Прогрев — если до базы &gt; 3000 шагов</h2></div>
+<pre class="code">for i in range(1, 20001): <i># от базы по порядку</i>
+    F(i)                  <i># каждое F(i) - 1 шаг</i>
+print(F(20000))</pre>
+  <ul class="notes">
+    <li>Нужна функция с <code>@lru_cache(None)</code>. Шаг к большим n → греть сверху: <code>for i in range(3000, 0, -1): F(i)</code>.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><h2>Условие → Python</h2></div>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>n чётно / нечётно</td><td><code>n % 2 == 0</code> / <code>n % 2 == 1</code></td></tr>
+      <tr><td>n / 2 (при чётном n)</td><td><code>n // 2</code> — всегда <code>//</code></td></tr>
+      <tr><td>F(1) + … + F(n − 1)</td><td><code>sum(F[i] for i in range(1, n))</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><h2>Кэш и лимит: что чинит что ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="tbl"><table class="two">
+    <thead><tr><th></th><th>ЛИМИТ<br><code>sys.setrecursionlimit(10000)</code></th><th>КЭШ<br><code>@lru_cache(None)</code></th></tr></thead>
+    <tbody>
+      <tr><th>Симптом</th><td><b>Кричит</b>: красная <code>RecursionError: maximum recursion depth exceeded</code></td><td><b>Молчит</b>: ни ответа, ни ошибки — программа «думает»</td></tr>
+      <tr><th>Причина</th><td><b>Глубина</b>: от N до базы больше ~1000 шагов — стопка незаконченных вызовов</td><td><b>Повторы</b>: F вызывает себя 2+ раза — одни и те же значения считаются миллионы раз</td></tr>
+      <tr><th>Видно в условии</th><td>N большое, шаг маленький: F(2025) → F(2024) → … → F(110)</td><td>в одной формуле F дважды или сумма: F(n−1) + F(n−2); F(1) + … + F(n−1)</td></tr>
+      <tr><th>Не нужен</th><td>N меньше ~900; шаг <code>n // 2</code> (~30 шагов)</td><td>F один раз в формуле: n + F(n−1), n·F(n−1) — даже если функций две</td></tr>
+    </tbody>
+  </table></div>
+  <div class="rule">
+    <p class="big-rule">Кричит — лимит. Молчит — кэш. Не уверен — оба: вреда нет.</p>
+    <p><b>Кэш — только вместе с лимитом</b>: на Python до 3.11 включительно кэш без лимита кричит уже от ~500 шагов.</p>
+    <p><b>Больше ~3000 шагов</b> — кричит даже с обоими (или Python молча закрывается) → цикл или прогрев.</p>
+  </div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><h2>Вопрос → последняя строка ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>F(a) − F(b), F(a) + G(b)</td><td><code>print(F[a] - F[b])</code></td></tr>
+      <tr><td>F(a) / F(b)</td><td><code>print(F[a] // F[b])</code> — <b>только <code>//</code></b>: <code>/</code> теряет цифры</td></tr>
+      <tr><td>Сумма цифр числа x</td><td><code>print(sum(map(int, str(x))))</code></td></tr>
+      <tr><td>Сколько n на [a; b], что F(n) = k</td><td><code>c = 0</code> · <code>for n in range(a, b + 1):</code> · <code>if F[n] == k: c += 1</code> · <code>print(c)</code></td></tr>
+      <tr><td>Наименьшее n, что F(n) &gt; X</td><td>в цикле А последней строкой: <code>if F[n] &gt; X: print(n); break</code></td></tr>
+    </tbody>
+  </table></div>
+</section>

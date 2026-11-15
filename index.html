@@ -461,7 +461,7 @@
   function itogText(id, w) {
     var s = stats(w), L = lightOf(id, w), parts = [];
     parts.push('блоки ' + fmtNum(s.bDone) + ' из ' + s.bTot);
-    if (s.mTot) parts.push('память ' + fmtNum(s.mDone) + ' из ' + s.mTot);
+    if (s.mTot) parts.push('шаблоны по информатике ' + fmtNum(s.mDone) + ' из ' + s.mTot);
     parts.push('занимался ' + studyDays(id) + ' из 7 дней');
     parts.push('энергия ' + s.energies.map(function (e) { return e || '–'; }).join(' '));
     parts.push('ночей после 23:30 — ' + s.late);
@@ -660,7 +660,7 @@
       '<div class="tile wide"><div class="k">Сделано за неделю</div><div class="v">' + pct + '%</div>' +
       '<div class="bar"><i style="width:' + pct + '%"></i></div><div class="s">занимался ' + n + ' из 7 дней</div></div>' +
       '<div class="tile"><div class="k">Блоки</div><div class="v">' + fmtNum(s.bDone) + ' из ' + s.bTot + '</div><div class="s">' + (cfgFor(weekId).noPctSign ? 'цель — все блоки' : 'цель — 70% и выше') + '</div></div>' +
-      '<div class="tile"><div class="k">Память</div><div class="v">' + (s.mTot ? fmtNum(s.mDone) + ' из ' + s.mTot : '—') + '</div><div class="s">20 минут в будни</div></div>' +
+      '<div class="tile"><div class="k">Шаблоны по информатике</div><div class="v">' + (s.mTot ? fmtNum(s.mDone) + ' из ' + s.mTot : '—') + '</div><div class="s">каждый будний день</div></div>' +
       '<div class="tile"><div class="k">Экран в среднем</div><div class="v"' + (over ? ' style="color:var(--half)"' : '') + '>' + fmtMin(s.scrAvg) + '</div><div class="s">цель ' + fmtMin(T.screenGoal) + '</div></div>' +
       '<div class="tile"><div class="k">Ночи после 23:30</div><div class="v">' + s.late + '</div><div class="s">перед учебным днём</div></div>' +
       '</div>' +

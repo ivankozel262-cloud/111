@@ -1,0 +1,157 @@
+<!-- title: КЕГЭ 8 — шаблоны перебора -->
+<header class="head">
+  <div class="kicker">КЕГЭ · задание 8</div>
+  <h1>Шаблоны перебора слов и чисел</h1>
+  <p class="meta">Python, модуль itertools. Все шаблоны запущены, ответы в комментариях сверены. По плану изменений КИМ ЕГЭ-2027 (ФИПИ) задание 8 не менялось.</p>
+</header>
+
+<section class="card">
+  <div class="sec-h"><h2>Как выбрать шаблон</h2><span class="tag soft">ПОНЯТЬ</span></div>
+  <p>Все шаблоны — это <b>один скелет А</b>, в котором меняются только генератор и условие. <b>Числа</b> — не отдельный шаблон: это тот же А, только алфавит из цифр. <b>Маска</b> — добавка к условию. Иди по вопросам сверху вниз.</p>
+  <div class="q">
+    <div class="q-h">1. Символы можно повторять?</div>
+    <div class="q-row"><span>«любое количество раз», «может входить в слово несколько раз»</span><span><code>product(алфавит, repeat=n)</code> · <b>А</b></span></div>
+    <div class="q-row"><span>«ровно 1 раз», «все буквы (цифры) различны»</span><span><code>permutations(алфавит, n)</code> · <b>А</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">2. Это числа?</div>
+    <div class="q-row"><span>«n-значные числа в системе счисления с основанием b»</span><span>алфавит <code>'0123456789ABCDEF'[:b]</code> и в if <code>s[0] != '0'</code> · <b>А</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">3. Что найти?</div>
+    <div class="q-row"><span>«сколько слов (чисел)…»</span><span>счётчик <code>c</code> · <b>А</b></span></div>
+    <div class="q-row"><span>«записаны в алфавитном порядке… под каким номером…», «какое слово стоит под номером N»</span><span>номер <code>k</code> и <code>sorted</code> · <b>Б +</b></span></div>
+    <div class="q-row"><span>«перестановкой букв слова КАПКАН» — в слове есть одинаковые буквы</span><span>слова собираешь в <code>set()</code> · <b>В +</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">4. Есть «рядом»?</div>
+    <div class="q-row"><span>«никакие две гласные (чётные цифры) не стоят рядом», «чередуются»</span><span>маска из <code>*</code> и <code>#</code> · <b>Г</b></span></div>
+  </div>
+  <p class="note"><b>+</b> — этих шаблонов не было в твоём списке из четырёх.</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">А</span><h2>Сколько слов — скелет всех шаблонов</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">from itertools import *
+
+c = 0
+for x in product('МЕТРО', repeat=4):
+    s = ''.join(x)
+    if s[0] in 'МТР' and s[-1] in 'ЕО':
+        c += 1
+print(c)                    <i># 150</i></pre>
+  <ul class="notes">
+    <li><b>Меняются только 2 строки:</b> генератор <code>for x in …</code> и условие <code>if …</code>. Остальное одинаково во всех задачах.</li>
+    <li><code>x</code> — кортеж <code>('М','Е','Т','О')</code>; <code>''.join(x)</code> склеивает его в строку <code>'МЕТО'</code>. Условие проверяй на <code>s</code>.</li>
+    <li><b>product — кодовый замок:</b> n колёсиков, на каждом любой символ → повторы есть. Пишется <b>с <code>repeat=n</code></b>.</li>
+    <li><b>permutations — карточки:</b> каждая карточка одна → повторов нет. Пишется <b>просто <code>n</code></b>; без n — длина всего слова.</li>
+  </ul>
+  <div class="sub-h">Генератор — 4 варианта</div>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Повторять можно</th><th>Каждый символ не больше 1 раза</th></tr></thead>
+    <tbody>
+      <tr><th>Буквы</th><td><code>product('МЕТРО', repeat=4)</code></td><td><code>permutations('ИГРОК', 5)</code></td></tr>
+      <tr><th>Числа, основание b</th><td><code>product('01234567', repeat=5)</code><br>+ в if <code>s[0] != '0'</code></td><td><code>permutations('0123456789', 4)</code><br>+ в if <code>s[0] != '0'</code></td></tr>
+    </tbody>
+  </table></div>
+  <ul class="notes">
+    <li>Цифры системы с основанием b — первые b символов: <code>'0123456789ABCDEF'[:b]</code>. Для 8 это <code>'01234567'</code>, для 14 — <code>'0123456789ABCD'</code>.</li>
+    <li><code>s[0] != '0'</code> — только для <b>чисел</b>. «Коды» и «пароли» из цифр могут начинаться с 0.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Б</span><h2>Номер слова в алфавитном списке +</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">from itertools import *
+
+<b>k = 0</b>
+for x in product(<b>sorted('ПАРУС')</b>, repeat=5):
+    <b>k += 1</b>
+    s = ''.join(x)
+    if s[0] == 'У' and 'АА' not in s:
+        <b>print(k)</b>            <i># 2527</i>
+        <b>break</b></pre>
+  <p class="sub-h">Жирное — отличия от скелета А:</p>
+  <ul class="notes">
+    <li><b>sorted</b> — алфавитный порядок. Без него product идёт в порядке букв строки.</li>
+    <li><b>k += 1 до проверки</b> — тогда у первого слова номер 1.</li>
+    <li><b>break</b> — нужен номер <b>первого</b> подходящего слова.</li>
+  </ul>
+  <p class="sub-h">Другой вопрос — меняешь только if:</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>«под каким номером слово ИЗБА»</td><td><code>if s == 'ИЗБА': print(k)</code></td></tr>
+      <tr><td>«какое слово стоит под номером 150»</td><td><code>if k == 150: print(s)</code></td></tr>
+      <tr><td>«номер <b>последнего</b> слова, в котором…»</td><td>без break: внутри if <code>last = k</code>, после цикла <code>print(last)</code></td></tr>
+      <tr><td>«слова пронумерованы, начиная с 0»</td><td>ответ <code>k - 1</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">В</span><h2>Сколько РАЗНЫХ слов, если в слове есть одинаковые буквы +</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">from itertools import *
+
+<b>words = set()</b>
+for x in permutations('КАПКАН'):
+    s = ''.join(x)
+    if s[0] != 'Н':
+        <b>words.add(s)</b>
+<b>print(len(words))</b>           <i># 150</i></pre>
+  <ul class="notes">
+    <li>В КАПКАН две К и две А. permutations считает их разными карточками → каждое слово выдаётся 2·2 = 4 раза. Без set вышло бы 600.</li>
+    <li><b>set</b> хранит только разные слова: <code>words.add(s)</code> вместо <code>c += 1</code>, ответ — <code>len(words)</code>.</li>
+    <li>Признак: «перестановкой букв слова…», и какая-то буква в этом слове встречается 2+ раза.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Г</span><h2>Маска: кто с кем стоит рядом</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">from itertools import *
+
+c = 0
+for x in permutations('КОЛУН', 5):
+    s = ''.join(x)
+    <b>mask = s</b>
+    <b>for e in 'ОУ':  mask = mask.replace(e, '*')</b>
+    <b>for e in 'КЛН': mask = mask.replace(e, '#')</b>
+    if <b>'**' not in mask and '##' not in mask</b>:
+        c += 1
+print(c)                    <i># 12</i></pre>
+  <ul class="notes">
+    <li>Маска — слово, где каждая буква заменена знаком своей группы: гласные → <code>*</code>, согласные → <code>#</code>. КОЛУН → <code>#*#*#</code>.</li>
+    <li>«никакие две гласные не стоят рядом» → только <code>'**' not in mask</code>.</li>
+    <li>«чередуются», «никакие две чётные и никакие две нечётные не стоят рядом» → оба условия.</li>
+    <li>Цифры: <code>'02468'</code> → <code>*</code>, <code>'13579'</code> → <code>#</code>, и не забудь <code>s[0] != '0'</code>.</li>
+    <li>Тот же приём — заменить группу символов одним знаком — пригодится в задании 24.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter mono">[:]</span><h2>Индексы и срезы справа налево</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="ruler-wrap"><table class="ruler">
+    <tr class="pos"><td class="lbl">слева, с 0 →</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+    <tr class="chars"><td class="lbl"><code>s =</code></td><td>М</td><td>Е</td><td>Т</td><td>Р</td><td>О</td></tr>
+    <tr class="neg"><td class="lbl">справа, с −1 ←</td><td>-5</td><td>-4</td><td>-3</td><td>-2</td><td>-1</td></tr>
+  </table></div>
+  <ol class="rules">
+    <li>Справа счёт идёт с <b>−1</b>: последний — <code>s[-1]</code>, предпоследний — <code>s[-2]</code>. <code>s[-k]</code> — k-й с конца.</li>
+    <li><b>Двоеточие после числа — берём хвост:</b> <code>s[-2:]</code> — последние 2.<br><b>Двоеточие перед числом — отрезаем хвост:</b> <code>s[:-2]</code> — всё без последних 2.</li>
+    <li>Правая граница среза <b>не входит</b>, и с минусами тоже: <code>s[-3:-1]</code> — это <code>'ТР'</code>.</li>
+    <li>Забыл срез — пиши словами: <code>s.endswith('РО')</code>, <code>s.startswith('МЕ')</code>.</li>
+  </ol>
+  <div class="tbl"><table>
+    <thead><tr><th>Запись</th><th>Даст</th><th>Где в задаче 8</th></tr></thead>
+    <tbody>
+      <tr><td><code>s[-1]</code></td><td><code>'О'</code></td><td>«оканчивается гласной»: <code>s[-1] in 'ЕО'</code></td></tr>
+      <tr><td><code>s[-2]</code></td><td><code>'Р'</code></td><td>«оканчивается парой одинаковых»: <code>s[-1] == s[-2]</code></td></tr>
+      <tr><td><code>s[-2:]</code></td><td><code>'РО'</code></td><td>«оканчивается на РО»: <code>s[-2:] == 'РО'</code></td></tr>
+      <tr><td><code>s[-3:]</code></td><td><code>'ТРО'</code></td><td>последние три</td></tr>
+      <tr><td><code>s[:-1]</code></td><td><code>'МЕТР'</code></td><td>всё, кроме последней</td></tr>
+      <tr><td><code>s[:-2]</code></td><td><code>'МЕТ'</code></td><td>всё, кроме двух последних</td></tr>
+      <tr><td><code>s[1:-1]</code></td><td><code>'ЕТР'</code></td><td>без первой и последней</td></tr>
+      <tr><td><code>s[-3:-1]</code></td><td><code>'ТР'</code></td><td>правая граница не входит</td></tr>
+      <tr><td><code>s[::-1]</code></td><td><code>'ОРТЕМ'</code></td><td>задом наперёд; <code>s == s[::-1]</code> — палиндром</td></tr>
+    </tbody>
+  </table></div>
+</section>

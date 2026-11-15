@@ -2,7 +2,7 @@
 // Как добавить тренажёр — см. ТЗ_для_Opus.md.
 self.EGE_DATA = {
   // Меняй при ЛЮБОМ изменении файлов: по этой строке телефон обновляет офлайн-кэш.
-  version: "2026-11-15-1",
+  version: "2026-11-16-1",
 
   subjects: [
     { id: "math", title: "Математика" },
@@ -32,7 +32,11 @@ self.EGE_DATA = {
     { id: "rus-15",     subject: "rus",  title: "№15. Н и НН",                           file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t15" }, days: [2, 3, 5], ready: true },
 
     { id: "termo",      subject: "phys", title: "МКТ и термодинамика 7–10",              file: "trainers/termo.html",      days: [6], ready: true },
-    { id: "electro",    subject: "phys", title: "Электродинамика 11–15",                 file: "trainers/electro.html",    days: [6], ready: true }
+    { id: "electro",    subject: "phys", title: "Электродинамика 11–15",                 file: "trainers/electro.html",    days: [6], ready: true },
+
+    // Информатика — только листы шаблонов по номерам. Собираются из tools/kege/NN.html: python3 tools/kege/build.py
+    { id: "kege-08",    subject: "inf",  title: "№8. Перебор слов и чисел (itertools)",  file: "trainers/kege-08.html",    days: [], ready: true },
+    { id: "kege-16",    subject: "inf",  title: "№16. Рекурсия",                         file: "trainers/kege-16.html",    days: [], ready: true }
   ],
 
   // Обычная неделя из плана v4 (действует с 23.11). Ключ — день недели, 1 — пн … 7 — вс.
@@ -46,10 +50,11 @@ self.EGE_DATA = {
     { title: "информатике", date: "2027-06-18" }
   ],
 
-  // Трекер плана v4. День: 0 — пн … 6 — вс. mem: true — «Память» (считается отдельно от блоков).
+  // Трекер плана v4. День: 0 — пн … 6 — вс. mem: true — «Шаблоны по информатике» (бывшая «Память») (считается отдельно от блоков).
   // items, fixed, fixedMock ниже — недели до 23.11.2026; с 23.11 действует набор из next.
   tracker: (function () {
-    function mem(t) { return { id: "mem", name: "Память", sub: "10 мин дома + 10 в дороге", time: t, mem: true }; }
+    // id "mem" не менять: на нём держатся старые отметки. Переименовано 16.11.2026 по просьбе Ивана.
+    function mem(t) { return { id: "mem", name: "Шаблоны по информатике", sub: "1–2 шаблона с нуля → сверка с листом", time: t, mem: true }; }
     function it(id, name, time, sub) { return { id: id, name: name, time: time, sub: sub || "" }; }
     return {
       types: { normal: "Обычная", mock: "С пробником", light: "Лёгкая", recovery: "Восстановление" },
