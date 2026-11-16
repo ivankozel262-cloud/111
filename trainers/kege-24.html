@@ -148,7 +148,7 @@
 <header class="head">
   <div class="kicker">КЕГЭ · задание 24</div>
   <h1>Строка из файла: шаблоны (Python)</h1>
-  <p class="meta">Все пять — твои шаблоны (Г и Д — из сборника, 18.5 и 18.4), каждый сверен с перебором всех подстрок на 1500 случайных строк. По проекту КИМ-2027 задание 24 не меняется.</p>
+  <p class="meta">Все пять — твои шаблоны (Г и Д — из сборника, 18.5 и 18.4), каждый сверен с перебором всех подстрок на 1500 случайных строк. Жирным в коде — строки, которыми шаблон отличается от скелета. По проекту КИМ-2027 задание 24 не меняется.</p>
 </header>
 
 <section class="card">
@@ -164,6 +164,34 @@
 </section>
 
 <section class="card">
+  <div class="sec-h"><h2>Один скелет на все пять</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">c = ''
+res = []
+for x in t:
+    c += x              <i># 1. добавили</i>
+    if НАРУШЕНО:        <i># 2. сломалось?</i>
+        c = ОСТАВИТЬ    <i># 3. обрезали</i>
+    res.append(len(c))  <i># 4. запомнили</i>
+print(max(res))</pre>
+  <p class="sub-h">Шаблоны отличаются только строками 2 и 3:</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>2. Нарушено, если…</th><th>3. Оставить</th></tr></thead>
+    <tbody>
+      <tr><th>А</th><td><code>x != 'A'</code></td><td><code>''</code> — <b>ничего</b></td></tr>
+      <tr><th>Б</th><td><code>'AA' in c or '11' in c</code></td><td><code>x</code> — <b>последний символ</b></td></tr>
+      <tr><th>В</th><td><code>c[-1] == c[-2]</code></td><td><code>c[-1]</code> — тоже <b>последний</b> (это и есть x)</td></tr>
+      <tr><th>Г</th><td><code>sub.count('T') &gt; 100</code></td><td><code>sub[k + 1:]</code> — <b>всё после первого T</b>; запоминаем, только если T ровно 100</td></tr>
+      <tr><th>Д</th><td>тройка не <code>'GTA'</code></td><td><code>''</code> — <b>ничего</b>, как в А; но шаг по 3 и всё это 3 раза (k = 0, 1, 2)</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="notes">
+    <li>Три способа обрезать: <b>ничего</b> (А, Д) · <b>последний символ</b> (Б, В) · <b>всё после первого найденного</b> (Г).</li>
+    <li>Запомнить длину — два одинаковых способа: <code>res.append(len(c))</code> + <code>max(res)</code> (А, Б, В) или <code>mx = max(mx, sub, key=len)</code> + <code>len(mx)</code> (Г, Д — как в сборнике).</li>
+    <li>Первая строка везде одна: <code>t = open('…').readline().strip()</code> — без <code>strip()</code> перевод строки в конце файла станет лишним символом.</li>
+  </ul>
+</section>
+
+<section class="card">
   <div class="sec-h"><span class="letter">А</span><h2>Подряд одинаковые символы</h2><span class="tag">НАИЗУСТЬ</span></div>
 <pre class="code">t = open('24-1.txt').readline().strip()
 <i># t = 'AAAoooAAoooAAAAoAoo'   # проверка: 4</i>
@@ -171,8 +199,8 @@ res = []
 c = ''
 for x in t:
     c += x
-    if x != 'A':
-        c = ''
+    <b>if x != 'A':</b>
+        <b>c = ''</b>
     res.append(len(c))
 print(max(res))                 <i># 9 на файле 24-1</i></pre>
   <p class="note">Строку с проверкой — закомментировать, иначе считается пример, а не файл.</p>
@@ -181,17 +209,17 @@ print(max(res))                 <i># 9 на файле 24-1</i></pre>
 <section class="card">
   <div class="sec-h"><span class="letter">Б</span><h2>Цифры и буквы — всё под одним символом</h2><span class="tag">НАИЗУСТЬ</span></div>
 <pre class="code">t = open('24-2.txt').readline().strip()
-for x in set(t):
-    if x in '0123456789':
-        t = t.replace(x, '1')
-    else:
-        t = t.replace(x, 'A')
+<b>for x in set(t):</b>                <i># подготовка: цифры → 1,</i>
+    <b>if x in '0123456789':</b>       <i># буквы → A</i>
+        <b>t = t.replace(x, '1')</b>
+    <b>else:</b>
+        <b>t = t.replace(x, 'A')</b>
 c = ''
 res = []
 for x in t:
     c += x
-    if 'AA' in c or '11' in c:
-        c = x
+    <b>if 'AA' in c or '11' in c:</b>
+        <b>c = x</b>
     res.append(len(c))
 print(max(res))                 <i># 16 на файле 24-2</i></pre>
   <p class="note">Если программа думает минуты, значит, ответ огромный: <code>'AA' in c</code> каждый раз просматривает всю цепочку. Проверяй хвост: <code>c[-2:]</code> вместо <code>c</code> в этой строке.</p>
@@ -204,8 +232,8 @@ c = ''
 res = []
 for x in t:                     <i># у тебя было t[1:]</i>
     c += x
-    if len(c) &gt; 1 and c[-1] == c[-2]:
-        c = c[-1]               <i># соседи нарушили — заново</i>
+    <b>if len(c) &gt; 1 and c[-1] == c[-2]:</b>
+        <b>c = c[-1]</b>
     res.append(len(c))
 print(max(res))                 <i># 41 на файле 24-3</i></pre>
   <p class="note"><b><code>t[1:]</code> пропускает первый символ</b>: если лучшая цепочка начинается с него, ответ на 1 меньше (на 24-3 — 40). Строка 7 на скрине обрезана — восстановлена для «каждые два соседних различны».</p>
@@ -223,24 +251,23 @@ print(max(res))                 <i># 41 на файле 24-3</i></pre>
 <section class="card">
   <div class="sec-h"><span class="letter">Г</span><h2>Встречается N раз (сборник 18.5)</h2><span class="tag">НАИЗУСТЬ</span></div>
 <pre class="code">s = open('24-8.txt').readline().strip()
-x = 'T'               <i># что считаем: буква или пара 'BC'</i>
-n = 100
 sub = ''
 mx = ''
 for e in s:
     sub += e
-    if sub.count(x) &gt; n:      <i># стало больше n —</i>
-        k = sub.find(x)       <i># режем после первого x</i>
-        sub = sub[k + 1:]
-    if sub.count(x) == n:
+    <b>if sub.count('T') &gt; 100:</b>     <i># стало больше 100 —</i>
+        <b>k = sub.find('T')</b>        <i># режем после первого T</i>
+        <b>sub = sub[k + 1:]</b>
+    <b>if sub.count('T') == 100:</b>
         mx = max(mx, sub, key=len)
-print(len(mx))                <i># 991 на файле 24-8</i></pre>
+print(len(mx))                   <i># 991 на файле 24-8</i></pre>
   <p class="note">Это 18.5 из сборника, только порядок другой: <b>сначала режем, потом проверяем</b> — так же работает и для минимума. <code>print(sub)</code> из сборника убрать: на файле это миллион строк.</p>
   <p class="sub-h">Другое условие → меняешь строку с <code>if</code>:</p>
   <div class="tbl"><table>
     <tbody>
-      <tr><td>не более n</td><td><code>if sub.count(x) &lt;= n:</code></td></tr>
-      <tr><td><b>минимальное</b>, ровно или не менее n</td><td>в начале <code>mn = s</code>; в if: <code>k = sub.find(x)</code>, <code>mn = min(mn, sub[k:], key=len)</code> — от первого x; <code>print(len(mn))</code></td></tr>
+      <tr><td>пара вместо буквы</td><td><code>'BC'</code> вместо <code>'T'</code> во всех трёх местах</td></tr>
+      <tr><td>не более 100</td><td><code>if sub.count('T') &lt;= 100:</code></td></tr>
+      <tr><td><b>минимальное</b>, ровно или не менее 100</td><td>в начале <code>mn = s</code>; в if: <code>k = sub.find('T')</code>, <code>mn = min(mn, sub[k:], key=len)</code> — от первого T; <code>print(len(mn))</code></td></tr>
       <tr><td>второе условие (демо-2026: Y ровно 80, 2025 не менее 90)</td><td>режем по Y, второе — в if: <code>if sub.count('Y') == 80 and sub.count('2025') &gt;= 90:</code></td></tr>
       <tr><td>«оканчивается на 2025»</td><td>в if: <code>and sub.endswith('2025')</code></td></tr>
     </tbody>
@@ -252,14 +279,14 @@ print(len(mx))                <i># 991 на файле 24-8</i></pre>
   <div class="sec-h"><span class="letter">Д</span><h2>Подряд идущие тройки GTA (сборник 18.4)</h2><span class="tag">НАИЗУСТЬ</span></div>
 <pre class="code">s = open('24-9.txt').readline().strip()
 m = ''
-for k in range(3):        <i># тройки с 0, 1 и 2</i>
+<b>for k in range(3):</b>        <i># тройки с 0, 1 и 2</i>
     sub = ''              <i># обнулять для каждого k</i>
-    for i in range(k, len(s) - 2, 3):
+    <b>for i in range(k, len(s) - 2, 3):</b>
         if s[i:i + 3] == 'GTA':
             sub += s[i:i + 3]
             m = max(m, sub, key=len)
-        else:
-            sub = ''
+        <b>else:</b>
+            <b>sub = ''</b>
 print(len(m) // 3)        <i># 7 троек на файле 24-9</i></pre>
   <p class="note">Две правки к сборнику: <b><code>sub = ''</code> под <code>for k</code></b> — иначе цепочка из конца строки склеится с цепочкой из начала (на 24-9 — 11 вместо 7); <b><code>len(s) - 2</code>, не <code>- 3</code></b> — иначе теряется последняя тройка. Пары: <code>range(2)</code>, шаг 2, <code>s[i:i + 2]</code>. В ответе символы — <code>len(m)</code>, тройки — <code>len(m) // 3</code>.</p>
 </section>
