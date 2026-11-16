@@ -148,7 +148,7 @@
 <header class="head">
   <div class="kicker">КЕГЭ · задание 24</div>
   <h1>Строка из файла: шаблоны (Python)</h1>
-  <p class="meta">А, Б, В — твои шаблоны, каждый сверен с перебором всех подстрок на 1500 случайных строк. Г добавлен: это главный тип 2026 года. По проекту КИМ-2027 задание 24 не меняется.</p>
+  <p class="meta">Все пять — твои шаблоны (Г и Д — из сборника, 18.5 и 18.4), каждый сверен с перебором всех подстрок на 1500 случайных строк. По проекту КИМ-2027 задание 24 не меняется.</p>
 </header>
 
 <section class="card">
@@ -157,7 +157,8 @@
     <div class="q-row"><span>подряд идут одинаковые символы / символы из набора</span><span><b>А</b></span></div>
     <div class="q-row"><span>два вида символов <b>чередуются</b> (цифра — буква)</span><span><b>Б</b></span></div>
     <div class="q-row"><span>условие на <b>каждые два соседних</b>: различны, убывают, разной чётности</span><span><b>В</b></span></div>
-    <div class="q-row"><span>буква / пара / тройка <b>встречается не более, ровно или не менее N раз</b> (демо, досрок, ЕГКР, апробации, резерв 2026)</span><span><b>Г</b></span></div>
+    <div class="q-row"><span>буква / пара <b>встречается не более, ровно или не менее N раз</b> — главный тип 2026</span><span><b>Г</b></span></div>
+    <div class="q-row"><span>подряд идущие <b>тройки (пары) вида</b> GTA</span><span><b>Д</b></span></div>
     <div class="q-row"><span>подстрока — <b>корректное выражение</b> или <b>римская запись</b> (основная волна 2026)</span><span>шаблона пока нет</span></div>
   </div>
 </section>
@@ -220,28 +221,47 @@ print(max(res))                 <i># 41 на файле 24-3</i></pre>
 </section>
 
 <section class="card">
-  <div class="sec-h"><span class="letter">Г</span><h2>Встречается не более / ровно N раз</h2><span class="tag">НАИЗУСТЬ</span></div>
-<pre class="code">t = open('24-5.txt').readline().strip()
-s = 'BC'                  <i># что считаем: буква, пара, тройка</i>
-n = 180
-m = len(s)
-p = [-1]                  <i># край слева</i>
-for i in range(len(t)):
-    if t[i:i + m] == s:
-        p.append(i)       <i># где начинается каждое s</i>
-p.append(len(t) - m + 1)  <i># край справа</i>
-res = []
-for i in range(len(p) - n - 1):
-    res.append(p[i + n + 1] - p[i] + m - 2)
-print(max(res))           <i># 8221 на файле 24-5</i></pre>
-  <p class="note">Окно от одного s до другого: внутри ровно n штук, оба крайних s разрезаны.</p>
+  <div class="sec-h"><span class="letter">Г</span><h2>Встречается N раз (сборник 18.5)</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">s = open('24-8.txt').readline().strip()
+x = 'T'               <i># что считаем: буква или пара 'BC'</i>
+n = 100
+sub = ''
+mx = ''
+for e in s:
+    sub += e
+    if sub.count(x) &gt; n:      <i># стало больше n —</i>
+        k = sub.find(x)       <i># режем после первого x</i>
+        sub = sub[k + 1:]
+    if sub.count(x) == n:
+        mx = max(mx, sub, key=len)
+print(len(mx))                <i># 991 на файле 24-8</i></pre>
+  <p class="note">Это 18.5 из сборника, только порядок другой: <b>сначала режем, потом проверяем</b> — так же работает и для минимума. <code>print(sub)</code> из сборника убрать: на файле это миллион строк.</p>
+  <p class="sub-h">Другое условие → меняешь строку с <code>if</code>:</p>
   <div class="tbl"><table>
     <tbody>
-      <tr><td><b>максимальное</b>, «не более n» или «ровно n»</td><td>код выше</td></tr>
-      <tr><td><b>минимальное</b>, «ровно n» или «не менее n»</td><td>без краёв: <code>p = []</code>, без <code>p.append(len(t) - m + 1)</code>; <code>for i in range(len(p) - n + 1):</code> <code>res.append(p[i + n - 1] - p[i] + m)</code>; <code>print(min(res))</code></td></tr>
-      <tr><td>два условия сразу (2026: «оканчивается на 2025, Y не менее 140»)</td><td>этим шаблоном не решается</td></tr>
+      <tr><td>не более n</td><td><code>if sub.count(x) &lt;= n:</code></td></tr>
+      <tr><td><b>минимальное</b>, ровно или не менее n</td><td>в начале <code>mn = s</code>; в if: <code>k = sub.find(x)</code>, <code>mn = min(mn, sub[k:], key=len)</code> — от первого x; <code>print(len(mn))</code></td></tr>
+      <tr><td>второе условие (демо-2026: Y ровно 80, 2025 не менее 90)</td><td>режем по Y, второе — в if: <code>if sub.count('Y') == 80 and sub.count('2025') &gt;= 90:</code></td></tr>
+      <tr><td>«оканчивается на 2025»</td><td>в if: <code>and sub.endswith('2025')</code></td></tr>
     </tbody>
   </table></div>
+  <p class="note"><b>Режем по тому, что «не более» или «ровно»; «не менее» и всё остальное — в if.</b> На файле из миллиона символов считает от 1 до 35 секунд — это нормально.</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Д</span><h2>Подряд идущие тройки GTA (сборник 18.4)</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">s = open('24-9.txt').readline().strip()
+m = ''
+for k in range(3):        <i># тройки с 0, 1 и 2</i>
+    sub = ''              <i># обнулять для каждого k</i>
+    for i in range(k, len(s) - 2, 3):
+        if s[i:i + 3] == 'GTA':
+            sub += s[i:i + 3]
+            m = max(m, sub, key=len)
+        else:
+            sub = ''
+print(len(m) // 3)        <i># 7 троек на файле 24-9</i></pre>
+  <p class="note">Две правки к сборнику: <b><code>sub = ''</code> под <code>for k</code></b> — иначе цепочка из конца строки склеится с цепочкой из начала (на 24-9 — 11 вместо 7); <b><code>len(s) - 2</code>, не <code>- 3</code></b> — иначе теряется последняя тройка. Пары: <code>range(2)</code>, шаг 2, <code>s[i:i + 2]</code>. В ответе символы — <code>len(m)</code>, тройки — <code>len(m) // 3</code>.</p>
 </section>
 
 </main>
