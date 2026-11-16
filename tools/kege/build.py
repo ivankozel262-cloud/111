@@ -76,6 +76,9 @@ SHELL = r'''<!doctype html>
   pre.code { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--soft); border-radius: 12px;
              padding: 10px 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: pre; tab-size: 4; }
   pre.code i { font-style: italic; color: var(--muted); }
+  @media screen and (max-width: 480px) {
+    pre.code { font-size: 11.5px; white-space: pre-wrap; }   /* длинная строка — перенос, а не прокрутка вбок */
+  }
   pre.code b { font-weight: 800; }
 
   .cb { position: relative; margin: 0 0 10px; }
