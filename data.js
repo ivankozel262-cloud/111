@@ -2,7 +2,7 @@
 // Как добавить тренажёр — см. ТЗ_для_Opus.md.
 self.EGE_DATA = {
   // Меняй при ЛЮБОМ изменении файлов: по этой строке телефон обновляет офлайн-кэш.
-  version: "2026-11-16-3",
+  version: "2026-11-16-4",
 
   subjects: [
     { id: "math", title: "Математика" },
@@ -37,7 +37,8 @@ self.EGE_DATA = {
     // Информатика — только листы шаблонов по номерам. Собираются из tools/kege/NN.html: python3 tools/kege/build.py
     { id: "kege-08",    subject: "inf",  title: "№8. Перебор слов и чисел (itertools)",  file: "trainers/kege-08.html",    days: [], ready: true },
     { id: "kege-14",    subject: "inf",  title: "№14. Системы счисления",                file: "trainers/kege-14.html",    days: [], ready: true },
-    { id: "kege-16",    subject: "inf",  title: "№16. Рекурсия",                         file: "trainers/kege-16.html",    days: [], ready: true }
+    { id: "kege-16",    subject: "inf",  title: "№16. Рекурсия",                         file: "trainers/kege-16.html",    days: [], ready: true },
+    { id: "kege-24",    subject: "inf",  title: "№24. Строка из файла",                  file: "trainers/kege-24.html",    days: [], ready: true }
   ],
 
   // Обычная неделя из плана v4 (действует с 23.11). Ключ — день недели, 1 — пн … 7 — вс.

@@ -1,0 +1,99 @@
+<!-- title: КЕГЭ 24 — строки из файла: шаблоны -->
+<header class="head">
+  <div class="kicker">КЕГЭ · задание 24</div>
+  <h1>Строка из файла: шаблоны (Python)</h1>
+  <p class="meta">А, Б, В — твои шаблоны, каждый сверен с перебором всех подстрок на 1500 случайных строк. Г добавлен: это главный тип 2026 года. По проекту КИМ-2027 задание 24 не меняется.</p>
+</header>
+
+<section class="card">
+  <div class="sec-h"><h2>Какой шаблон</h2><span class="tag soft">ПОНЯТЬ</span></div>
+  <div class="q">
+    <div class="q-row"><span>подряд идут одинаковые символы / символы из набора</span><span><b>А</b></span></div>
+    <div class="q-row"><span>два вида символов <b>чередуются</b> (цифра — буква)</span><span><b>Б</b></span></div>
+    <div class="q-row"><span>условие на <b>каждые два соседних</b>: различны, убывают, разной чётности</span><span><b>В</b></span></div>
+    <div class="q-row"><span>буква / пара / тройка <b>встречается не более, ровно или не менее N раз</b> (демо, досрок, ЕГКР, апробации, резерв 2026)</span><span><b>Г</b></span></div>
+    <div class="q-row"><span>подстрока — <b>корректное выражение</b> или <b>римская запись</b> (основная волна 2026)</span><span>шаблона пока нет</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">А</span><h2>Подряд одинаковые символы</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">t = open('24-1.txt').readline().strip()
+<i># t = 'AAAoooAAoooAAAAoAoo'   # проверка: 4</i>
+res = []
+c = ''
+for x in t:
+    c += x
+    if x != 'A':
+        c = ''
+    res.append(len(c))
+print(max(res))                 <i># 9 на файле 24-1</i></pre>
+  <p class="note">Строку с проверкой — закомментировать, иначе считается пример, а не файл.</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Б</span><h2>Цифры и буквы — всё под одним символом</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">t = open('24-2.txt').readline().strip()
+for x in set(t):
+    if x in '0123456789':
+        t = t.replace(x, '1')
+    else:
+        t = t.replace(x, 'A')
+c = ''
+res = []
+for x in t:
+    c += x
+    if 'AA' in c or '11' in c:
+        c = x
+    res.append(len(c))
+print(max(res))                 <i># 16 на файле 24-2</i></pre>
+  <p class="note">Если программа думает минуты, значит, ответ огромный: <code>'AA' in c</code> каждый раз просматривает всю цепочку. Проверяй хвост: <code>c[-2:]</code> вместо <code>c</code> в этой строке.</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">В</span><h2>Условие на два соседних символа</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">t = open('24-3.txt').readline().strip()
+c = ''
+res = []
+for x in t:                     <i># у тебя было t[1:]</i>
+    c += x
+    if len(c) &gt; 1 and c[-1] == c[-2]:
+        c = c[-1]               <i># соседи нарушили — заново</i>
+    res.append(len(c))
+print(max(res))                 <i># 41 на файле 24-3</i></pre>
+  <p class="note"><b><code>t[1:]</code> пропускает первый символ</b>: если лучшая цепочка начинается с него, ответ на 1 меньше (на 24-3 — 40). Строка 7 на скрине обрезана — восстановлена для «каждые два соседних различны».</p>
+  <p class="sub-h">Условие → строка 7 (когда начинать заново):</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td>каждые два соседних различны</td><td><code>c[-1] == c[-2]</code></td></tr>
+      <tr><td>все символы одинаковые</td><td><code>c[-1] != c[-2]</code></td></tr>
+      <tr><td>цифры строго убывают (2025)</td><td><code>c[-1] &gt;= c[-2]</code></td></tr>
+      <tr><td>соседние цифры разной чётности</td><td><code>int(c[-1]) % 2 == int(c[-2]) % 2</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Г</span><h2>Встречается не более / ровно N раз</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">t = open('24-5.txt').readline().strip()
+s = 'BC'                  <i># что считаем: буква, пара, тройка</i>
+n = 180
+m = len(s)
+p = [-1]                  <i># край слева</i>
+for i in range(len(t)):
+    if t[i:i + m] == s:
+        p.append(i)       <i># где начинается каждое s</i>
+p.append(len(t) - m + 1)  <i># край справа</i>
+res = []
+for i in range(len(p) - n - 1):
+    res.append(p[i + n + 1] - p[i] + m - 2)
+print(max(res))           <i># 8221 на файле 24-5</i></pre>
+  <p class="note">Окно от одного s до другого: внутри ровно n штук, оба крайних s разрезаны.</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td><b>максимальное</b>, «не более n» или «ровно n»</td><td>код выше</td></tr>
+      <tr><td><b>минимальное</b>, «ровно n» или «не менее n»</td><td>без краёв: <code>p = []</code>, без <code>p.append(len(t) - m + 1)</code>; <code>for i in range(len(p) - n + 1):</code> <code>res.append(p[i + n - 1] - p[i] + m)</code>; <code>print(min(res))</code></td></tr>
+      <tr><td>два условия сразу (2026: «оканчивается на 2025, Y не менее 140»)</td><td>этим шаблоном не решается</td></tr>
+    </tbody>
+  </table></div>
+</section>
