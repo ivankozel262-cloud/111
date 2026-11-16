@@ -10,7 +10,7 @@
   <div class="q">
     <div class="q-row"><span>подряд идут одинаковые символы / символы из набора</span><span><b>А</b></span></div>
     <div class="q-row"><span>два вида символов <b>чередуются</b> (цифра — буква)</span><span><b>Б</b></span></div>
-    <div class="q-row"><span>условие на <b>каждые два соседних</b>: различны, убывают, разной чётности</span><span><b>В</b></span></div>
+    <div class="q-row"><span>условие на <b>соседние</b> символы: различны, убывают, разной чётности, нет трёх подряд из набора</span><span><b>В</b></span></div>
     <div class="q-row"><span>буква / пара <b>встречается не более, ровно или не менее N раз</b> — главный тип 2026</span><span><b>Г</b></span></div>
     <div class="q-row"><span>подряд идущие <b>тройки (пары) вида</b> GTA</span><span><b>Д</b></span></div>
     <div class="q-row"><span>подстрока — <b>корректное выражение</b> или <b>римская запись</b> (основная волна 2026)</span><span>шаблона пока нет</span></div>
@@ -34,12 +34,15 @@ print(max(res))</pre>
       <tr><th>А</th><td><code>x != 'A'</code></td><td><code>''</code> — <b>ничего</b></td></tr>
       <tr><th>Б</th><td><code>'AA' in c or '11' in c</code></td><td><code>x</code> — <b>последний символ</b></td></tr>
       <tr><th>В</th><td><code>c[-1] == c[-2]</code></td><td><code>c[-1]</code> — тоже <b>последний</b> (это и есть x)</td></tr>
+      <tr><th>В₃</th><td><code>c[-3] == c[-2] == c[-1] == '*'</code></td><td><code>c[-2:]</code> — <b>два последних</b></td></tr>
       <tr><th>Г</th><td><code>sub.count('T') &gt; 100</code></td><td><code>sub[k + 1:]</code> — <b>всё после первого T</b>; запоминаем, только если T ровно 100</td></tr>
       <tr><th>Д</th><td>тройка не <code>'GTA'</code></td><td><code>''</code> — <b>ничего</b>, как в А; но шаг по 3 и всё это 3 раза (k = 0, 1, 2)</td></tr>
     </tbody>
   </table></div>
   <ul class="notes">
-    <li>Три способа обрезать: <b>ничего</b> (А, Д) · <b>последний символ</b> (Б, В) · <b>всё после первого найденного</b> (Г).</li>
+    <li><b>Что оставить — самый длинный конец, который ещё не нарушает.</b> Нарушают k последних символов → оставляешь k − 1 последних: k = 1 → <code>''</code> (А, Д) · k = 2 → <code>x</code> (Б, В) · k = 3 → <code>c[-2:]</code> (В₃). В Г — всё после первого найденного.</li>
+    <li><b><code>c = x</code> и <code>c = c[-1]</code> — одно и то же</b>: x только что добавили в конец c.</li>
+    <li><b><code>len(c) &gt; k - 1</code></b>, когда смотришь на k последних: <code>c[-2]</code> → <code>len(c) &gt; 1</code>, <code>c[-3]</code> → <code>len(c) &gt; 2</code>. Это защита от ошибки на первых шагах, а не обрезка: если условие в if ложно, c не трогается.</li>
     <li>Запомнить длину — два одинаковых способа: <code>res.append(len(c))</code> + <code>max(res)</code> (А, Б, В) или <code>mx = max(mx, sub, key=len)</code> + <code>len(mx)</code> (Г, Д — как в сборнике).</li>
     <li>Первая строка везде одна: <code>t = open('…').readline().strip()</code> — без <code>strip()</code> перевод строки в конце файла станет лишним символом.</li>
   </ul>
@@ -79,7 +82,7 @@ print(max(res))                 <i># 16 на файле 24-2</i></pre>
   <p class="note">Если программа думает минуты, значит, ответ огромный: <code>'AA' in c</code> каждый раз просматривает всю цепочку. Проверяй хвост: <code>c[-2:]</code> вместо <code>c</code> в этой строке.</p>
 </section>
 
-<section class="card">
+<section class="card long">
   <div class="sec-h"><span class="letter">В</span><h2>Условие на два соседних символа</h2><span class="tag">НАИЗУСТЬ</span></div>
 <pre class="code">t = open('24-3.txt').readline().strip()
 c = ''
@@ -90,7 +93,7 @@ for x in t:                     <i># у тебя было t[1:]</i>
         <b>c = c[-1]</b>
     res.append(len(c))
 print(max(res))                 <i># 41 на файле 24-3</i></pre>
-  <p class="note"><b><code>t[1:]</code> пропускает первый символ</b>: если лучшая цепочка начинается с него, ответ на 1 меньше (на 24-3 — 40). Строка 7 на скрине обрезана — восстановлена для «каждые два соседних различны».</p>
+  <p class="note"><b><code>t[1:]</code> пропускает первый символ</b>: если лучшая цепочка начинается с него, ответ на 1 меньше (на 24-3 — 40, на строке <code>'LD'</code> — 1 вместо 2). Верны две пары: <code>c = ''</code> + <code>for x in t</code> или <code>c = t[0]</code> + <code>for x in t[1:]</code> — не смешивать. Строка 7 на скрине обрезана — восстановлена для «каждые два соседних различны».</p>
   <p class="sub-h">Условие → строка 7 (когда начинать заново):</p>
   <div class="tbl"><table>
     <tbody>
@@ -100,6 +103,22 @@ print(max(res))                 <i># 41 на файле 24-3</i></pre>
       <tr><td>соседние цифры разной чётности</td><td><code>int(c[-1]) % 2 == int(c[-2]) % 2</code></td></tr>
     </tbody>
   </table></div>
+  <div class="keep">
+  <p class="sub-h">В₃. Никакие три символа из набора не стоят рядом (kompege №8615, там ответ 846):</p>
+<pre class="code">t = open('24-10.txt').readline().strip()
+<b>for x in set(t):</b>             <i># подготовка: A–F → *</i>
+    <b>if x in 'ABCDEF':</b>
+        <b>t = t.replace(x, '*')</b>
+res = []
+c = ''
+for x in t:
+    c += x
+    <b>if len(c) &gt; 2 and c[-3] == c[-2] == c[-1] == '*':</b>
+        <b>c = c[-2:]</b>           <i># два последних — ещё нормальные</i>
+    res.append(len(c))
+print(max(res))              <i># 1204 на файле 24-10</i></pre>
+  <p class="note"><b><code>c[-2:]</code> — с двоеточием</b>: два символа. <code>c[-2]</code> — один символ, ответ на 1 меньше (на строке <code>***XXXX</code> — 5 вместо 6).</p>
+  </div>
 </section>
 
 <section class="card">

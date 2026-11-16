@@ -123,7 +123,9 @@
     code { background: none; padding: 0; font-size: .92em; }
     pre.code { background: none; border: .8pt solid #000; border-radius: 0; font-size: 8.4pt; line-height: 1.4; padding: 4pt 6pt; overflow: visible; }
     pre.code i { color: #000; }
-    .cb { margin-bottom: 5pt; }
+    .cb { margin-bottom: 5pt; break-inside: avoid; }
+    .tbl tr { break-inside: avoid; }
+    .keep { break-inside: avoid; }
     .pair { display: grid; grid-template-columns: 57% 1fr; gap: 9pt; align-items: start; }
     .pair .cb { margin-bottom: 0; }
     .tbl { overflow: visible; margin-bottom: 4pt; }
