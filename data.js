@@ -2,7 +2,7 @@
 // Как добавить тренажёр — см. ТЗ_для_Opus.md.
 self.EGE_DATA = {
   // Меняй при ЛЮБОМ изменении файлов: по этой строке телефон обновляет офлайн-кэш.
-  version: "2026-11-16-8",
+  version: "2026-11-17-1",
 
   subjects: [
     { id: "math", title: "Математика" },
@@ -22,6 +22,8 @@ self.EGE_DATA = {
     { id: "pervyi-hod", subject: "math", title: "Первый ход (планиметрия, №18)",         file: "trainers/pervyi-hod.html", days: [1],    ready: true },
     { id: "razminka",   subject: "math", title: "Разминка по чертежу",                   file: "trainers/razminka.html",   days: [1],    ready: true },
     { id: "teoriya",    subject: "math", title: "Формулы и факты (теория планиметрии)",  file: "trainers/teoriya.html",    days: [1],    ready: true },
+
+    { id: "rus-teoriya", subject: "rus",  title: "Теория 9–15: правила и списки",         file: "trainers/rus-teoriya.html", days: [], ready: true },
 
     { id: "rus-9",      subject: "rus",  title: "№9. Гласные в корне",                   file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t9"  }, days: [2, 3, 5], ready: true },
     { id: "rus-10",     subject: "rus",  title: "№10. Приставки, Ъ и Ь",                 file: "trainers/orfografiya.html", preset: { "ege-offline-task": "t10" }, days: [2, 3, 5], ready: true },
