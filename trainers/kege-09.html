@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>КЕГЭ 9 — строки таблицы: шаблоны</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f2f2f7; --card: #ffffff; --ink: #1c1c1e; --muted: #6c6c70; --line: #e5e5ea; --soft: #f2f2f7;
+    --r: 16px; --ease: cubic-bezier(.2, .8, .2, 1);
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #000000; --card: #1c1c1e; --ink: #f2f2f7; --muted: #98989f; --line: #38383a; --soft: #2c2c2e; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 16px/1.45 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent;
+         font-feature-settings: "calt" 0; }  /* иначе часть шрифтов рисует x между цифрами как × */
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; touch-action: manipulation; }
+  b { font-weight: 700; }
+  p { margin: 0 0 8px; }
+
+  .page { max-width: 680px; margin: 0 auto; padding: 12px 16px 40px; padding-bottom: max(40px, env(safe-area-inset-bottom)); }
+  .head { margin: 4px 2px 12px; }
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 26px; line-height: 1.15; margin: 4px 0 6px; font-weight: 700; letter-spacing: -.01em; }
+  .meta { font-size: 14px; color: var(--muted); }
+
+  .bar { position: sticky; top: 0; z-index: 5; margin: 0 -16px; padding: 8px 16px; background: var(--bg); }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
+            padding: 12px 14px; border-radius: var(--r); background: var(--card); text-align: left; }
+  .switch .t { font-weight: 600; }
+  .switch .s { display: block; font-size: 13px; color: var(--muted); font-weight: 400; }
+  .knob { flex: none; width: 51px; height: 31px; border-radius: 16px; background: var(--line); position: relative; transition: background-color .25s var(--ease); }
+  .knob::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff;
+                 box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .25s var(--ease); }
+  .switch[aria-checked="true"] .knob { background: #34c759; }
+  .switch[aria-checked="true"] .knob::after { transform: translateX(20px); }
+
+  .card { background: var(--card); border-radius: var(--r); padding: 14px; margin-top: 12px; }
+  .sec-h { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .sec-h h2 { flex: 1; font-size: 17px; line-height: 1.25; margin: 0; font-weight: 700; }
+  .letter { flex: none; min-width: 30px; height: 30px; padding: 0 4px; display: grid; place-items: center;
+            border: 2px solid var(--ink); border-radius: 9px; font-weight: 800; font-size: 16px; }
+  .letter.mono { font-family: var(--mono); font-size: 13px; }
+  .tag { flex: none; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; border: 1.5px solid var(--ink); border-radius: 6px; padding: 2px 6px; }
+  .tag.soft { font-weight: 600; border-width: 1px; color: var(--muted); border-color: var(--muted); }
+  .sub-h { font-weight: 700; margin: 12px 0 6px; }
+  .note { font-size: 14px; color: var(--muted); margin: 10px 0 0; }
+  td.nw code { white-space: nowrap; }
+
+  .q { border-top: 1px solid var(--line); padding: 8px 0 4px; }
+  .q-h { font-weight: 700; margin-bottom: 4px; }
+  .q-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 4px 0; font-size: 15px; }
+  .q-row > span:first-child { flex: 1 1 220px; color: var(--muted); }
+  .q-row > span:last-child { flex: 0 1 auto; }
+
+  code { font-family: var(--mono); font-size: .86em; background: var(--soft); border-radius: 5px; padding: 1px 4px; overflow-wrap: break-word; }
+  pre.code { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--soft); border-radius: 12px;
+             padding: 10px 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: pre; tab-size: 4; }
+  pre.code i { font-style: italic; color: var(--muted); }
+  @media screen and (max-width: 480px) {
+    pre.code { font-size: 11.5px; white-space: pre-wrap; }   /* длинная строка — перенос, а не прокрутка вбок */
+  }
+  pre.code b { font-weight: 800; }
+
+  .cb { position: relative; margin: 0 0 10px; }
+  .cb .cover { display: none; }
+  .hide .cb:not(.open) pre.code { color: transparent; user-select: none; -webkit-user-select: none; }
+  .hide .cb:not(.open) pre.code i { color: transparent; }
+  .hide .cb:not(.open) .cover { display: flex; position: absolute; inset: 0; align-items: center; justify-content: center; text-align: center;
+                                padding: 10px; border-radius: 12px; border: 1.5px dashed var(--muted); color: var(--muted); font-size: 15px; }
+  .hide .cb.open::after { content: "нажми ещё раз, чтобы скрыть"; display: block; font-size: 12px; color: var(--muted); margin-top: 4px; text-align: right; }
+  .hide .cb { cursor: pointer; }
+
+  ul.notes, ol.rules { margin: 0 0 8px; padding-left: 20px; }
+  ul.notes li, ol.rules li { margin-bottom: 6px; }
+
+  .tbl { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 0 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 7px 8px 7px 0; border-bottom: 1px solid var(--line); }
+  thead th { font-size: 13px; color: var(--muted); font-weight: 700; }
+  tbody th { font-weight: 700; padding-right: 10px; }
+  td code { white-space: normal; }
+  table.two td, table.two th { min-width: 96px; }
+
+  .ruler-wrap { overflow-x: auto; margin: 2px 0 10px; }
+  table.ruler { width: auto; border-collapse: separate; border-spacing: 3px 0; }
+  table.ruler td { border: 0; padding: 0; text-align: center; width: 40px; font-family: var(--mono); }
+  table.ruler td.lbl { width: auto; text-align: right; padding-right: 8px; font-family: inherit; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  table.ruler tr.chars td:not(.lbl) { border: 2px solid var(--ink); border-radius: 8px; font-size: 19px; font-weight: 700; height: 40px; font-family: inherit; }
+  table.ruler tr.pos td:not(.lbl) { font-size: 13px; padding-bottom: 3px; color: var(--muted); }
+  table.ruler tr.neg td:not(.lbl) { font-size: 15px; font-weight: 800; padding-top: 3px; }
+
+  .rule { border: 2px solid var(--ink); border-radius: 12px; padding: 10px 12px; margin-top: 10px; }
+  .rule p:last-child { margin-bottom: 0; }
+  .big-rule { font-weight: 800; font-size: 17px; }
+  .pair { display: block; }
+
+  /* Печать (и PDF): только чёрный, без заливок — для ч/б принтера */
+  @page { size: A4; margin: 11mm 12mm 12mm; }
+  @media print {
+    :root { --bg: #fff; --card: #fff; --ink: #000; --muted: #000; --line: #000; --soft: #fff; }
+    html, body { background: #fff; color: #000; }
+    body { font-size: 9.4pt; line-height: 1.36; }
+    .page { max-width: none; padding: 0; }
+    .bar, .cover { display: none !important; }
+    .hide .cb pre.code, .hide .cb pre.code i { color: #000 !important; }
+    .hide .cb.open::after { content: none; }
+    .head { margin: 0 0 4pt; border-bottom: 2pt solid #000; padding-bottom: 4pt; }
+    .kicker { font-size: 7.5pt; }
+    h1 { font-size: 17pt; margin: 2pt 0 3pt; }
+    .meta { font-size: 8pt; margin: 0; }
+    .card { border-radius: 0; padding: 5pt 0 1pt; margin: 0; border-top: 1.2pt solid #000; break-inside: avoid; }
+    .card.long { break-inside: auto; }
+    .sec-h { margin-bottom: 4pt; break-after: avoid; }
+    .sec-h h2 { font-size: 10.8pt; }
+    .letter { min-width: 17pt; height: 17pt; border-width: 1.4pt; border-radius: 0; font-size: 10pt; }
+    .tag { font-size: 6.5pt; border-radius: 0; }
+    .tag.soft { color: #000; border-color: #000; }
+    p { margin-bottom: 4pt; }
+    code { background: none; padding: 0; font-size: .92em; }
+    pre.code { background: none; border: .8pt solid #000; border-radius: 0; font-size: 8.4pt; line-height: 1.4; padding: 4pt 6pt; overflow: visible; }
+    pre.code i { color: #000; }
+    .cb { margin-bottom: 5pt; break-inside: avoid; }
+    .tbl tr { break-inside: avoid; }
+    .keep { break-inside: avoid; }
+    .pair { display: grid; grid-template-columns: 57% 1fr; gap: 9pt; align-items: start; }
+    .pair .cb { margin-bottom: 0; }
+    .tbl { overflow: visible; margin-bottom: 4pt; }
+    table { font-size: 8.6pt; }
+    th, td { padding: 2.2pt 6pt 2.2pt 0; border-bottom: .45pt solid #000; }
+    thead th { color: #000; font-size: 7.6pt; }
+    .q { border-top: .45pt solid #000; padding: 3pt 0 1pt; }
+    .q-h { margin-bottom: 1pt; }
+    .q-row { display: grid; grid-template-columns: 56% 1fr; gap: 10pt; font-size: 8.9pt; padding: 1pt 0; }
+    .q-row > span:first-child { color: #000; }
+    .note { color: #000; font-size: 8.2pt; margin-top: 4pt; }
+    ul.notes { margin-bottom: 4pt; padding-left: 13pt; }
+    ol.rules { margin-bottom: 4pt; padding-left: 19pt; }
+    ul.notes li, ol.rules li { margin-bottom: 2pt; }
+    .sub-h { margin: 5pt 0 2pt; }
+    .rule { border-radius: 0; border-width: 1.4pt; padding: 4pt 6pt; margin-top: 5pt; }
+    .big-rule { font-size: 10.5pt; }
+    table.ruler tr.chars td:not(.lbl) { border-radius: 0; }
+    .pb { break-before: page; }
+  }
+</style>
+</head>
+<body>
+<main class="page" id="page">
+<header class="head">
+  <div class="kicker">КЕГЭ · задание 9</div>
+  <h1>Строки таблицы: шаблоны (Python)</h1>
+  <p class="meta">Скелет — твой пример 6. Маски, условия и концовки добавлены, их у тебя не было. Каждый код на листе запущен на файлах 9-1 … 9-5, ответы сверены со вторым решением, написанным по-другому. С 2026 года файл к заданию 9 дают только в .ods (ФИПИ). По проекту КИМ-2027 задание 9 не меняется.</p>
+</header>
+
+<section class="card">
+  <div class="sec-h"><h2>Как собрать решение</h2><span class="tag soft">ПОНЯТЬ</span></div>
+  <p>Всегда <b>скелет А</b>, в нём меняются три места. Иди по вопросам сверху вниз.</p>
+  <div class="q">
+    <div class="q-h">1. Что сказано про повторы?</div>
+    <div class="q-row"><span>«все числа различны», «каждое число встречается по одному разу»</span><span><code>len(no_rep) == 5</code> · <b>А</b></span></div>
+    <div class="q-row"><span>«одно число повторяется дважды (трижды), остальные различны», «два числа повторяются»</span><span>маска · <b>Б</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">2. Условие на числа</div>
+    <div class="q-row"><span>наибольшее, наименьшее, оставшиеся, среднее, повторяющееся, «не больше»…</span><span>словарь · <b>В</b></span></div>
+  </div>
+  <div class="q">
+    <div class="q-h">3. Что найти?</div>
+    <div class="q-row"><span>количество строк · номер строки · сумма в строке · наибольшая сумма</span><span>концовка · <b>Г</b></span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">А</span><h2>Скелет — твой пример 6</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">c = 0
+for line in open('9-1.csv'):
+    l = list(map(int, line.split(',')))
+    l.sort()
+    no_rep = [x for x in l if l.count(x) == 1]
+    if len(no_rep) == 5:  <i># 1. повторы</i>
+        if 3 * (l[0] + l[-1]) &lt;= 2 * sum(l[1:-1]):
+            c += 1  <i># 3. что найти</i>
+print(c)  <i># 2891 на 9-1</i></pre>
+  <ul class="notes">
+    <li><b>Убрано <code>and len(set(l)) == 5</code>:</b> обе проверки значат «все числа разные». Проверено на 300 случайных файлах (650 тыс. строк) — с ней и без неё ответы совпали везде.</li>
+    <li><b>После <code>sort</code>:</b> <code>l[0]</code> — наименьшее, <code>l[-1]</code> — наибольшее, <code>l[1:-1]</code> — все, кроме них. <code>l[1:]</code> — все, кроме наименьшего; <code>l[:-1]</code> — все, кроме наибольшего.</li>
+    <li><b>Меняются только 3 места:</b> 1 — повторы (строка 6), 2 — условие на числа (строка 7), 3 — что найти (строка 8 + первая и последняя).</li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">Б</span><h2>Маска повторов</h2><span class="tag">НАИЗУСТЬ</span></div>
+<pre class="code">    m = sorted([l.count(x) for x in l])
+    rep = [x for x in l if l.count(x) &gt; 1]
+    no_rep = [x for x in l if l.count(x) == 1]
+    if <b>m == [1, 1, 1, 1, 3, 3, 3]</b>:</pre>
+  <p class="note">Эти строки встают вместо строк 5–6 скелета. <code>m</code> — маска, <code>rep</code> — повторяющиеся, <code>no_rep</code> — как у тебя.</p>
+  <ul class="notes">
+    <li><code>l.count(x)</code> — сколько раз x стоит в строке. <b>Число, которое повторяется k раз, даёт в маске k штук «k»</b>: трижды → <code>3, 3, 3</code>.</li>
+    <li><b>Проверка маски:</b> её длина — сколько чисел в строке; двойки идут парами, тройки — по три.</li>
+    <li><code>rep</code> — повторяющиеся, каждая копия: <code>[27, 27, 27]</code>. «Повторяющееся число» — <code>rep[0]</code>.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>В условии</th><th>Маска: 6 чисел · 7 чисел</th></tr></thead>
+    <tbody>
+      <tr><td>все различны</td><td class="nw"><code>[1,1,1,1,1,1]</code><br><code>[1,1,1,1,1,1,1]</code></td></tr>
+      <tr><td>одно число повторяется дважды, остальные различны</td><td class="nw"><code>[1,1,1,1,2,2]</code><br><code>[1,1,1,1,1,2,2]</code></td></tr>
+      <tr><td>два числа повторяются дважды, остальные различны</td><td class="nw"><code>[1,1,2,2,2,2]</code><br><code>[1,1,1,2,2,2,2]</code></td></tr>
+      <tr><td>одно число повторяется трижды, остальные различны (ЕГЭ-2025)</td><td class="nw"><code>[1,1,1,3,3,3]</code><br><code>[1,1,1,1,3,3,3]</code></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Без <code>sorted</code></b> маска совпадёт, только если повторяющееся число — самое большое в строке (на 9-2 будет 459 вместо 249). Маска для 6 чисел на строке из 7 никогда не совпадёт — ответ 0.</p>
+</section>
+
+<section class="card">
+  <div class="sec-h"><span class="letter">В</span><h2>Условие на числа — словарь</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>В условии</th><th>В коде (после <code>sort</code>)</th></tr></thead>
+    <tbody>
+      <tr><td>наименьшее / наибольшее число строки</td><td><code>l[0]</code> / <code>l[-1]</code></td></tr>
+      <tr><td>оставшиеся числа (кроме наименьшего и наибольшего)</td><td><code>l[1:-1]</code></td></tr>
+      <tr><td>сумма чисел строки</td><td><code>sum(l)</code></td></tr>
+      <tr><td>повторяющееся число</td><td><code>rep[0]</code></td></tr>
+      <tr><td>среднее арифметическое неповторяющихся</td><td><code>sum(no_rep) / len(no_rep)</code></td></tr>
+      <tr><td>среднее арифметическое всех чисел</td><td><code>sum(l) / len(l)</code></td></tr>
+      <tr><td>наибольшее число не повторяется</td><td><code>l.count(l[-1]) == 1</code></td></tr>
+      <tr><td>квадрат суммы наибольшего и наименьшего</td><td><code>(l[0] + l[-1]) ** 2</code></td></tr>
+      <tr><td>сумма квадратов оставшихся</td><td><code>sum([x ** 2 for x in l[1:-1]])</code></td></tr>
+      <tr><td>удвоенная (утроенная) сумма…</td><td><code>2 * (…)</code> — <b>со скобками</b></td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Слова</th><th>Знак</th></tr></thead>
+    <tbody>
+      <tr><td>не больше, не превышает</td><td><code>&lt;=</code></td></tr>
+      <tr><td>меньше</td><td><code>&lt;</code></td></tr>
+      <tr><td>не меньше</td><td><code>&gt;=</code></td></tr>
+      <tr><td>больше, превышает</td><td><code>&gt;</code></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">По разбору ЕГЭ-2026 частые ошибки: нет проверки, что числа различны; неверная сумма наибольшего/наименьшего или оставшихся; <b>строгое неравенство вместо нестрогого</b>. На 9-1 с <code>&lt;</code> вместо <code>&lt;=</code> будет 2490.</p>
+</section>
+
+<section class="card long">
+  <div class="sec-h"><span class="letter">Г</span><h2>Что найти — концовка</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Вопрос</th><th>Что пишешь</th></tr></thead>
+    <tbody>
+      <tr><td>количество строк</td><td>до цикла <code>c = 0</code><br>в if <code>c += 1</code><br>после <code>print(c)</code></td></tr>
+      <tr><td>номер <b>первой</b> строки</td><td>до цикла <code>n = 0</code><br><b>первой строкой цикла</b> <code>n += 1</code><br>в if <code>print(n)</code> и <code>break</code></td></tr>
+      <tr><td>сумма чисел в строке с <b>наибольшим номером</b> (или номер последней)</td><td>до цикла <code>ans = 0</code><br>в if <code>ans = sum(l)</code> (или <code>n</code>) — перезапись, без break<br>после <code>print(ans)</code></td></tr>
+      <tr><td><b>наибольшая</b> сумма среди подходящих</td><td>до цикла <code>mx = 0</code><br>в if <code>mx = max(mx, sum(l))</code><br>после <code>print(mx)</code></td></tr>
+    </tbody>
+  </table></div>
+  <p class="sub-h">Пример — ЕГЭ-2025 (ФИПИ): 7 чисел; одно число повторяется трижды, остальные четыре различны; среднее арифметическое неповторяющихся не больше повторяющегося числа. Сумма чисел в строке с наибольшим номером.</p>
+<pre class="code">ans = 0
+for line in open('9-2.csv'):
+    l = list(map(int, line.split(',')))
+    l.sort()
+    <b>m = sorted([l.count(x) for x in l])</b>
+    <b>rep = [x for x in l if l.count(x) &gt; 1]</b>
+    no_rep = [x for x in l if l.count(x) == 1]
+    if <b>m == [1, 1, 1, 1, 3, 3, 3]</b>:
+        if <b>sum(no_rep) / len(no_rep) &lt;= rep[0]</b>:
+            <b>ans = sum(l)</b>
+print(ans)  <i># 249 на 9-2</i></pre>
+  <p class="note"><b>Сначала маска, потом среднее</b> (вложенный if): если строка без повторов, <code>len(no_rep)</code> может быть 0 — деление на ноль. Если вывести первую подходящую строку, будет 443.</p>
+  <p class="sub-h">Номер первой строки (9-3: одно число повторяется дважды, остальные различны; повторяющееся больше среднего всех чисел):</p>
+<pre class="code"><b>n = 0</b>
+for line in open('9-3.csv'):
+    <b>n += 1</b>
+    l = list(map(int, line.split(',')))
+    l.sort()
+    m = sorted([l.count(x) for x in l])
+    rep = [x for x in l if l.count(x) &gt; 1]
+    if m == [1, 1, 1, 1, 2, 2]:
+        if rep[0] &gt; sum(l) / len(l):
+            <b>print(n)</b>  <i># 901 на 9-3</i>
+            <b>break</b></pre>
+</section>
+
+<section class="card">
+  <div class="sec-h"><h2>Файл .ods → .csv</h2><span class="tag soft">ОДИН РАЗ</span></div>
+  <ul class="notes">
+    <li>В LibreOffice Calc: <b>Файл → Сохранить как → тип «Текст CSV»</b>, в окне параметров <b>разделитель полей — запятая</b>. Сохранить в папку с программой.</li>
+    <li>Если в файле <code>;</code> — пиши <code>line.split(';')</code>. Не уверен — сначала <code>print(open('9.csv').readline())</code>.</li>
+    <li><code>ValueError: invalid literal for int()</code> — не тот разделитель или первая строка — заголовок.</li>
+  </ul>
+</section>
+
+</main>
+<script>
+(function () {
+  var KEY = 'kege_tpl_v1';           // общий для всех листов шаблонов: включён ли режим «Скрыть код»
+  var page = document.getElementById('page');
+  var head = page.querySelector('.head');
+  var codes = page.querySelectorAll('pre.code');
+  for (var i = 0; i < codes.length; i++) {
+    var wrap = document.createElement('div');
+    wrap.className = 'cb';
+    codes[i].parentNode.insertBefore(wrap, codes[i]);
+    wrap.appendChild(codes[i]);
+    var cover = document.createElement('div');
+    cover.className = 'cover';
+    cover.textContent = 'Напиши по памяти, потом нажми — сверить';
+    wrap.appendChild(cover);
+    wrap.addEventListener('click', function () {
+      if (page.classList.contains('hide')) this.classList.toggle('open');
+    });
+  }
+  var bar = document.createElement('div');
+  bar.className = 'bar';
+  bar.innerHTML = '<button type="button" class="switch" role="switch" aria-checked="false">' +
+    '<span><span class="t">Скрыть код</span><span class="s">проверка себя: пишешь шаблон сам, потом открываешь</span></span>' +
+    '<span class="knob" aria-hidden="true"></span></button>';
+  head.parentNode.insertBefore(bar, head.nextSibling);
+  var sw = bar.firstChild;
+  function set(on) {
+    page.classList.toggle('hide', on);
+    sw.setAttribute('aria-checked', String(on));
+    var open = page.querySelectorAll('.cb.open');
+    for (var j = 0; j < open.length; j++) open[j].classList.remove('open');
+  }
+  var saved = false;
+  try { saved = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  set(saved);
+  sw.addEventListener('click', function () {
+    var on = !page.classList.contains('hide');
+    set(on);
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
