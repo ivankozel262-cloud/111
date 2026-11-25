@@ -176,7 +176,7 @@
   </div>
   <div class="q">
     <div class="q-h">4. Что спрашивают?</div>
-    <p>→ последняя строка (таблица в конце).</p>
+    <p>→ последняя строка (таблица в конце). Найти n по значению F(n) → <b>Е</b>.</p>
   </div>
   <p class="note"><b>Все шаблоны — один скелет А</b>: меняются направление цикла, число словарей и последняя строка.</p>
 </section>
@@ -261,6 +261,31 @@ print(F(20000))</pre>
 </section>
 
 <section class="card">
+  <div class="sec-h"><span class="letter">Е</span><h2>Найти n по значению F(n) — два цикла ★</h2><span class="tag">НАИЗУСТЬ</span></div>
+  <p class="sub-h">Задачи с параметром. F(0) = 1; F(1) = 0; F(n) = F(n // 2) + 1 при n &gt; 1 и чётном n; F(n) = F(n // 2) при n &gt; 1 и нечётном n. Укажите наименьшее n, при котором F(n) = 10.</p>
+<pre class="code"><i># Заполняем значения f</i>
+f = dict()
+for n in range(10 ** 6):
+    if n == 0: f[n] = 1
+    if n == 1: f[n] = 0
+    if n &gt; 1 and n % 2 == 0:
+        f[n] = f[n // 2] + 1
+    if n &gt; 1 and n % 2 != 0:
+        f[n] = f[n // 2]
+
+<i># Поиск значения n</i>
+<b>for n in range(10 ** 6):</b>
+    <b>if f[n] == 10:</b>
+        <b>print(n)</b>
+        <b>break</b>  <i># 1024</i></pre>
+  <ul class="notes">
+    <li>Первый цикл — это <b>А</b>. Новое только поиск. n заранее неизвестно — заполняй <b>с запасом</b>: <code>10 ** 6</code>.</li>
+    <li><b>Оба range — с одного начала.</b> F задана с n = 1, а поиск идёт с 0 → <code>KeyError: 0</code>.</li>
+    <li><b>Ничего не напечатал</b> — ответ больше <code>10 ** 6</code> (для F(n) = 20 это 1048576). Перенеси <code>if f[n] == 20: print(n); break</code> в конец первого цикла и поставь <code>range(10 ** 8)</code> — цикл остановится на ответе. Два цикла до <code>10 ** 7</code> занимают ~0,7 ГБ памяти.</li>
+  </ul>
+</section>
+
+<section class="card">
   <div class="sec-h"><h2>Условие → Python</h2></div>
   <div class="tbl"><table>
     <tbody>
@@ -298,6 +323,7 @@ print(F(20000))</pre>
       <tr><td>Сумма цифр числа x</td><td><code>print(sum(map(int, str(x))))</code></td></tr>
       <tr><td>Сколько n на [a; b], что F(n) = k</td><td><code>c = 0</code> · <code>for n in range(a, b + 1):</code> · <code>if F[n] == k: c += 1</code> · <code>print(c)</code></td></tr>
       <tr><td>Наименьшее n, что F(n) &gt; X</td><td>в цикле А последней строкой: <code>if F[n] &gt; X: print(n); break</code></td></tr>
+      <tr><td>Наименьшее n, что F(n) = k (n не дано)</td><td><b>Е</b>: заполнить с запасом до <code>10 ** 6</code>, потом поиск с <code>break</code></td></tr>
     </tbody>
   </table></div>
 </section>
